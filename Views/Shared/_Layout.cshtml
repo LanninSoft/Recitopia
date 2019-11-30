@@ -106,18 +106,26 @@
                 <td>
                     <div class="container body-content">
                         @RenderBody()
-                        <br />
-                        <hr />
-                        <footer>
-
-                            <p>&copy; @DateTime.Now.Year - Recitopia</p>
-                        </footer>
+                        
+                        
+                       
                     </div>
                 </td>
             </tr>
         </table>
-    </div>
+        <br />
+        <div style="width:100%;background-color:#343a40">
+            <font style="color:lightgray;font-size:12px">
+                <footer>
 
+                    <p>&copy; @DateTime.Now.Year - Recitopia</p>
+                </footer>
+
+            </font>
+        </div>
+        <br />
+    </div>
+    
 
     @RenderSection("scripts", required: false)
 </body>

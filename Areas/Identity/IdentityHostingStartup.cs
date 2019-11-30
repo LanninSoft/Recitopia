@@ -17,7 +17,7 @@ namespace Recitopia_LastChance.Areas.Identity
             builder.ConfigureServices((context, services) => {
                 services.AddDbContext<RecitopiaDBContext>(options =>
                     options.UseSqlServer(
-                        context.Configuration.GetConnectionString("RecitopiaDBContextConnection")));
+                        context.Configuration.GetConnectionString("DefaultConnection")));
 
                 services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddEntityFrameworkStores<RecitopiaDBContext>();
