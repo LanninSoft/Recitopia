@@ -1,0 +1,49 @@
+﻿@model Recitopia_LastChance.Models.Recipe
+
+@{
+    ViewBag.Title = "Create Copy";
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <font style="color:red">@ViewBag.ErrorMessage</font>
+}
+
+
+
+<font class="alert-info">Are you sure you want to create a copy of '@Model.Recipe_Name'?</font>
+
+<div>
+
+    <table width="100%" class="table-borderless">
+        <tr>
+            <th>
+                Recipe
+            </th>
+        </tr>
+
+    </table>
+    <dl class="dl-horizontal">
+        <dt>
+            @*@Html.DisplayNameFor(model => model.Recipe_Name)*@
+            Recipe Name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Recipe_Name)
+        </dd>
+
+
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Create Copy" class="btn alert-info" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

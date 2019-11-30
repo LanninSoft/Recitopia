@@ -1,0 +1,45 @@
+﻿@model Recitopia_LastChance.Models.Components
+
+@{
+    ViewBag.Title = "Details";
+}
+
+    <table width="100%" class="table-borderless">
+        <tr>
+            <th style="font-size:20px">
+                Allergen Component Details
+            </th>
+        </tr>
+        <tr>
+            <th style="font-size:30px;background-color:blanchedalmond">
+                @Model.Component_Name
+            </th>
+        </tr>
+    </table>
+
+<div>
+   
+    
+    <dl class="dl-horizontal"  style="font-size:13px">
+        <dt>
+            Component Name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Component_Name)
+        </dd>
+
+        <dt>
+            Notes
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Notes)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Comp_Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

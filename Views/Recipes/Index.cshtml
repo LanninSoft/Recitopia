@@ -1,0 +1,87 @@
+﻿@model IEnumerable<Recitopia_LastChance.Models.Recipe>
+
+
+@{
+    ViewBag.Title = "Recipe List";
+}
+
+<table width="100%" class="table table-borderless ">
+    <tr class="pageBanner">
+        <th>
+            Recipes
+        </th>
+    </tr>
+</table>
+
+
+<div ng-app="myApp" ng-controller="Recipes" style="font-size:13px" class="container-fluid">
+    @* Use ng-controller *@
+    
+    
+    <table width="100%" class="table table-condensed table-hover table-striped table-bordered table-responsive-lg">
+        <tr >
+            <th class="AngularTableHeaderColor" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('recipe_Name')"><font style="color:black">Recipe Name</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('recipe_Name')"></i>
+            </th>
+            <th  class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">               
+                <a href="" ng-click="changeSorting('category_Name')"><font style="color:black">Category</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('category_Name')"></i>
+            </th>
+
+            <th  class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('gluten_Free')"><font style="color:black">Gluten Free</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('gluten_Free')"></i>
+            </th>
+
+            <th  class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                 <a href="" ng-click="changeSorting('serving_Size')"><font style="color:black">Serving Size</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('serving_Size')"></i>
+            </th>
+
+            <th  style="text-align:right"  class="AngularTableHeaderColor"><a href="@Url.Action("Create", "Recipes")" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> New Recipe</a></th>
+          
+
+        </tr>
+        <tr>
+            <td style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.recipe_Name"></td>
+            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input style="padding:1px;height:20px;width:100%"  ng-model="f.category_Name"></td>
+            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"></td>
+            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input style="padding:1px;height:20px;width:100%"  ng-model="f.serving_Size"></td>
+            <td> </td>
+            
+        </tr>
+    @*</table>
+    <table width="100%" class="table table-condensed table-hover table-striped table-responsive-lg">*@
+
+    <tr ng-repeat="recipe in Recipes | filter:f | orderBy:sort.active:sort.descending ">
+        @* Fetch All the Recipe record using ng-repeat *@
+
+        <td style="height:15px;padding:1px">{{recipe.recipe_Name}}</td>
+        <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{recipe.category_Name}}</td>
+        <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{recipe.gluten_Free ? "Yes":""}}</td>
+        <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{recipe.serving_Size}}</td>
+     
+
+        <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:175px">
+            <input type="button" style="background-color:lavender" class="btn btn-sm AngularButtons" value="Ingredients" ng-click="RedirectToRecipeIngredients(recipe)" /> |
+
+            <button ng-click="RedirectToEdit(recipe)" class="btn btn-outline-success AngularButtons">
+                <i class="fa fa-pen"></i>
+            </button> |
+            <button ng-click="RedirectToDetails(recipe)" class="btn btn-outline-info AngularButtons">
+                <i class="fa fa-clipboard"></i>
+            </button> |
+
+            <button ng-click="DelRecipe(recipe)" class="btn btn-outline-danger AngularButtons">
+                <i class="fa fa-trash"></i>
+            </button>
+        </td>
+    </tr>
+
+    </table>
+</div>
+<div>
+    <a href="@Url.Action("Create", "Recipes")" class="btn alert-success" role="button"><i class="fa fa-plus"></i> New Recipe</a>
+</div>
+

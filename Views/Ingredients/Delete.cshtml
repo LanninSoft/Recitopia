@@ -1,0 +1,79 @@
+﻿@model Recitopia_LastChance.Models.Ingredient
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <font style="color:red">@ViewBag.ErrorMessage</font>
+}
+<font class="alert-danger">Are you sure you want to delete '@ViewBag.IngredientName'?  All associated Nutrition and Allergen relationships will removed.  This will also remove the ingredient from recipes.</font>
+
+<div>
+   <dl style="font-size:13px">
+        <dt>
+            Ingredient Name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ingred_name)
+        </dd>
+
+
+
+        <dt>
+            Cost per lb
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Cost_per_lb)
+        </dd>
+
+
+
+        <dt>
+            Vendor Name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Vendor.Vendor_Name)
+        </dd>
+
+
+
+        <dt>
+            Notes
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Notes)
+        </dd>
+
+
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Brand)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Brand)
+        </dd>
+
+
+
+    </dl>
+
+
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn alert-danger" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

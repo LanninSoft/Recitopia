@@ -1,0 +1,100 @@
+﻿@model Recitopia_LastChance.Models.Recipe_Ingredients
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<table width="100%" class="table-borderless">
+    <tr>
+        <th style="font-size:30px;background-color:blanchedalmond">
+            @ViewBag.RecipeName
+        </th>
+    </tr>
+
+</table>
+
+<table width="100%">
+    <tr>
+        <td width="50%" valign="top">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+
+                <div class="form-group">
+                    @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.Recipe_Id)
+
+                    @Html.HiddenFor(model => model.Recipe_Id, new { Value = ViewBag.Rec_Id })*@
+                    <input value="@ViewBag.Rec_Id" id="RID" name="RID" type="hidden">
+                </div>
+               
+                <div class="form-group">
+
+                    <font style="font-size:13px;font-weight:bolder">Ingredient Name</font>
+                    <div class="col-md-10">
+                        @Html.DropDownList("Ingredient_Id", null, htmlAttributes: new { @class = "form-control", required = "required", style = "font-size:13px;height:35px" })
+                        @Html.ValidationMessageFor(model => model.Ingredient_Id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <font style="font-size:13px;font-weight:bolder"> Amount g</font>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.Amount_g, new { @class = "form-control", @Value = "0", style = "font-size:13px;height:25px" })
+                        @Html.ValidationMessageFor(model => model.Amount_g, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Create" class="btn alert-success" />
+                    </div>
+                </div>
+            </div>
+                }
+</td>
+    @*</tr>
+    <tr>*@
+        <td width="50%" valign="top" style="font-size:13px">
+            <div>
+                <table>
+                    <tr style="background-color:lightblue">
+                        <td style="font-weight:bolder" align="center">
+                            Recipes already in '@ViewBag.RecipeName'
+                        </td>
+
+                    </tr>
+                    @if (ViewBag.Ingredients != null)
+                    {
+                        foreach (var thing in ViewBag.Ingredients)
+                        {
+                            <tr>
+                                <td style="font-size:small">
+                                    -@thing
+                                </td>
+
+
+                            </tr>
+                        }
+                    }
+
+                </table>
+            </div>
+        </td>
+    </tr>
+</table>
+
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index", new { recipeID = ViewBag.Rec_Id })
+</div>
+
+
+@*@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}*@

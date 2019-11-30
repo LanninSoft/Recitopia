@@ -1,0 +1,45 @@
+﻿@model Recitopia_LastChance.Models.Serving_Sizes
+
+@{
+    ViewBag.Title = "Details";
+}
+
+    <table width="100%" class="table-borderless">
+        <tr>
+            <th style="font-size:20px">
+                Serving Size Details
+            </th>
+        </tr>
+        <tr>
+            <th style="font-size:30px;background-color:blanchedalmond">
+                @Model.Serving_Size
+            </th>
+        </tr>
+    </table>
+
+<div>
+   
+    
+    <dl class="dl-horizontal"  style="font-size:13px">
+        <dt>
+            Serving Size
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Serving_Size)
+        </dd>
+
+        <dt>
+            Notes
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Notes)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.SS_Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

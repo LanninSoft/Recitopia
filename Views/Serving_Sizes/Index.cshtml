@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Recitopia_LastChance.Models.Serving_Sizes>
+
+@{
+    ViewBag.Title = "Serving Sizes";
+}
+<table width="100%" class="table table-borderless">
+    <tr class="pageBanner">
+        <th>
+            Serving Sizes
+        </th>
+    </tr>
+</table>
+
+<div ng-app="myApp" ng-controller="ServingSize" class="container-fluid" style="font-size:13px">
+    @* Use ng-controller *@
+    
+    
+        <table width="100%" class="table table-condensed table-hover table-striped table-bordered table-responsive-lg">
+            <tr>
+                <th class="AngularTableHeaderColor" style="vertical-align:bottom">
+                    <a href="" ng-click="changeSorting('serving_Size')"><font style="color:black">Serving</font></a>
+                    <i class="fa fa-caret-left" ng-class="getIcon('serving_Size')"></i>
+                </th>
+                <th  class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">Notes</th>
+                <th style="text-align:right" class="AngularTableHeaderColor"><a href="@Url.Action("Create", "Serving_Sizes")" class="btn alert-success  btn-sm" role="button"><i class="fa fa-plus"></i> Add Serving Size</a></th>
+
+            </tr>
+            <tr>
+                <td style="padding:1px;height:20px;font-size:13px"></td>
+                <td class=" d-none d-lg-table-cell" style="padding:1px;height:20px;font-size:13px"></td>
+                <td></td>
+            </tr>
+     
+
+            <tr ng-repeat="serving in Servings | filter:f | orderBy:sort.active:sort.descending">
+                @* Fetch All the Vendor record using ng-repeat *@
+
+                <td style="height:15px;padding:1px" >{{serving.serving_Size}}</td>
+                <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px" >{{serving.notes}}</td>
+
+                <td style="height:15px;padding:1px" align="right" >
+
+                    <button class="AngularButtons" ng-click="RedirectToEdit(serving)">
+                        <i class="btn alert-success btn-sm fa fa-pen"></i>
+                    </button> |
+                    @*<button class="AngularButtons" ng-click="RedirectToDetails(serving)">
+                        <i class="btn alert-info btn-sm fa fa-clipboard"></i>
+                    </button> |*@
+
+                    <button class="AngularButtons" ng-click="DelServingSize(serving)">
+                        <i class="btn alert-danger btn-sm fa fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+
+        </table>
+    
+    </div>
+    <div>
+        <a href="@Url.Action("Create", "Serving_Sizes")" class="btn alert-success" role="button"><i class="fa fa-plus"></i> Add Serving Size</a>
+    </div>

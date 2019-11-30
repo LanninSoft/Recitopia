@@ -1,0 +1,117 @@
+﻿@model IEnumerable<Recitopia_LastChance.Models.Ingredient_Nutrients>
+
+@{
+    ViewBag.Title = "Ingredient Nutrients";
+}
+<table width="100%" class="table table-borderless">
+    <tr class="pageBanner">
+        <th>
+            @ViewBag.IngredName (Nutrition List)
+        </th>
+    </tr>
+</table>
+<div ng-app="myApp" ng-controller="IngredientNutrient" ng-init="Ingred_Id=(@ViewBag.IngredNameID)" class="container-fluid" style="font-size:13px">
+    @* Use ng-controller *@
+   
+    
+    <div>
+
+        @if (Model.Count() > 0)
+        {
+
+        }
+        else
+        {
+                    
+        <a href="@Url.Action("PrimeIngredNutrient", "Ingredient_Nutrients", new { id = ViewBag.IngredNameID })" class="btn alert-warning btn-sm" role="button"><i class="fa fa-plus"></i> Add Default Nutrients</a>
+        }
+       
+    </div>
+    
+    <table style="width:75%">
+        <tr>
+            <td>
+                <table width="100%" class="table table-condensed table-hover table-striped table-bordered table-responsive-lg">
+                    <tr>
+                        <th class="AngularTableHeaderColor" style="vertical-align:bottom">
+                            <a href="" ng-click="changeSorting('nutrition_Item')"><font style="color:black">Nutrition Item</font></a>
+                            <i class="fa fa-caret-left" ng-class="getIcon('nutrition_Item')"></i>
+                        </th>
+                        <th class="AngularTableHeaderColor" style="vertical-align:bottom">
+                            <a href="" ng-click="changeSorting('nut_per_100_grams')"><font style="color:black">Nut/100g</font></a>
+                            <i class="fa fa-caret-left" ng-class="getIcon('nut_per_100_grams')"></i>
+                        </th>
+                        <th style="text-align:right" class="AngularTableHeaderColor"><a href="@Url.Action("Create", "Ingredient_Nutrients", new { IngredID = ViewBag.IngredNameID })" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> Add Item</a></th>
+
+                    </tr>
+                    <tr>
+                        <td style="font-size:13px">
+                            <input style="padding:1px;height:20px;width:100%" ng-model="f.nutrition_Item">
+                        </td>
+                        <td ></td>
+                        <td></td>
+                    </tr>
+
+
+                    <tr ng-repeat="nutrient in IngredientNutrition | filter:f | orderBy:sort.active:sort.descending">
+                        <td style="height:15px;padding:1px">{{nutrient.nutrition_Item}}</td>
+                        <td style="height:15px;padding:1px">
+                            <div ng-show="!nutrient.edit.nut_per_100_grams"
+                                 ng-click="nutrient.edit.nut_per_100_grams = !nutrient.edit.nut_per_100_grams">
+                                <i class="fa fa-pencil"></i>{{nutrient.nut_per_100_grams}}
+                            </div>
+
+                            <input type="number" min="0" step="0.001" style="width:50px" ng-show="nutrient.edit.nut_per_100_grams"
+                                   ng-blur="nutrient.edit.nut_per_100_grams = !nutrient.edit.nut_per_100_grams | resultMessage = ''"
+                                   ng-model="nutrient.nut_per_100_grams" />
+
+                        </td>
+
+
+                        <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:150px">
+                            <button ng-click="RedirectToEdit(nutrient)" class="btn btn-outline-success AngularButtons">
+                                <i class="fa fa-pen"></i>
+                            </button> |
+                            @*<button ng-click="RedirectToDetails(nutrient)" class="btn btn-outline-info AngularButtons">
+                                <i class="fa fa-clipboard"></i>
+                            </button> |*@
+
+                            <button ng-click="DelNutrient(nutrient)" class="btn btn-outline-danger AngularButtons">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <div>
+                                <div ng-if="resultMessage == 'Update Successful'">
+
+                                    <font style="color:darkgreen">{{resultMessage}}</font><i class="fa fa-check"></i>
+                                </div>
+                                <div ng-if="resultMessage == 'Error saving'">
+
+                                    <font style="color:red">{{resultMessage}}</font><i class="fa fa-exclamation"></i>
+                                </div>
+                            </div>
+                        </td>
+                        <td align="right" colspan="2">
+                            <div ng-if="(IngredientNutrition|filter:query).length > 0">
+                                <button class="btn alert-warning AngularButtons border-dark" ng-click="RedirectToUpdate(IngredientNutrition)">
+                                    &nbsp;<i style="height:15px" class=" fa fa-save"></i> Save your changes&nbsp;
+                                </button>
+                            </div>
+                        </td>
+
+                    </tr>
+
+                </table>
+            </td>
+            </tr>
+        </table>
+
+                <div>
+                    <a href="@Url.Action("Create", "Ingredient_Nutrients", new { IngredID = ViewBag.IngredNameID })" class="btn alert-success" role="button"><i class="fa fa-plus"></i> Add Item</a>
+                </div>
+
+</div>

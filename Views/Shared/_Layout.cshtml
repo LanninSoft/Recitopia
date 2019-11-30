@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Recitopia_LastChance</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    <link href="~/font-awesome/css/all.css" rel="stylesheet" />
+    <!-- In production use:
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+    -->
+    <script src="~/angular.js/angular.js"></script>
+    <script src="~/angular.js/angular-route.js"></script>
+    <script src="~/angular.js/app/app.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <style>
+        hoverdiv {
+            box-shadow: 10px 10px 5px grey;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid box effect8" style="background-color:whitesmoke;">
+        <table width="100%" align="center" class="table-responsive-lg">
+            <tr>
+                <td>
+                    <div style="font-size:30px">
+
+                        <a href="http://www.Traitopia.com" target="_blank" style="text-decoration: none">Recitopia</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <nav class="navbar navbar-expand-lg navbar-dark bg-dark " style="background-color:black;">
+
+                        <div class="container-fluid">
+
+                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+
+                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                <ul class="navbar-nav mr-auto">
+                                    <li class="nav-item active">
+                                        <a class="nav-link" href="@Url.Action("Index", "Home")">Home<span class="sr-only">(current)</span></a>
+
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="@Url.Action("Index", "Recipes")">Recipes</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="@Url.Action("Index", "Ingredients")">Ingredients</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="@Url.Action("Index", "Nutritions")">Nutrition</a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="@Url.Action("Index", "Components")">Allergens</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="@Url.Action("Index", "Serving_Sizes")">Serving Sizes</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="@Url.Action("Index", "Meal_Category")">Categories</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="@Url.Action("Index", "Vendors")">Vendors</a>
+                                    </li>
+
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Options
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <a class="dropdown-item" href="#">User Management</a>
+                                            <a class="dropdown-item" href="@Url.Action("Index", "Admin")">Group Management</a>
+
+                                        </div>
+                                    </li>
+
+                                </ul>
+
+                            </div>
+
+                        </div>
+                    </nav>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <partial name="_LoginPartial" />
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <div class="container body-content">
+                        @RenderBody()
+                        <br />
+                        <hr />
+                        <footer>
+
+                            <p>&copy; @DateTime.Now.Year - Recitopia</p>
+                        </footer>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

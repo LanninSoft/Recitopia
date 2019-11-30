@@ -1,0 +1,191 @@
+﻿@model Recitopia_LastChance.Models.Ingredient
+
+@{
+    ViewBag.Title = "Details";
+}
+
+    <table width="100%" class="table-borderless">
+        <tr>
+            <th style="font-size:20px">
+                Ingredient Details
+            </th>
+        </tr>
+        <tr>
+            <th style="font-size:30px;background-color:blanchedalmond">
+                @ViewBag.IngredientName
+            </th>
+        </tr>
+    </table>
+
+<div>
+   
+   
+    <table width="100%" border="0">
+        <tr>
+            <td width="30%" valign="top" style="font-size:13px">
+                <table width=100% class="table-striped" border="1">
+                    <tr>
+                        <th  style="background-color:darkseagreen;font-size:15px">
+                            Details
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            Ingredient Name
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(model => model.Ingred_name)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Cost per lb
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(model => model.Cost_per_lb)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Cost $
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(model => model.Cost)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Vendor Name
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(model => model.Vendor.Vendor_Name)
+                        </td>
+                    </tr>
+                    @if (Model.Notes != null)
+                    {
+                        <tr>
+                            <th>
+                                Notes
+                            </th>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(model => model.Notes)
+                            </td>
+
+                        </tr>
+
+                    }
+                    @if (Model.Brand != null)
+                    {
+                        <tr>
+                            <th>
+                                Brand
+                            </th>
+
+                        </tr>
+
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(model => model.Brand)
+                            </td>
+
+                        </tr>
+                    }
+                </table>
+            </td>
+            <td width="65%" valign="top" align="right" style="font-size:13px">
+                <table border="1" width="100%" class="table-striped">
+                    <tr>
+                        <th colspan="2" style="background-color:darkseagreen;font-size:15px">
+                            Nutritients
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            Nutrient Name
+                        </th>
+                        <th>
+                            Nutrition/100g
+                        </th>
+
+
+                    </tr>
+
+                    @foreach (var item in ViewBag.IngredientNutritions)
+                    {
+                        <tr>
+                            <td>
+                                @item.Nutrition_Item
+                            </td>
+                            <td>
+                                @item.Nut_per_100_grams
+                            </td>
+
+
+                        </tr>
+                    }
+                </table>
+                <br />
+                <table border="1" width="100%" class="table-striped">
+                    <tr>
+                        <th  style="background-color:darkseagreen;font-size:15px">
+                            Allergens
+                        </th>
+                    </tr>
+                    <tr>
+                        
+                        <th>
+                            Allergen Components
+                        </th>
+
+
+                    </tr>
+
+                    @if (ViewBag.RComponents != null)
+                        {
+                            foreach (var allergen in ViewBag.RComponents)
+                            {
+                                if (allergen != null)
+                                {
+                                    <tr>
+                                        <td>
+                                            <span> @allergen </span>
+                                        </td>
+                                    </tr>
+                                }
+                                @*else
+                                {
+                                    <tr>
+                                        <td>
+
+                                           Once Ingredients are added, this will automatically populate.
+                                        </td>
+                                    </tr>
+                                }*@
+
+                            }
+                        }
+                </table>
+            </td>
+        </tr>
+        
+
+    </table>
+    
+    
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Ingredient_Id }) |
+    @Html.ActionLink("Back to List", "Index")|
+    @Html.ActionLink("Create Copy", "CreateCopy", new { id = Model.Ingredient_Id })
+</p>

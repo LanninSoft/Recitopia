@@ -1,0 +1,81 @@
+﻿@model Recitopia_LastChance.Models.Recipe
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <font style="color:red">@ViewBag.ErrorMessage</font>
+}
+
+
+
+<font class="alert-danger">Are you sure you want to delete '@Model.Recipe_Name'?  All associated ingredient relationships will also be removed.</font>
+<div>
+   
+    
+    <dl class="dl-horizontal" style="font-size:13px">
+        <dt>
+            @*@Html.DisplayNameFor(model => model.Recipe_Name)*@
+            Recipe Name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Recipe_Name)
+        </dd>
+
+        <dt>
+            @*@Html.DisplayNameFor(model => model.Gluten_Free)*@
+            Gluten Free
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Gluten_Free)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SKU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SKU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UPC)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UPC)
+        </dd>
+
+        <dt>
+            Notes
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Notes)
+        </dd>
+
+        <dt>
+            @*@Html.DisplayNameFor(model => model.Meal_Category.Category_Name)*@
+            Category
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Meal_Category.Category_Name)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn alert-warning" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

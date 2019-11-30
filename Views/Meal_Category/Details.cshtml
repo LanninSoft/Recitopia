@@ -1,0 +1,45 @@
+﻿@model Recitopia_LastChance.Models.Meal_Category
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<table width="100%" class="table-borderless">
+    <tr>
+        <th style="font-size:20px">
+            Details
+        </th>
+    </tr>
+    <tr>
+        <th style="font-size:30px;background-color:blanchedalmond">
+            @Model.Category_Name
+        </th>
+    </tr>
+</table>
+
+<div>
+
+   
+    <dl class="dl-horizontal"  style="font-size:13px">
+        <dt>
+            Category Name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Category_Name)
+        </dd>
+
+        <dt>
+            Notes
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Notes)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Category_Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

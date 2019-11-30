@@ -1,0 +1,45 @@
+﻿@model Recitopia_LastChance.Models.Recipe_Ingredients
+
+@{
+    ViewBag.Title = "Details";
+}
+
+
+<table width="100%" class="table-borderless">
+   
+    <tr>
+        <th style="font-size:30px;background-color:blanchedalmond">
+            Details
+        </th>
+    </tr>
+</table>
+<div>
+    
+   
+    @Html.HiddenFor(model => model.Recipe_Id,
+                                                new { id = "Recipe_Id", Value = ViewBag.Rec_Id })
+    <dl class="dl-horizontal"  style="font-size:13px">
+        <dt>
+            <font style="font-size:13px;font-weight:bolder">Ingredient Name</font>
+            
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ingredient.Ingred_name)
+        </dd>
+
+        <dt>
+            
+            <font style="font-size:13px;font-weight:bolder">Amount g</font>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Amount_g)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index", new { recipeID = Model.Recipe.Recipe_Id } )
+</p>

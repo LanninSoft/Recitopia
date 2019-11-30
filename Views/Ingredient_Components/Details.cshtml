@@ -1,0 +1,40 @@
+﻿@model Recitopia_LastChance.Models.Ingredient_Components
+
+@{
+    ViewBag.Title = "Details";
+}
+
+
+    <table width="100%" class="table-borderless">
+        
+        <tr>
+            <th style="font-size:25px;background-color:blanchedalmond">
+                Details
+            </th>
+        </tr>
+    </table>
+<div>
+   
+   
+    <dl class="dl-horizontal" style="font-size:13px">
+        <dt>
+            Ingredient Name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ingredients.Ingred_name)
+        </dd>
+        <dt>
+            Component Name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Components.Component_Name)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index", new { IngredID = Model.Ingredients.Ingredient_Id })
+</p>

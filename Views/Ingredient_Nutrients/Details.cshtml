@@ -1,0 +1,48 @@
+﻿@model Recitopia_LastChance.Models.Ingredient_Nutrients
+
+@{
+    ViewBag.Title = "Details";
+}
+
+    <table width="100%" class="table-borderless">
+
+        <tr>
+            <th style="font-size:25px;background-color:blanchedalmond">
+                Details
+            </th>
+        </tr>
+    </table>
+<div>
+    
+    
+    <dl class="dl-horizontal" style="font-size:13px">
+        <dt>
+            Ingredient Name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ingredients.Ingred_name)
+        </dd>
+
+        <dt>
+            Nutrition Item
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nutrition.Nutrition_Item)
+        </dd>
+
+        <dt>
+            Nutrition/100g
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nut_per_100_grams)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index", new { IngredID = Model.Ingred_Id })
+</p>

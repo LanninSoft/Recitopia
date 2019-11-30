@@ -1,0 +1,49 @@
+﻿@model Recitopia_LastChance.Models.Recipe_Ingredients
+
+@{
+    ViewBag.Title = "Delete";
+
+}
+@if (ViewBag.Error != null)
+{
+    <font style="color:red">@ViewBag.Error</font>
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <font style="color:red">@ViewBag.ErrorMessage</font>
+}
+<font class="alert-danger">Are you sure you want to delete this?</font>
+
+<div>
+    
+   
+    <dl class="dl-horizontal"style="font-size:13px">
+        <dt>
+            Recipe Name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Recipe.Recipe_Name)
+        </dd>
+        <dt>
+            Ingredient Name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ingredient.Ingred_name)
+        </dd>
+
+
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn alert-danger" /> |
+            @Html.ActionLink("Back to List", "Index", new { recipeID = Model.Recipe_Id})
+        </div>
+    }
+</div>

@@ -1,0 +1,46 @@
+﻿@model Recitopia_LastChance.Models.Serving_Sizes
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <font style="color:red">@ViewBag.ErrorMessage</font>
+}
+
+
+
+<font class="alert-danger">Are you sure you want to delete this Serving Size?</font>
+<div>
+    
+    
+    <dl class="dl-horizontal" style="font-size:13px">
+        <dt>
+            Serving Size
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Serving_Size)
+        </dd>
+
+        <dt>
+            Notes
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Notes)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn alert-danger" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

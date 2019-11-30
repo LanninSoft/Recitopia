@@ -1,0 +1,53 @@
+﻿@model Recitopia_LastChance.Models.Nutrition
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<table width="100%" class="table-borderless">
+    <tr>
+        <th>
+            Nutrition Details
+        </th>
+    </tr>
+    <tr>
+        <th style="font-size:25px;background-color:blanchedalmond">
+            @Model.Nutrition_Item
+        </th>
+    </tr>
+</table>
+
+<div>
+
+    
+    <dl class="dl-horizontal" style="font-size:13px">
+        <dt>
+            Nutrition Item
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nutrition_Item)
+        </dd>
+
+        <dt>
+            DV
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DV)
+        </dd>
+
+        <dt>
+            Measurement
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Measurement)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Nutrition_Item_Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
