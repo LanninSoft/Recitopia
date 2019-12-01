@@ -1,6 +1,6 @@
 using System;
 
-namespace Recitopia_LastChance.Models
+namespace Recitopia.Models
 {
     public class ErrorViewModel
     {

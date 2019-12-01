@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace Recitopia_LastChance.Models
+namespace Recitopia.Models
 {
     public class RecitopiaDBContext : IdentityDbContext<IdentityUser>
     {

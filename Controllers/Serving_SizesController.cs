@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Recitopia_LastChance.Models;
+using Recitopia.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Recitopia_LastChance.Controllers
+namespace Recitopia.Controllers
 {
     public class Serving_SizesController : AuthorizeController
     {

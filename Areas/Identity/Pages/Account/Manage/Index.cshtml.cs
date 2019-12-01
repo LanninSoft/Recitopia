@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Recitopia_LastChance.Areas.Identity.Pages.Account.Manage
+namespace Recitopia.Areas.Identity.Pages.Account.Manage
 {
     public partial class IndexModel : PageModel
     {

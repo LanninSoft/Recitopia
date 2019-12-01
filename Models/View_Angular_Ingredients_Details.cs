@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Recitopia_LastChance.Models
+namespace Recitopia.Models
 {
     public partial class View_Angular_Ingredients_Details
     {

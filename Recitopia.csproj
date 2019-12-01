@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <UserSecretsId>aspnet-Recitopia_LastChance-1E3915D3-539E-4759-9F05-2F4C84525BC2</UserSecretsId>
+    <UserSecretsId>aspnet-Recitopia-1E3915D3-539E-4759-9F05-2F4C84525BC2</UserSecretsId>
   </PropertyGroup>
 
 

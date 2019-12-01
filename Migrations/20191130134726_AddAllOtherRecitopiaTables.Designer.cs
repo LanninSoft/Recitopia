@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Recitopia_LastChance.Models;
+using Recitopia.Models;
 
-namespace Recitopia_LastChance.Migrations
+namespace Recitopia.Migrations
 {
     [DbContext(typeof(RecitopiaDBContext))]
     [Migration("20191130134726_AddAllOtherRecitopiaTables")]

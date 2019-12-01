@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Recitopia_LastChance.Migrations
+namespace Recitopia.Migrations
 {
     public partial class AddCustomerTables : Migration
     {

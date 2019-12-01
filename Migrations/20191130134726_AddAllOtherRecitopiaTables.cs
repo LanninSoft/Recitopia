@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
-namespace Recitopia_LastChance.Migrations
+namespace Recitopia.Migrations
 {
     public partial class AddAllOtherRecitopiaTables : Migration
     {

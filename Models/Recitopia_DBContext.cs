@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.SqlServer.Infrastructure.Internal;
 using Microsoft.Extensions.Configuration;
-using Recitopia_LastChance.Areas.Identity;
+using Recitopia.Areas.Identity;
 
-namespace Recitopia_LastChance.Models
+namespace Recitopia.Models
 {
     public partial class Recitopia_DBContext : DbContext 
     {

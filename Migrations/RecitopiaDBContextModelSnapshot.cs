@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Recitopia_LastChance.Models;
+using Recitopia.Models;
 
-namespace Recitopia_LastChance.Migrations
+namespace Recitopia.Migrations
 {
     [DbContext(typeof(RecitopiaDBContext))]
     partial class RecitopiaDBContextModelSnapshot : ModelSnapshot

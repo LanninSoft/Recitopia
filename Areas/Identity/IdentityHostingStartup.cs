@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Recitopia_LastChance.Models;
+using Recitopia.Models;
 
-[assembly: HostingStartup(typeof(Recitopia_LastChance.Areas.Identity.IdentityHostingStartup))]
-namespace Recitopia_LastChance.Areas.Identity
+[assembly: HostingStartup(typeof(Recitopia.Areas.Identity.IdentityHostingStartup))]
+namespace Recitopia.Areas.Identity
 {
     public class IdentityHostingStartup : IHostingStartup
     {
