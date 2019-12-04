@@ -8,7 +8,7 @@
     },
     {
       "library": "font-awesome@5.11.2",
-      "destination": "wwwroot/font-awesome/"
+      "destination": "wwwroot/lib/font-awesome/"
     }
   ]
 }
