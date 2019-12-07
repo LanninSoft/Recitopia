@@ -12,6 +12,8 @@
     <Compile Remove="Migrations\20191207122838_AddSecurityModels.Designer.cs" />
     <Compile Remove="Migrations\20191207124041_ExtendSecurityModels.cs" />
     <Compile Remove="Migrations\20191207124041_ExtendSecurityModels.Designer.cs" />
+    <Compile Remove="Migrations\20191207170425_AddVirtualDBSetForUsers.cs" />
+    <Compile Remove="Migrations\20191207170425_AddVirtualDBSetForUsers.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

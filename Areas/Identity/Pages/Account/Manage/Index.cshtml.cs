@@ -89,19 +89,32 @@ namespace Recitopia.Areas.Identity.Pages.Account.Manage
                 await LoadAsync(user);
                 return Page();
             }
+            
+                //USE LINQ TO UPDATE USER
+                var appuser = db.AppUsers.Find(user.Id);
+                if (appuser != null)
+                {
+                    appuser.FirstName = Input.FirstName;
+                    appuser.LastName = Input.LastName;
+                    
+                    
+                    db.SaveChanges();
+                }
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             if (Input.PhoneNumber != phoneNumber)
             {
                 var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-                //USE LINQ TO UPDATE USER
-               
 
                 if (!setPhoneResult.Succeeded)
                 {
                     var userId = await _userManager.GetUserIdAsync(user);
                     throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
                 }
+
+              
+
+
             }
 
             await _signInManager.RefreshSignInAsync(user);
