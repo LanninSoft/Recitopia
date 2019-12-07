@@ -40,16 +40,7 @@ namespace Recitopia.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    FirstName = table.Column<string>(maxLength: 100, nullable: true),
-                    LastName = table.Column<string>(maxLength: 100, nullable: true),
-                    Address1 = table.Column<string>(maxLength: 256, nullable: true),
-                    Address2 = table.Column<string>(maxLength: 256, nullable: true),
-                    City = table.Column<string>(maxLength: 100, nullable: true),
-                    State = table.Column<string>(maxLength: 25, nullable: true),
-                    ZipCode = table.Column<string>(maxLength: 25, nullable: true),
-                    WebUrl = table.Column<string>(maxLength: 500, nullable: true),
-                    Notes = table.Column<string>(maxLength: 4000, nullable: true),
-                    Customer_Id = table.Column<int>(nullable: true)
+                    
                 },
                 constraints: table =>
                 {

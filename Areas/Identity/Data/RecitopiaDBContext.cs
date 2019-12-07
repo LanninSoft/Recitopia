@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Recitopia.Models
 {
-    public class RecitopiaDBContext : IdentityDbContext<IdentityUser>
+    public class RecitopiaDBContext : IdentityDbContext<AppUser, AppRole, string>
     {
         private string connstr;
 

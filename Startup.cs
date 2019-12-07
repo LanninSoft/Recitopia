@@ -12,6 +12,9 @@ using Recitopia.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Recitopia.Models;
+using Recitopia.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace Recitopia
 {
@@ -27,27 +30,35 @@ namespace Recitopia
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
+            //NEW
+            services.AddIdentity<AppUser, AppRole>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<RecitopiaDBContext>()
+              .AddDefaultTokenProviders();
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            //    .AddEntityFrameworkStores<ApplicationDbContext>();
-
-            
             services.AddControllersWithViews()
                     .AddRazorRuntimeCompilation();
             services.AddRazorPages();
 
-            //services.AddIdentity<IdentityUser, IdentityRole>()
-            //.AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddTransient<IEmailSender, EmailSender>(i =>
+                new EmailSender(
+                    Configuration["EmailSender:PrimaryDomain"],
+                    Configuration.GetValue<int>("EmailSender:PrimaryPort"),
+                    Configuration["EmailSender:UsernameEmail"],
+                    Configuration["EmailSender:UsernamePassword"],
+                    Configuration["EmailSender:UsernameEmail"],
+                    Configuration["EmailSender:ToEmail"],
+                    Configuration["EmailSender:CcEmail"],
+                    Configuration.GetValue<bool>("EmailSender:enableSsl")
+                )
+            );
 
-            //services.AddAuthorization(options => {
-            //    options.AddPolicy("readonlypolicy",
-            //        builder => builder.RequireRole("Administrator", "User"));
-            //    options.AddPolicy("writepolicy",
-            //        builder => builder.RequireRole("Administrator"));
-            //});
             services.AddMvc()
                .AddRazorPagesOptions(options =>
                {

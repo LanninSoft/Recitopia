@@ -19,8 +19,14 @@ namespace Recitopia.Areas.Identity
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("DefaultConnection")));
 
-                services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                    .AddEntityFrameworkStores<RecitopiaDBContext>();
+                //services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                //    .AddEntityFrameworkStores<RecitopiaDBContext>();
+
+                ////services.AddIdentity<AppUser, AppRole>(options =>
+                ////{
+                ////    options.User.RequireUniqueEmail = true;
+                ////}).AddEntityFrameworkStores<RecitopiaDBContext>();
+
             });
         }
     }
