@@ -447,7 +447,7 @@ namespace Recitopia.Models
         public virtual DbSet<Recipe_Ingredients> Recipe_Ingredients { get; set; }
         public virtual DbSet<Serving_Sizes> Serving_Sizes { get; set; }
         public virtual DbSet<Vendor> Vendor { get; set; }
-        //public virtual DbSet<View_All_Ingredient_Components> View_All_Ingredient_Components { get; set; }
+        public virtual DbSet<AppUser> AppUsers { get; set; }
         //public virtual DbSet<View_All_Ingredient_Nutrients> View_All_Ingredient_Nutrients { get; set; }
         //public virtual DbSet<View_All_Recipe_Components> View_All_Recipe_Components { get; set; }
         //public virtual DbSet<View_All_Recipe_Ingredients> View_All_Recipe_Ingredients { get; set; }

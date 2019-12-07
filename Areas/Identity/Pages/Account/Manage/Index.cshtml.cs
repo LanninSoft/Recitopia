@@ -14,7 +14,7 @@ namespace Recitopia.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
-
+        private RecitopiaDBContext db = new RecitopiaDBContext();
         public IndexModel(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager)
@@ -94,7 +94,8 @@ namespace Recitopia.Areas.Identity.Pages.Account.Manage
             if (Input.PhoneNumber != phoneNumber)
             {
                 var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-                //var updateUserInfo = await _userManager.
+                //USE LINQ TO UPDATE USER
+               
 
                 if (!setPhoneResult.Succeeded)
                 {
