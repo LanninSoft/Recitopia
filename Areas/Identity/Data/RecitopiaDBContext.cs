@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Recitopia.Models;
 
 namespace Recitopia.Models
 {
@@ -448,6 +449,12 @@ namespace Recitopia.Models
         public virtual DbSet<Serving_Sizes> Serving_Sizes { get; set; }
         public virtual DbSet<Vendor> Vendor { get; set; }
         public virtual DbSet<AppUser> AppUsers { get; set; }
+
+        public virtual DbSet<AppRole> AppRoles { get; set; }
+
+        public DbSet<Recitopia.Models.Customers> Customers { get; set; }
+
+        public DbSet<Recitopia.Models.Customer_Users> Customer_Users { get; set; }
 
         //public virtual DbSet<View_All_Ingredient_Nutrients> View_All_Ingredient_Nutrients { get; set; }
         //public virtual DbSet<View_All_Recipe_Components> View_All_Recipe_Components { get; set; }

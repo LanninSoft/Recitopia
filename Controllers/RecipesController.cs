@@ -724,7 +724,7 @@ namespace Recitopia.Controllers
                 ViewBag.ErrorMessage = "Uh Oh, There is a problem 2";
                 return View(recipe);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 ViewBag.ErrorMessage = "Uh Oh, There is a problem 3";
                 return View(recipe);

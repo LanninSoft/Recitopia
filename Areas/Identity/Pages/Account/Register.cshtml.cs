@@ -15,8 +15,10 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Recitopia.Models;
 
+
 namespace Recitopia.Areas.Identity.Pages.Account
 {
+    
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
@@ -24,6 +26,7 @@ namespace Recitopia.Areas.Identity.Pages.Account
         private readonly UserManager<AppUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private RecitopiaDBContext db = new RecitopiaDBContext();
 
         public RegisterModel(
             UserManager<AppUser> userManager,
@@ -43,7 +46,6 @@ namespace Recitopia.Areas.Identity.Pages.Account
         public string ReturnUrl { get; set; }
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
-
         public class InputModel
         {
             [Required]
@@ -82,6 +84,9 @@ namespace Recitopia.Areas.Identity.Pages.Account
                     Id = Guid.NewGuid().ToString()
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
+
+
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");

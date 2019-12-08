@@ -7,60 +7,74 @@ namespace Recitopia.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-               name: "Groups",
-               columns: table => new
-               {
-                   Group_Id = table.Column<int>(nullable: false, defaultValueSql: "((1))"),
-                   Group_Name = table.Column<string>(maxLength: 50, nullable: false),
-                   Phone = table.Column<string>(maxLength: 15, nullable: true),
-                   Email = table.Column<string>(maxLength: 50, nullable: true),
-                   Address1 = table.Column<string>(maxLength: 50, nullable: true),
-                   Address2 = table.Column<string>(maxLength: 50, nullable: true),
-                   City = table.Column<string>(maxLength: 25, nullable: true),
-                   State = table.Column<string>(maxLength: 10, nullable: true),
-                   Zip = table.Column<int>(nullable: true),
-                   Web_URL = table.Column<string>(maxLength: 50, nullable: true),
-                   Notes = table.Column<string>(type: "text", nullable: true)
-               },
-               constraints: table =>
-               {
-                   table.PrimaryKey("FK_Group_ID_ToTable", x => x.Group_Id);
-               });
-
-            migrationBuilder.CreateTable(
-                name: "Group_Users",
+                name: "Customers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Customer_Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Group_Id = table.Column<int>(nullable: false, defaultValueSql: "((1))"),
-                    User_Id = table.Column<string>(nullable: true),
+                    Customer_Name = table.Column<string>(nullable: true),
+                    Phone = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: true),
+                    Address1 = table.Column<string>(nullable: true),
+                    Address2 = table.Column<string>(nullable: true),
+                    City = table.Column<string>(nullable: true),
+                    State = table.Column<string>(nullable: true),
+                    Zip = table.Column<int>(nullable: true),
+                    Web_URL = table.Column<string>(nullable: true),
                     Notes = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Group_Users", x => x.Id);
+                    table.PrimaryKey("PK_Customers", x => x.Customer_Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Customer_Users",
+                columns: table => new
+                {
+                    CU_Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Customer_Id = table.Column<int>(nullable: false),
+                    Id = table.Column<string>(maxLength: 450, nullable: true),
+                    Notes = table.Column<string>(nullable: true),
+                    CustomersCustomer_Id = table.Column<int>(nullable: true),
+                    AppUsersId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Customer_Users", x => x.CU_Id);
+                    //table.ForeignKey(
+                    //    name: "FK_Customer_Users_AspNetUsers_AppUsersId",
+                    //    column: x => x.AppUsersId,
+                    //    principalTable: "AspNetUsers",
+                    //    principalColumn: "Id",
+                    //    onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Group_Users_ToTable",
-                        column: x => x.Group_Id,
-                        principalTable: "Groups",
-                        principalColumn: "Group_Id",
+                        name: "FK_Customer_Users_Customers_Id",
+                        column: x => x.Customer_Id,
+                        principalTable: "Customers",
+                        principalColumn: "Customer_Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Group_Users_Group_Id",
-                table: "Group_Users",
-                column: "Group_Id");
+                name: "IX_Customer_Users_AppUsersId",
+                table: "Customer_Users",
+                column: "Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Customer_Users_CustomersCustomer_Id",
+                table: "Customer_Users",
+                column: "CustomersCustomer_Id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Group_Users");
+                name: "Customer_Users");
 
             migrationBuilder.DropTable(
-                name: "Groups");
+                name: "Customers");
         }
     }
 }
