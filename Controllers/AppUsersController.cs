@@ -13,11 +13,11 @@ namespace Recitopia.Controllers
 {
     public class AppUsersController : AuthorizeController
     {
-        private readonly RecitopiaDBContext _context;
+        private readonly RecitopiaDBContext db;
         private readonly UserManager<AppUser> _userManager;
         public AppUsersController(RecitopiaDBContext context, UserManager<AppUser> userManager)
         {
-            _context = context;
+            db = context;
             _userManager = userManager;
 
         }
@@ -25,7 +25,7 @@ namespace Recitopia.Controllers
         // GET: AppUsers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.AppUsers.ToListAsync());
+            return View(await db.AppUsers.ToListAsync());
         }
 
         // GET: AppUsers/Details/5
@@ -36,7 +36,7 @@ namespace Recitopia.Controllers
                 return NotFound();
             }
 
-            var appUser = await _context.AppUsers
+            var appUser = await db.AppUsers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (appUser == null)
             {
@@ -61,8 +61,8 @@ namespace Recitopia.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(appUser);
-                await _context.SaveChangesAsync();
+                db.Add(appUser);
+                await db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(appUser);
@@ -76,11 +76,23 @@ namespace Recitopia.Controllers
                 return NotFound();
             }
 
-            var appUser = await _context.AppUsers.FindAsync(id);
+            var appUser = await db.AppUsers.FindAsync(id);
+
             if (appUser == null)
             {
                 return NotFound();
             }
+
+            var userRoles = db.AppRoles;
+
+            IEnumerable<SelectListItem> appUserRoles = db.AppRoles.Select(c => new SelectListItem
+            {
+                Value = c.Id,
+                Text = c.Name
+
+            });
+            ViewBag.UserRoles = appUserRoles;
+
             return View(appUser);
         }
 
@@ -100,7 +112,7 @@ namespace Recitopia.Controllers
             {
                 
                 //USE LINQ TO UPDATE USER
-                var appuser = _context.AppUsers.Find(id);
+                var appuser = db.AppUsers.Find(id);
                 try
                 {
                     if (appuser != null)
@@ -115,7 +127,7 @@ namespace Recitopia.Controllers
                         appuser.ZipCode = appUser.ZipCode;
                         appuser.WebUrl = appUser.WebUrl;
                         appuser.Notes = appUser.Notes;
-                        appuser.Customer_Id = appUser.Customer_Id;
+                        appuser.Site_Role_Id = appUser.Site_Role_Id;
                         appuser.Email = appUser.Email;
                         appuser.EmailConfirmed = appUser.EmailConfirmed;
                         appuser.PhoneNumberConfirmed = appUser.PhoneNumberConfirmed;
@@ -124,7 +136,7 @@ namespace Recitopia.Controllers
                         appuser.LockoutEnabled = appUser.LockoutEnabled;
                         appuser.AccessFailedCount = appUser.AccessFailedCount;
 
-                        await _context.SaveChangesAsync();
+                        await db.SaveChangesAsync();
                     }
 
                 }
@@ -152,7 +164,7 @@ namespace Recitopia.Controllers
                 return NotFound();
             }
 
-            var appUser = await _context.AppUsers
+            var appUser = await db.AppUsers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (appUser == null)
             {
@@ -167,15 +179,15 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var appUser = await _context.AppUsers.FindAsync(id);
-            _context.AppUsers.Remove(appUser);
-            await _context.SaveChangesAsync();
+            var appUser = await db.AppUsers.FindAsync(id);
+            db.AppUsers.Remove(appUser);
+            await db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool AppUserExists(string id)
         {
-            return _context.AppUsers.Any(e => e.Id == id);
+            return db.AppUsers.Any(e => e.Id == id);
         }
     }
 }

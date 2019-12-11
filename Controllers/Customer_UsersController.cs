@@ -12,17 +12,41 @@ namespace Recitopia.Controllers
 {
     public class Customer_UsersController : Controller
     {
-        private readonly RecitopiaDBContext _context;
+        private readonly RecitopiaDBContext db;
 
         public Customer_UsersController(RecitopiaDBContext context)
         {
-            _context = context;
+            db = context;
+
+
+
         }
         [Authorize]
         // GET: Customer_Users
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Customer_Users.ToListAsync());
+
+
+            //BUILD VIEW FOR ANGULARJS RENDERING
+            var query =
+               from t1 in db.Customer_Users.AsQueryable()
+               join t2 in db.AppUsers.AsQueryable() on t1.Id equals t2.Id into t2g
+               from t2 in t2g.DefaultIfEmpty()
+               join t3 in db.Customers.AsQueryable() on t1.Customer_Id equals t3.Customer_Id into t3g
+               from t3 in t3g.DefaultIfEmpty()
+               select new Customer_Users()
+               {
+                   CU_Id = t1.CU_Id,
+                   Id = t1.Id,
+                   Customer_Id = t1.Customer_Id,
+                   Notes = t1.Notes,
+                   Customer_Name = t3.Customer_Name,
+                   User_Name = t2.FirstName + ' ' + t2.LastName
+               };
+
+            return View(await query.ToListAsync());
+
+
         }
 
         // GET: Customer_Users/Details/5
@@ -33,7 +57,7 @@ namespace Recitopia.Controllers
                 return NotFound();
             }
 
-            var customer_Users = await _context.Customer_Users
+            var customer_Users = await db.Customer_Users
                 .FirstOrDefaultAsync(m => m.CU_Id == id);
             if (customer_Users == null)
             {
@@ -46,6 +70,28 @@ namespace Recitopia.Controllers
         // GET: Customer_Users/Create
         public IActionResult Create()
         {
+
+            var Customers = db.Customers;
+
+            IEnumerable<SelectListItem> appUserCustomers = db.Customers.Select(c => new SelectListItem
+            {
+                Value = c.Customer_Id.ToString(),
+                Text = c.Customer_Name
+
+            });
+            ViewBag.Customers = appUserCustomers;
+
+            var appUsers = db.AppUsers;
+
+            IEnumerable<SelectListItem> appUserList = db.AppUsers.Select(c => new SelectListItem
+            {
+                Value = c.Id.ToString(),
+                Text = c.FirstName + ' ' + c.LastName
+
+            });
+            ViewBag.AppUsers = appUserList;
+
+
             return View();
         }
 
@@ -54,12 +100,12 @@ namespace Recitopia.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CU_Id,Customer_Id,Id,Notes")] Customer_Users customer_Users)
+        public async Task<IActionResult> Create([FromForm] Customer_Users customer_Users)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(customer_Users);
-                await _context.SaveChangesAsync();
+                db.Add(customer_Users);
+                await db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(customer_Users);
@@ -73,11 +119,33 @@ namespace Recitopia.Controllers
                 return NotFound();
             }
 
-            var customer_Users = await _context.Customer_Users.FindAsync(id);
+            var customer_Users = await db.Customer_Users.FindAsync(id);
+
             if (customer_Users == null)
             {
                 return NotFound();
             }
+
+            var Customers = db.Customers;
+
+            IEnumerable<SelectListItem> appUserCustomers = db.Customers.Select(c => new SelectListItem
+            {
+                Value = c.Customer_Id.ToString(),
+                Text = c.Customer_Name
+            });
+
+            ViewBag.Customers = appUserCustomers;
+
+            var appUsers = db.AppUsers;
+
+            IEnumerable<SelectListItem> appUserList = db.AppUsers.Select(c => new SelectListItem
+            {
+                Value = c.Id.ToString(),
+                Text = c.FirstName + ' ' + c.LastName
+            });
+
+            ViewBag.AppUsers = appUserList;
+
             return View(customer_Users);
         }
 
@@ -86,19 +154,15 @@ namespace Recitopia.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CU_Id,Customer_Id,Id,Notes")] Customer_Users customer_Users)
+        public async Task<IActionResult> Edit(int id, [FromForm] Customer_Users customer_Users)
         {
-            if (id != customer_Users.CU_Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
+           
+            if (customer_Users.CU_Id != 0)
             {
                 try
                 {
-                    _context.Update(customer_Users);
-                    await _context.SaveChangesAsync();
+                    db.Update(customer_Users);
+                    await db.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -113,6 +177,10 @@ namespace Recitopia.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+
+
+
             return View(customer_Users);
         }
 
@@ -124,7 +192,7 @@ namespace Recitopia.Controllers
                 return NotFound();
             }
 
-            var customer_Users = await _context.Customer_Users
+            var customer_Users = await db.Customer_Users
                 .FirstOrDefaultAsync(m => m.CU_Id == id);
             if (customer_Users == null)
             {
@@ -139,15 +207,15 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var customer_Users = await _context.Customer_Users.FindAsync(id);
-            _context.Customer_Users.Remove(customer_Users);
-            await _context.SaveChangesAsync();
+            var customer_Users = await db.Customer_Users.FindAsync(id);
+            db.Customer_Users.Remove(customer_Users);
+            await db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool Customer_UsersExists(int id)
         {
-            return _context.Customer_Users.Any(e => e.CU_Id == id);
+            return db.Customer_Users.Any(e => e.CU_Id == id);
         }
     }
 }

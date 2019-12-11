@@ -6,14 +6,34 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20191130125929_CreateIdentitySchema.cs" />
+    <Compile Remove="Migrations\20191130125929_CreateIdentitySchema.Designer.cs" />
+    <Compile Remove="Migrations\20191130133043_AddCustomerTables.cs" />
+    <Compile Remove="Migrations\20191130133043_AddCustomerTables.Designer.cs" />
+    <Compile Remove="Migrations\20191130134726_AddAllOtherRecitopiaTables.cs" />
+    <Compile Remove="Migrations\20191130134726_AddAllOtherRecitopiaTables.Designer.cs" />
     <Compile Remove="Migrations\20191207104352_AddSecurityModels.cs" />
     <Compile Remove="Migrations\20191207104352_AddSecurityModels.Designer.cs" />
     <Compile Remove="Migrations\20191207122838_AddSecurityModels.cs" />
     <Compile Remove="Migrations\20191207122838_AddSecurityModels.Designer.cs" />
     <Compile Remove="Migrations\20191207124041_ExtendSecurityModels.cs" />
     <Compile Remove="Migrations\20191207124041_ExtendSecurityModels.Designer.cs" />
+    <Compile Remove="Migrations\20191207125516_ExtendSecurityModels.cs" />
+    <Compile Remove="Migrations\20191207125516_ExtendSecurityModels.Designer.cs" />
     <Compile Remove="Migrations\20191207170425_AddVirtualDBSetForUsers.cs" />
     <Compile Remove="Migrations\20191207170425_AddVirtualDBSetForUsers.Designer.cs" />
+    <Compile Remove="Migrations\20191210004652_Cleanup.cs" />
+    <Compile Remove="Migrations\20191210004652_Cleanup.Designer.cs" />
+    <Compile Remove="Migrations\20191210013243_Cleanup.cs" />
+    <Compile Remove="Migrations\20191210013243_Cleanup.Designer.cs" />
+    <Compile Remove="Migrations\20191210014053_Initial.cs" />
+    <Compile Remove="Migrations\20191210014053_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20191210192006_Discrepencies.cs" />
+    <Compile Remove="Migrations\20191210192006_Discrepencies.Designer.cs" />
+    <Compile Remove="Migrations\20191210200512_initial.cs" />
+    <Compile Remove="Migrations\20191210200512_initial.Designer.cs" />
+    <Compile Remove="Migrations\20191210201536_discrepency.cs" />
+    <Compile Remove="Migrations\20191210201536_discrepency.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

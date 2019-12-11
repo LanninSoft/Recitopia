@@ -452,11 +452,12 @@ namespace Recitopia.Models
 
         public virtual DbSet<AppRole> AppRoles { get; set; }
 
-        public DbSet<Recitopia.Models.Customers> Customers { get; set; }
+        public virtual DbSet<Customers> Customers { get; set; }
 
-        public DbSet<Recitopia.Models.Customer_Users> Customer_Users { get; set; }
+        public virtual DbSet<Customer_Users> Customer_Users { get; set; }
 
-        //public virtual DbSet<View_All_Ingredient_Nutrients> View_All_Ingredient_Nutrients { get; set; }
+        //public virtual DbSet<AppUser> AppUser { get; set; }
+
         //public virtual DbSet<View_All_Recipe_Components> View_All_Recipe_Components { get; set; }
         //public virtual DbSet<View_All_Recipe_Ingredients> View_All_Recipe_Ingredients { get; set; }
         //public virtual DbSet<View_Angular_Ingredient_Components_Details> View_Angular_Ingredient_Components_Details { get; set; }

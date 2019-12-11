@@ -38,9 +38,20 @@ namespace Recitopia
             }).AddEntityFrameworkStores<RecitopiaDBContext>()
               .AddDefaultTokenProviders();
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddEntityFrameworkSqlServer()
+                .AddDbContext<RecitopiaDBContext>(options =>
+                {
+                    options.UseSqlServer(Configuration["DefaultConnection"],
+                        sqlServerOptionsAction: sqlOptions =>
+                        {
+                            sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+                        });
+                }
+                );
 
             services.AddControllersWithViews()
                     .AddRazorRuntimeCompilation();

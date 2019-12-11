@@ -12,17 +12,17 @@ namespace Recitopia.Controllers
 {
     public class CustomersController : Controller
     {
-        private readonly RecitopiaDBContext _context;
+        private readonly RecitopiaDBContext db;
 
         public CustomersController(RecitopiaDBContext context)
         {
-            _context = context;
+            db = context;
         }
         [Authorize]
         // GET: Customers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Customers.ToListAsync());
+            return View(await db.Customers.ToListAsync());
         }
 
         // GET: Customers/Details/5
@@ -33,7 +33,7 @@ namespace Recitopia.Controllers
                 return NotFound();
             }
 
-            var customers = await _context.Customers
+            var customers = await db.Customers
                 .FirstOrDefaultAsync(m => m.Customer_Id == id);
             if (customers == null)
             {
@@ -58,8 +58,8 @@ namespace Recitopia.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(customers);
-                await _context.SaveChangesAsync();
+                db.Add(customers);
+                await db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(customers);
@@ -73,7 +73,7 @@ namespace Recitopia.Controllers
                 return NotFound();
             }
 
-            var customers = await _context.Customers.FindAsync(id);
+            var customers = await db.Customers.FindAsync(id);
             if (customers == null)
             {
                 return NotFound();
@@ -97,8 +97,8 @@ namespace Recitopia.Controllers
             {
                 try
                 {
-                    _context.Update(customers);
-                    await _context.SaveChangesAsync();
+                    db.Update(customers);
+                    await db.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -124,7 +124,7 @@ namespace Recitopia.Controllers
                 return NotFound();
             }
 
-            var customers = await _context.Customers
+            var customers = await db.Customers
                 .FirstOrDefaultAsync(m => m.Customer_Id == id);
             if (customers == null)
             {
@@ -139,15 +139,15 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var customers = await _context.Customers.FindAsync(id);
-            _context.Customers.Remove(customers);
-            await _context.SaveChangesAsync();
+            var customers = await db.Customers.FindAsync(id);
+            db.Customers.Remove(customers);
+            await db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CustomersExists(int id)
         {
-            return _context.Customers.Any(e => e.Customer_Id == id);
+            return db.Customers.Any(e => e.Customer_Id == id);
         }
     }
 }
