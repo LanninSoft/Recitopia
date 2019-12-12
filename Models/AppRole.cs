@@ -8,8 +8,16 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Recitopia.Models
 {
-    public class AppRole : IdentityRole<string>
+    public class AppRole : IdentityRole
     {
+        public AppRole() : base()         
+        { 
+        
+        }
+        public AppRole(string name) : base(name) 
+        {
+            
+        }
         
     }
 }

@@ -686,7 +686,7 @@ namespace Recitopia.Controllers
 
                 //ADD RECIPE COPY
                 Recipe recipe_new = new Recipe();
-                    recipe_new.Recipe_Name = "Copy - " + recipe.Recipe_Name;
+                    recipe_new.Recipe_Name = recipe.Recipe_Name + " - COPY";
                     recipe_new.Category_Id = recipe.Category_Id;
                     recipe_new.Gluten_Free = recipe.Gluten_Free;
                     recipe_new.SKU = recipe.SKU;

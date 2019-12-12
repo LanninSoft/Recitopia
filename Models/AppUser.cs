@@ -8,8 +8,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Recitopia.Models
 {
+   
+
+
+
+
     public class AppUser : IdentityUser<string>
     {
+        private readonly UserManager<AppUser> _userManager;
 
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
@@ -35,6 +41,13 @@ namespace Recitopia.Models
         public string Site_Role_Id { get; set; }
         public IEnumerable<Customers> Customers { get; set; }
 
-       
+        private RecitopiaDBContext db = new RecitopiaDBContext();
+        public Task AddToRoleAsync(AppUser user, String roleName)
+        {
+            var result =  _userManager.AddToRoleAsync(user, roleName);
+            
+
+            return result;
+        }
     }
 }

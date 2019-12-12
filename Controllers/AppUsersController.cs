@@ -87,7 +87,7 @@ namespace Recitopia.Controllers
 
             IEnumerable<SelectListItem> appUserRoles = db.AppRoles.Select(c => new SelectListItem
             {
-                Value = c.Id,
+                Value = c.Name,
                 Text = c.Name
 
             });
@@ -151,6 +151,13 @@ namespace Recitopia.Controllers
                         throw;
                     }
                 }
+                //remove all other roles for user
+                //add role from edit page
+                var roles = await _userManager.GetRolesAsync(appuser);
+                await _userManager.RemoveFromRolesAsync(appuser, roles.ToArray());
+
+                var doIt = await _userManager.AddToRoleAsync(appuser, appuser.Site_Role_Id);
+               
                 return RedirectToAction(nameof(Index));
             }
             return View(appUser);
