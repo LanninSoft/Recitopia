@@ -238,21 +238,12 @@ namespace Recitopia.Controllers
             try
             {
 
-                DbCommand cmd = db.Database.GetDbConnection().CreateCommand();
+           
 
-                cmd.CommandText = "dbo.Procedure_Cascade_Delete_Ingredient";
-                cmd.CommandType = CommandType.StoredProcedure;
+            db.Ingredient.Remove(ingredient);
+            db.SaveChanges();
 
-                cmd.Parameters.Add(new SqlParameter("@ingredId", SqlDbType.Int) { Value = ingredient.Ingredient_Id });
-
-                if (cmd.Connection.State != ConnectionState.Open)
-                {
-                    cmd.Connection.Open();
-                }
-
-                cmd.ExecuteNonQueryAsync();
-
-                return RedirectToAction("Index");
+            return RedirectToAction("Index");
             }
             
             catch (InvalidOperationException) // This will catch SqlConnection Exception

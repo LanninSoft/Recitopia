@@ -623,25 +623,10 @@ namespace Recitopia.Controllers
             try
             {
                
-                //NEED TO TURN ON CASCADE DELETE BEFORE CHANGING CODE;
+                db.Recipe.Remove(recipe);
 
-                DbCommand cmd = db.Database.GetDbConnection().CreateCommand();
+                db.SaveChanges();
 
-                cmd.CommandText = "dbo.Procedure_Cascade_Delete_Recipe";
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.Add(new SqlParameter("@recipeId", SqlDbType.Int) { Value = recipe.Recipe_Id });
-
-                if (cmd.Connection.State != ConnectionState.Open)
-                {
-                    cmd.Connection.Open();
-                }
-
-                cmd.ExecuteNonQueryAsync();
-
-
-                //db.Recipes.Remove(recipe);
-                //db.SaveChanges();
                 return RedirectToAction("Index");
             }
            

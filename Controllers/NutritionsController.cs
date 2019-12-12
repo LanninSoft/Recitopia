@@ -128,7 +128,7 @@ namespace Recitopia.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Nutrition nutrition = db.Nutrition.Find(id);
-            //NEED CASCADE DELETE EVENTUALLY
+           
             try
             {
                 db.Nutrition.Remove(nutrition);

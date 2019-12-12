@@ -177,21 +177,10 @@ namespace Recitopia.Controllers
 
             try
             {
-                
 
-                DbCommand cmd = db.Database.GetDbConnection().CreateCommand();
 
-                cmd.CommandText = "dbo.Procedure_Cascade_Delete_Component";
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.Add(new SqlParameter("@comId", SqlDbType.Int) { Value = component.Comp_Id });
-
-                if (cmd.Connection.State != ConnectionState.Open)
-                {
-                    cmd.Connection.Open();
-                }
-
-                cmd.ExecuteNonQueryAsync();
+                db.Components.Remove(component);
+                db.SaveChanges();
 
                 return RedirectToAction("Index");
             }

@@ -50,6 +50,7 @@ namespace Recitopia.Models
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            
             builder.Entity<Components>(entity =>
             {
                 entity.HasKey(e => e.Comp_Id)
@@ -115,7 +116,7 @@ namespace Recitopia.Models
                 entity.HasOne(d => d.Vendor)
                     .WithMany(p => p.Ingredient)
                     .HasForeignKey(d => d.Vendor_Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Ingredient_ToTable");
             });
 
@@ -126,13 +127,13 @@ namespace Recitopia.Models
                 entity.HasOne(d => d.Components)
                     .WithMany(p => p.Ingredient_Components)
                     .HasForeignKey(d => d.Comp_Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Ingredient_Comp_ToTable_1");
 
                 entity.HasOne(d => d.Ingredients)
                     .WithMany(p => p.Ingredient_Components)
                     .HasForeignKey(d => d.Ingred_Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Ingredient_Comp_ToTable");
             });
 
@@ -145,13 +146,13 @@ namespace Recitopia.Models
                 entity.HasOne(d => d.Ingredients)
                     .WithMany(p => p.Ingredient_Nutrients)
                     .HasForeignKey(d => d.Ingred_Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Ingredient_Nutrients_ToTable");
 
                 entity.HasOne(d => d.Nutrition)
                     .WithMany(p => p.Ingredient_Nutrients)
                     .HasForeignKey(d => d.Nutrition_Item_Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Ingredient_Nutrients_ToTable_1");
             });
 
@@ -207,13 +208,13 @@ namespace Recitopia.Models
                 entity.HasOne(d => d.Meal_Category)
                     .WithMany(p => p.Recipe)
                     .HasForeignKey(d => d.Category_Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Recipe_ToTable");
 
                 entity.HasOne(d => d.Serving_Sizes)
                     .WithMany(p => p.Recipe)
                     .HasForeignKey(d => d.SS_Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Serving_Size_ToTable");
             });
 
@@ -226,13 +227,13 @@ namespace Recitopia.Models
                 entity.HasOne(d => d.Ingredient)
                     .WithMany(p => p.Recipe_Ingredients)
                     .HasForeignKey(d => d.Ingredient_Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Recipe_Ingredients_ToTable_1");
 
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.Recipe_Ingredients)
                     .HasForeignKey(d => d.Recipe_Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Recipe_Ingredients_ToTable");
             });
 
