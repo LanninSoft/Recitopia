@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Recitopia.Models.Customer_Users>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+   
+<table style="width:50%" class="table">
+    <thead>
+        <tr>
+            <th>
+               Select Customer Name
+            </th>
+          
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (ViewBag.UserCustomers != null)
+        {
+            @foreach (var item in ViewBag.UserCustomers)
+            {
+                <tr>
+                    <td>
+                        <span> @item[0] </span>
+                    </td>
+
+
+                    <td>
+                        <a asp-action="CustomerLoginGo" asp-route-id="@item[1]">Select</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            
+            <tr>
+                <td>
+                    <span>You are not associated to any customers. </span>
+                </td>
+
+
+                <td>
+                    
+                </td>
+            </tr>
+        }
+       
+    </tbody>
+</table>
+

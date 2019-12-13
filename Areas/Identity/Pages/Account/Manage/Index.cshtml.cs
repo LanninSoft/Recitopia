@@ -62,7 +62,7 @@ namespace Recitopia.Areas.Identity.Pages.Account.Manage
             [Display(Name = "Web URL")]
             public string WebUrl { get; set; }
 
-          
+            public int Customer_Id { get; set; }
 
 
         }
@@ -85,8 +85,9 @@ namespace Recitopia.Areas.Identity.Pages.Account.Manage
                 City = userInfo.City,
                 State = userInfo.State,
                 ZipCode = userInfo.ZipCode,
-                WebUrl = userInfo.WebUrl
-                
+                WebUrl = userInfo.WebUrl,
+                Customer_Id = userInfo.Customer_Id
+
             };
         }
 
@@ -129,6 +130,8 @@ namespace Recitopia.Areas.Identity.Pages.Account.Manage
                     appuser.State = Input.State;
                     appuser.ZipCode = Input.ZipCode;
                     appuser.WebUrl = Input.WebUrl;
+                    appuser.Customer_Id = Input.Customer_Id;
+                
 
                     await db.SaveChangesAsync();
                 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Recitopia.Models;
 
 namespace Recitopia.Migrations
 {
     [DbContext(typeof(RecitopiaDBContext))]
-    partial class RecitopiaDBContextModelSnapshot : ModelSnapshot
+    [Migration("20191213111051_addCustomerIDtoASPNetUser")]
+    partial class addCustomerIDtoASPNetUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -171,10 +173,7 @@ namespace Recitopia.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Customer_Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Customer_Name")
+                    b.Property<string>("Customer_Id")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -266,9 +265,6 @@ namespace Recitopia.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
-
-                    b.Property<int>("Customer_Id")
-                        .HasColumnType("int");
 
                     b.Property<string>("Notes")
                         .HasColumnType("text");

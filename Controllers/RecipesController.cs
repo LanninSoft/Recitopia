@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
@@ -18,12 +19,20 @@ namespace Recitopia.Controllers
     {
       
         private RecitopiaDBContext db = new RecitopiaDBContext();
-
+       
         [Authorize]
+      
         // GET: Recipes
         public ActionResult Index()
         {
-            var recipes = db.Recipe.Include(r => r.Meal_Category);
+
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
+
+            var recipes = db.Recipe.Where(m => m.Customer_Id == CustomerId).Include(r => r.Meal_Category).Where(m => m.Customer_Id == CustomerId);
             if(recipes != null)
             {
                 var recipes_sorted = recipes.OrderBy(o => o.Recipe_Name);
@@ -37,17 +46,19 @@ namespace Recitopia.Controllers
                 return View();
             }
         }
+        
         [HttpGet]
         public JsonResult GetData()
         {
-
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
             //BUILD VIEW FOR ANGULARJS RENDERING
             var query =
                from t1 in db.Recipe.AsQueryable()
-               join t2 in db.Meal_Category.AsQueryable() on t1.Category_Id equals t2.Category_Id into t2g
+               join t2 in db.Meal_Category.AsQueryable() on t1.Category_Id equals t2.Category_Id  into t2g
                from t2 in t2g.DefaultIfEmpty() //DefaultIfEmpty is used for left joins
                join t3 in db.Serving_Sizes.AsQueryable() on t1.SS_Id equals t3.SS_Id
-               //where t1.Customer_Id == id
+               where t1.Customer_Id == CustomerId
                orderby t1.Recipe_Name
                select new View_Angular_Recipe_Details()
                {
@@ -75,11 +86,7 @@ namespace Recitopia.Controllers
             return Json(new { Status = "Failure" });
         }
         //SORTING
-        public ActionResult GetAllEmployeeData()
-        {
-            return View(db.Recipe.Include(r => r.Meal_Category).OrderBy(e => e.Recipe_Name));
-        }
-
+       
 
         // GET: Recipes/Details/5
         public ActionResult Details(int? id)
@@ -93,18 +100,23 @@ namespace Recitopia.Controllers
             {
                 return NotFound();
             }
-
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
             //----------------------------------------------------
             //GET MAIN INGREDIENT LIST AND BUILD OUT COST COLUMN - 2 VIEWBAGS 
             //---------------------------------------------------
 
-           //BUILD OUT RECIPE INGREDIENT ITEMS
+            //BUILD OUT RECIPE INGREDIENT ITEMS
             var query =
                from t1 in db.Recipe_Ingredients.AsQueryable()
                join t2 in db.Recipe.AsQueryable() on t1.Recipe_Id equals t2.Recipe_Id into t2g
                from t2 in t2g.DefaultIfEmpty() //DefaultIfEmpty is used for left joins
                join t3 in db.Ingredient.AsQueryable() on t1.Ingredient_Id equals t3.Ingredient_Id
                where t1.Recipe_Id == id
+               where t1.Customer_Id == CustomerId
                orderby t3.Ingred_name
                select new View_All_Recipe_Ingredients()
                {
@@ -516,8 +528,13 @@ namespace Recitopia.Controllers
         // GET: Recipes/Create
         public ActionResult Create()
         {
-            ViewBag.Category_Id = new SelectList(db.Meal_Category.OrderBy(m => m.Category_Name), "Category_Id", "Category_Name");
-            ViewBag.SS_Id = new SelectList(db.Serving_Sizes.OrderBy(m => m.Serving_Size), "SS_Id", "Serving_Size", 1);
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
+            ViewBag.Category_Id = new SelectList(db.Meal_Category.Where(m => m.Customer_Id == CustomerId).OrderBy(m => m.Category_Name), "Category_Id", "Category_Name");
+            ViewBag.SS_Id = new SelectList(db.Serving_Sizes.Where(m => m.Customer_Id == CustomerId).OrderBy(m => m.Serving_Size), "SS_Id", "Serving_Size", 1);
 
             return View();
         }
@@ -529,8 +546,14 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([FromForm] Recipe recipe)
         {
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+
             if (ModelState.IsValid)
             {
+               
+                
+                recipe.Customer_Id = CustomerId;
+
                 db.Recipe.Add(recipe);
                 db.SaveChanges();
 
@@ -544,8 +567,8 @@ namespace Recitopia.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Category_Id = new SelectList(db.Meal_Category.OrderBy(m => m.Category_Name), "Category_Id", "Category_Name", recipe.Category_Id);
-            ViewBag.SS_ID = new SelectList(db.Serving_Sizes.OrderByDescending(m => m.Serving_Size), "SS_Id", "Serving_Size", recipe.SS_Id);
+            ViewBag.Category_Id = new SelectList(db.Meal_Category.Where(m => m.Customer_Id == CustomerId).OrderBy(m => m.Category_Name), "Category_Id", "Category_Name", recipe.Category_Id);
+            ViewBag.SS_ID = new SelectList(db.Serving_Sizes.Where(m => m.Customer_Id == CustomerId).OrderByDescending(m => m.Serving_Size), "SS_Id", "Serving_Size", recipe.SS_Id);
             return View(recipe);
         }
 
@@ -556,15 +579,21 @@ namespace Recitopia.Controllers
             {
                 return new StatusCodeResult(0);
             }
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
             Recipe recipe = db.Recipe.Find(id);
+
             if (recipe == null)
             {
                 return NotFound();
             }
             ViewBag.Recipe_Name = recipe.Recipe_Name;
 
-            ViewBag.Category_Id = new SelectList(db.Meal_Category.OrderBy(m => m.Category_Name), "Category_Id", "Category_Name", recipe.Category_Id);
-            ViewBag.SS_Id = new SelectList(db.Serving_Sizes.OrderBy(m => m.Serving_Size), "SS_Id", "Serving_Size", recipe.SS_Id);
+            ViewBag.Category_Id = new SelectList(db.Meal_Category.Where(m => m.Customer_Id == CustomerId).OrderBy(m => m.Category_Name), "Category_Id", "Category_Name", recipe.Category_Id);
+            ViewBag.SS_Id = new SelectList(db.Serving_Sizes.Where(m => m.Customer_Id == CustomerId).OrderBy(m => m.Serving_Size), "SS_Id", "Serving_Size", recipe.SS_Id);
 
             return View(recipe);
         }
@@ -576,8 +605,11 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([FromForm] Recipe recipe)
         {
+            
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
             if (ModelState.IsValid)
             {
+                recipe.Customer_Id = CustomerId;
                 db.Entry(recipe).State = EntityState.Modified;
                 db.SaveChanges();
 
@@ -590,8 +622,8 @@ namespace Recitopia.Controllers
 
                 return RedirectToAction("Index");
             }
-            ViewBag.Category_Id = new SelectList(db.Meal_Category.OrderBy(m => m.Category_Name), "Category_Id", "Category_Name", recipe.Category_Id);
-            ViewBag.SS_Id = new SelectList(db.Serving_Sizes.OrderBy(m => m.Serving_Size), "SS_Id", "Serving_Size", recipe.SS_Id);
+            ViewBag.Category_Id = new SelectList(db.Meal_Category.Where(m => m.Customer_Id == CustomerId).OrderBy(m => m.Category_Name), "Category_Id", "Category_Name", recipe.Category_Id);
+            ViewBag.SS_Id = new SelectList(db.Serving_Sizes.Where(m => m.Customer_Id == CustomerId).OrderBy(m => m.Serving_Size), "SS_Id", "Serving_Size", recipe.SS_Id);
 
             return View(recipe);
         }
@@ -602,6 +634,11 @@ namespace Recitopia.Controllers
             if (id == null)
             {
                 return new StatusCodeResult(0);
+            }
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
             }
             Recipe recipe = db.Recipe.Find(id);
 
@@ -650,6 +687,11 @@ namespace Recitopia.Controllers
                 return new StatusCodeResult(0);
             }
 
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
 
             Recipe recipe = db.Recipe.Find(id);
 
@@ -665,7 +707,7 @@ namespace Recitopia.Controllers
         {
 
             Recipe recipe = db.Recipe.Find(id);
-
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
             try
             {
 
@@ -679,12 +721,13 @@ namespace Recitopia.Controllers
                     recipe_new.Notes = recipe.Notes;
                     recipe_new.LaborCost = recipe.LaborCost;
                     recipe_new.SS_Id = recipe.SS_Id;
+                    recipe_new.Customer_Id = recipe.Customer_Id;
 
                 db.Recipe.Add(recipe_new);
                 db.SaveChanges();
 
                 //NEED TO ADD GROUP ID LATER
-                var recipe_ingredients = db.Recipe_Ingredients.Where(m => m.Recipe_Id == recipe.Recipe_Id).ToList();
+                var recipe_ingredients = db.Recipe_Ingredients.Where(m => m.Recipe_Id == recipe.Recipe_Id && m.Customer_Id == CustomerId).ToList();
 
                 foreach (Recipe_Ingredients thing in recipe_ingredients)
                 {
@@ -693,6 +736,7 @@ namespace Recitopia.Controllers
                         Recipe_Id = recipe_new.Recipe_Id,
                         Ingredient_Id = thing.Ingredient_Id,
                         Amount_g = thing.Amount_g,
+                        Customer_Id = thing.Customer_Id
 
                     };
                     //UPDATE DB - INSERT

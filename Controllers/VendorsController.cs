@@ -10,6 +10,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace Recitopia.Controllers
 {
@@ -21,8 +22,12 @@ namespace Recitopia.Controllers
         // GET: Vendors
         public ActionResult Index()
         {
-
-            var vendors = db.Vendor.OrderBy(m => m.Vendor_Name).ToList();
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
+            var vendors = db.Vendor.Where(m => m.Customer_Id == CustomerId).OrderBy(m => m.Vendor_Name).ToList();
             if (vendors != null)
             {
                 
@@ -41,8 +46,8 @@ namespace Recitopia.Controllers
         [HttpGet]
         public JsonResult GetData()
         {
-            
-            List<Vendor> vendors = db.Vendor.OrderBy(m => m.Vendor_Name).ToList();
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            List<Vendor> vendors = db.Vendor.Where(m => m.Customer_Id == CustomerId).OrderBy(m => m.Vendor_Name).ToList();
             if (vendors != null)
             {
                 return Json(vendors);
@@ -54,6 +59,12 @@ namespace Recitopia.Controllers
         // GET: Vendors/Details/5
         public ActionResult Details(int? id)
         {
+
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
             if (id == null)
             {
                 return new StatusCodeResult(0);
@@ -69,6 +80,11 @@ namespace Recitopia.Controllers
         // GET: Vendors/Create
         public ActionResult Create()
         {
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
             return View();
         }
 
@@ -79,8 +95,14 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([FromForm] Vendor vendor)
         {
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
             if (ModelState.IsValid)
             {
+                vendor.Customer_Id = CustomerId;
                 db.Vendor.Add(vendor);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -92,6 +114,11 @@ namespace Recitopia.Controllers
         // GET: Vendors/Edit/5
         public ActionResult Edit(int? id)
         {
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
             if (id == null)
             {
                 return new StatusCodeResult(0);
@@ -111,8 +138,10 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([FromForm] Vendor vendor)
         {
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
             if (ModelState.IsValid)
             {
+                vendor.Customer_Id = CustomerId;
                 db.Entry(vendor).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -123,6 +152,11 @@ namespace Recitopia.Controllers
         // GET: Vendors/Delete/5
         public ActionResult Delete(int? id)
         {
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
             if (id == null)
             {
                 return new StatusCodeResult(0);

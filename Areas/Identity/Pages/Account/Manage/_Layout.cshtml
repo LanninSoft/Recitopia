@@ -55,39 +55,49 @@
                                         <a class="nav-link" href="@Url.Action("Index", "Home")">Home<span class="sr-only">(current)</span></a>
 
                                     </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="@Url.Action("Index", "Recipes")">Recipes</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="@Url.Action("Index", "Ingredients")">Ingredients</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="@Url.Action("Index", "Nutritions")">Nutrition</a>
-                                    </li>
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="@Url.Action("Index", "Recipes")">Recipes</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="@Url.Action("Index", "Ingredients")">Ingredients</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="@Url.Action("Index", "Nutritions")">Nutrition</a>
+                                        </li>
 
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="@Url.Action("Index", "Components")">Allergens</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="@Url.Action("Index", "Serving_Sizes")">Serving Sizes</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="@Url.Action("Index", "Meal_Category")">Categories</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="@Url.Action("Index", "Vendors")">Vendors</a>
-                                    </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="@Url.Action("Index", "Components")">Allergens</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="@Url.Action("Index", "Serving_Sizes")">Serving Sizes</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="@Url.Action("Index", "Meal_Category")">Categories</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="@Url.Action("Index", "Vendors")">Vendors</a>
+                                        </li>
+                                        @if (User.IsInRole("Administrator"))
+                                        {
+                                            <li class="nav-item dropdown">
+                                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Administration
+                                                </a>
+                                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 
-                                    <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Options
-                                        </a>
-                                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                            <a class="dropdown-item" href="#">User Management</a>
-                                            <a class="dropdown-item" href="@Url.Action("Index", "Admin")">Group Management</a>
+                                                    <a class="dropdown-item" href="@Url.Action("Index", "AppUsers")">User Management</a>
+                                                    <a class="dropdown-item" href="@Url.Action("Index", "Customers")">Customers</a>
+                                                    <a class="dropdown-item" href="@Url.Action("Index", "Customer_Users")">Customer Users</a>
+                                                    <a class="dropdown-item" href="@Url.Action("Index", "AppRoles")">Role Management</a>
+                                                </div>
+                                            </li>
+                                        }
 
-                                        </div>
-                                    </li>
+                                    }
+
+
 
                                 </ul>
 
@@ -106,14 +116,14 @@
 
             <tr>
                 <td>
-                    <table style="width:100%">
+                    <table style="width:75%">
                         <tr>
-                            <td>
-                                <div class="col-md-3">
+                            <td style="width:25%;vertical-align:top">
+                                <div >
                                     <partial name="_ManageNav" />
                                 </div>
                             </td>
-                            <td>
+                            <td style="width:75%">
                                 <div class="container body-content">
                                    @RenderBody()
 

@@ -10,6 +10,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace Recitopia.Controllers
 {
@@ -20,9 +21,16 @@ namespace Recitopia.Controllers
         // GET: Ingredient_Components
         public ActionResult Index(int IngredID)
         {
-            var ingredient_Components = db.Ingredient_Components.Include(i => i.Components).Include(i => i.Ingredients);
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
+            
+
+            var ingredient_Components = db.Ingredient_Components.Where(m => m.Customer_Id == CustomerId).Include(i => i.Components).Where(m => m.Customer_Id == CustomerId).Include(i => i.Ingredients).Where(m => m.Customer_Id == CustomerId);
             //Filter down to id looking for
-            var Ingred_nut = ingredient_Components.Where(i => i.Ingred_Id.Equals(IngredID));
+            var Ingred_nut = ingredient_Components.Where(i => i.Ingred_Id.Equals(IngredID) && i.Customer_Id == CustomerId);
 
 
 
@@ -39,6 +47,7 @@ namespace Recitopia.Controllers
         [HttpGet]
         public JsonResult GetData(int ingredId)
         {
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
             //BUILD VIEW FOR ANGULARJS RENDERING
             var query =
                from t1 in db.Ingredient_Components.AsQueryable()
@@ -46,6 +55,7 @@ namespace Recitopia.Controllers
                from t2 in t2g.DefaultIfEmpty() //DefaultIfEmpty is used for left joins
                join t3 in db.Components.AsQueryable() on t1.Comp_Id equals t3.Comp_Id
                where t1.Ingred_Id == ingredId
+               where t1.Customer_Id == CustomerId
                orderby t3.Component_Name
                select new View_Angular_Ingredient_Components_Details()
                {
@@ -84,6 +94,12 @@ namespace Recitopia.Controllers
         // GET: Ingredient_Components/Create
         public ActionResult Create(int IngredID)
         {
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
+
             //get recipe name from db and pass in viewbag
             Ingredient ingredient = db.Ingredient.Find(IngredID);
 
@@ -91,8 +107,8 @@ namespace Recitopia.Controllers
             ViewBag.IngredName = ingredient.Ingred_name;
             ViewBag.IngredId = IngredID;
 
-            ViewBag.Ingred_Id = new SelectList(db.Ingredient.OrderBy(m => m.Ingred_name), "Ingredient_Id", "Ingred_name");
-            ViewBag.Comp_Id = new SelectList(db.Components.OrderBy(m => m.Comp_Sort), "Comp_Id", "Component_Name");
+            ViewBag.Ingred_Id = new SelectList(db.Ingredient.Where(m => m.Customer_Id == CustomerId).OrderBy(m => m.Ingred_name), "Ingredient_Id", "Ingred_name");
+            ViewBag.Comp_Id = new SelectList(db.Components.Where(m => m.Customer_Id == CustomerId).OrderBy(m => m.Comp_Sort), "Comp_Id", "Component_Name");
             //ViewBag.Comp_Id = new SelectList(db.Components.Select(m => new { m.Comp_Id, m.Component_Name }));
 
 
@@ -103,6 +119,7 @@ namespace Recitopia.Controllers
                from t2 in t2g.DefaultIfEmpty() //DefaultIfEmpty is used for left joins
                join t3 in db.Components.AsQueryable() on t1.Comp_Id equals t3.Comp_Id
                where t1.Ingred_Id == IngredID
+               where t1.Customer_Id == CustomerId
                orderby t3.Component_Name
                select new View_All_Ingredient_Components()
                {
@@ -139,16 +156,23 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([FromForm] Ingredient_Components ingredient_Components, int RID)
         {
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
+
             if (RID > 0)
             {
 
                 ingredient_Components.Ingred_Id = RID;
+                ingredient_Components.Customer_Id = CustomerId;
                 db.Ingredient_Components.Add(ingredient_Components);
                 db.SaveChanges();
                 return RedirectToAction("Index", new { IngredID = ingredient_Components.Ingred_Id });
             }
 
-            ViewBag.Comp_Id = new SelectList(db.Components, "Comp_Id", "Component_Name", ingredient_Components.Comp_Id);
+            ViewBag.Comp_Id = new SelectList(db.Components.Where(m => m.Customer_Id == CustomerId), "Comp_Id", "Component_Name", ingredient_Components.Comp_Id);
             ViewBag.Ingred_Id = RID;
             return View(ingredient_Components);
         }
@@ -165,7 +189,11 @@ namespace Recitopia.Controllers
             {
                 return NotFound();
             }
-
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
             //get name from db and pass in viewbag
             Ingredient ingredient = db.Ingredient.Find(ingredient_Components.Ingred_Id);
 
@@ -173,9 +201,9 @@ namespace Recitopia.Controllers
             ViewBag.IngredName = ingredient.Ingred_name;
             ViewBag.IngredId = ingredient.Ingredient_Id;
 
-            ViewBag.Comp_Id = new SelectList(db.Components.OrderBy(m => m.Comp_Sort), "Comp_Id", "Component_Name", ingredient_Components.Comp_Id);
+            ViewBag.Comp_Id = new SelectList(db.Components.Where(m => m.Customer_Id == CustomerId).OrderBy(m => m.Comp_Sort), "Comp_Id", "Component_Name", ingredient_Components.Comp_Id);
 
-            ViewBag.Ingred_Id = new SelectList(db.Ingredient, "Ingredient_Id", "Ingred_name", ingredient_Components.Ingred_Id);
+            ViewBag.Ingred_Id = new SelectList(db.Ingredient.Where(m => m.Customer_Id == CustomerId), "Ingredient_Id", "Ingred_name", ingredient_Components.Ingred_Id);
             return View(ingredient_Components);
         }
 
@@ -186,14 +214,22 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([FromForm] Ingredient_Components ingredient_Components)
         {
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
             if (ModelState.IsValid)
             {
+                ingredient_Components.Customer_Id = CustomerId;
                 db.Entry(ingredient_Components).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index", new { IngredID = ingredient_Components.Ingred_Id });
             }
-            ViewBag.Comp_Id = new SelectList(db.Components, "Comp_Id", "Component_Name", ingredient_Components.Comp_Id);
-            ViewBag.Ingred_Id = new SelectList(db.Ingredient, "Ingredient_Id", "Ingred_name", ingredient_Components.Ingred_Id);
+            
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
+
+            ViewBag.Comp_Id = new SelectList(db.Components.Where(m => m.Customer_Id == CustomerId), "Comp_Id", "Component_Name", ingredient_Components.Comp_Id);
+            ViewBag.Ingred_Id = new SelectList(db.Ingredient.Where(m => m.Customer_Id == CustomerId), "Ingredient_Id", "Ingred_name", ingredient_Components.Ingred_Id);
             return View(ingredient_Components);
         }
 
@@ -205,7 +241,13 @@ namespace Recitopia.Controllers
                 return new StatusCodeResult(0);
             }
 
-            var Ingredients_Components = db.Ingredient_Components.Where(m => m.Id == id).Include(r => r.Ingredients).Include(r => r.Components);
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
+
+            var Ingredients_Components = db.Ingredient_Components.Where(m => m.Id == id).Include(r => r.Ingredients).Where(m => m.Customer_Id == CustomerId).Include(r => r.Components).Where(m => m.Customer_Id == CustomerId);
 
             // var recipe_Ingredients = recipe_Ingredients_Temp.Where(m => m.Id == id);
 

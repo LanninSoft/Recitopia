@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Recitopia.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace Recitopia.Areas.Identity.Pages.Account
 {
@@ -87,7 +88,12 @@ namespace Recitopia.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    //GO TO CUSTOMER SELECTION PAGE TO SET CUSTOMERID
+
+                    HttpContext.Session.SetString("CurrentUserCustomerId", 0.ToString());
+
+                    return LocalRedirect("~/Customers/CustomerLogin");
+                    //return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
                 {

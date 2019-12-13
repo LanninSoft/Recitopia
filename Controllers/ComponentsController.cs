@@ -10,6 +10,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace Recitopia.Controllers
 {
@@ -20,8 +21,12 @@ namespace Recitopia.Controllers
         // GET: Components
         public ActionResult Index()
         {
-
-            List<Components> TempV = db.Components.ToList();
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
+            List<Components> TempV = db.Components.Where(m => m.Customer_Id == CustomerId).ToList();
 
             var sortedList = TempV.OrderBy(m => m.Comp_Sort).ToList();
 
@@ -32,7 +37,10 @@ namespace Recitopia.Controllers
         {
             //doesn't allow the model to get dependent table information
             //db.Configuration.ProxyCreationEnabled = false;
-            List<Components> allergen = db.Components.OrderBy(m => m.Component_Name).ToList();
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+
+            List<Components> allergen = db.Components.Where(m => m.Customer_Id == CustomerId).OrderBy(m => m.Component_Name).ToList();
             if (allergen != null)
             {
                 return Json(allergen);
@@ -69,7 +77,12 @@ namespace Recitopia.Controllers
         {
             if (ModelState.IsValid)
             {
-                //Remove all extra and save 48 characters to Comp_sort field
+                int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+                if (CustomerId == 0)
+                {
+                    return RedirectToAction("CustomerLogin", "Customers");
+                }
+               
                 var compFullName = component.Component_Name.ToString();
 
                 char[] arr = compFullName.ToCharArray();
@@ -90,8 +103,12 @@ namespace Recitopia.Controllers
                 }
 
                 //---------------------------------------
+                component.Customer_Id = CustomerId;
+
                 db.Components.Add(component);
+
                 db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
 
@@ -120,6 +137,8 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([FromForm] Components component)
         {
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+           
             if (ModelState.IsValid)
             {
                 //Remove all extra and save 48 characters to Comp_sort field
@@ -144,7 +163,7 @@ namespace Recitopia.Controllers
                 }
 
                 //---------------------------------------
-
+                component.Customer_Id = CustomerId;
                 db.Entry(component).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");

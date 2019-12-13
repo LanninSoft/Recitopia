@@ -9,10 +9,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace Recitopia.Models
 {
    
-
-
-
-
     public class AppUser : IdentityUser<string>
     {
         private readonly UserManager<AppUser> _userManager;
@@ -39,6 +35,9 @@ namespace Recitopia.Models
         public string Notes { get; set; }
         [Display(Name = "Role")]
         public string Site_Role_Id { get; set; }
+        public int Customer_Id { get; set; }
+        public string Customer_Name { get; set; }
+
         public IEnumerable<Customers> Customers { get; set; }
 
         private RecitopiaDBContext db = new RecitopiaDBContext();
@@ -49,5 +48,6 @@ namespace Recitopia.Models
 
             return result;
         }
+       
     }
 }

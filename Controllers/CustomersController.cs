@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +15,7 @@ namespace Recitopia.Controllers
     public class CustomersController : Controller
     {
         private readonly RecitopiaDBContext db;
+        
 
         public CustomersController(RecitopiaDBContext context)
         {
@@ -23,6 +26,66 @@ namespace Recitopia.Controllers
         public async Task<IActionResult> Index()
         {
             return View(await db.Customers.ToListAsync());
+        }
+        public IActionResult CustomerLogin()
+        {
+
+            //RETURN LIST OF CUSTOMERS THAT A MEMBER OF
+            //IF ONLY ONE, TAKE THEM HOME.  IF MULTIPLE, PROVIDE LIST AND USER SELECTS WHICH CUSTOMER TO LOGIN TO
+            var currentUser = db.AppUsers.Where(m => m.UserName.Equals(User.Identity.Name)).First();
+
+            var customerList = db.Customer_Users.Where(m => m.Id == currentUser.Id);
+
+            if (customerList.Count() > 1)
+            {
+                //Provide selection view
+
+                //create list and populate with Customer name and Id
+                List<IList<string>> custList = new List<IList<string>>();
+
+                foreach (Customer_Users thing in customerList)
+                {
+                    var tempResults = db.Customers.Where(m => m.Customer_Id == thing.Customer_Id).First();
+                    
+                    custList.Add(new List<string> { tempResults.Customer_Name, tempResults.Customer_Id.ToString() });
+                }
+
+
+                ViewBag.UserCustomers = custList;
+
+                return View();
+            }
+            else if(customerList.Count() == 1)
+            {
+                //take them to home page
+                var customerCId = db.Customer_Users.Where(m => m.Id == currentUser.Id).First();
+
+                return RedirectToAction("CustomerLoginGo", new { id = customerCId.Customer_Id});
+            }
+            else
+            {
+                ViewBag.UserCustomers = null;
+
+                return View();
+            }
+
+        }
+        public IActionResult CustomerLoginGo (int id)
+        {
+            //save customerid to appuser field to carry
+            var currentUser = db.AppUsers.Where(m => m.UserName.Equals(User.Identity.Name)).First();
+                                  
+
+            var getCustomerName = db.Customers.Where(m => m.Customer_Id == id).First();
+
+            currentUser.Customer_Id = id;
+            currentUser.Customer_Name = getCustomerName.Customer_Name;
+
+            HttpContext.Session.SetString("CurrentUserCustomerId", id.ToString());
+
+            db.SaveChanges();
+
+            return LocalRedirect("~/Home/Index");
         }
 
         // GET: Customers/Details/5
@@ -54,7 +117,7 @@ namespace Recitopia.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Customer_Id,Customer_Name,Phone,Email,Address1,Address2,City,State,Zip,Web_URL,Notes")] Customers customers)
+        public async Task<IActionResult> Create([FromForm] Customers customers)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +149,7 @@ namespace Recitopia.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Customer_Id,Customer_Name,Phone,Email,Address1,Address2,City,State,Zip,Web_URL,Notes")] Customers customers)
+        public async Task<IActionResult> Edit(int id, [FromForm] Customers customers)
         {
             if (id != customers.Customer_Id)
             {

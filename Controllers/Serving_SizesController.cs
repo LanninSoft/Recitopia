@@ -10,6 +10,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace Recitopia.Controllers
 {
@@ -20,14 +21,20 @@ namespace Recitopia.Controllers
         // GET: Serving_Sizes
         public ActionResult Index()
         {
-            return View(db.Serving_Sizes.ToList());
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
+
+            return View(db.Serving_Sizes.Where(m => m.Customer_Id == CustomerId).ToList());
         }
         [HttpGet]
         public JsonResult GetData()
         {
-            //doesn't allow the model to get dependent table information
-            //db.Configuration.ProxyCreationEnabled = false;
-            List<Serving_Sizes> SS = db.Serving_Sizes.OrderBy(m => m.Serving_Size).ToList();
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+
+            List<Serving_Sizes> SS = db.Serving_Sizes.Where(m => m.Customer_Id == CustomerId).OrderBy(m => m.Serving_Size).ToList();
             if (SS != null)
             {
                 return Json(SS);
@@ -62,8 +69,15 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([FromForm] Serving_Sizes serving_Sizes)
         {
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
+
             if (ModelState.IsValid)
             {
+                serving_Sizes.Customer_Id = CustomerId;
                 db.Serving_Sizes.Add(serving_Sizes);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -75,6 +89,11 @@ namespace Recitopia.Controllers
         // GET: Serving_Sizes/Edit/5
         public ActionResult Edit(int? id)
         {
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
             if (id == null)
             {
                 return new StatusCodeResult(0);
@@ -94,8 +113,10 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([FromForm] Serving_Sizes serving_Sizes)
         {
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
             if (ModelState.IsValid)
             {
+                serving_Sizes.Customer_Id = CustomerId;
                 db.Entry(serving_Sizes).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -106,6 +127,12 @@ namespace Recitopia.Controllers
         // GET: Serving_Sizes/Delete/5
         public ActionResult Delete(int? id)
         {
+
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
             if (id == null)
             {
                 return new StatusCodeResult(0);

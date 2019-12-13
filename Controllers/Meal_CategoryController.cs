@@ -10,6 +10,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace Recitopia.Controllers
 {
@@ -20,14 +21,20 @@ namespace Recitopia.Controllers
         // GET: Meal_Category
         public ActionResult Index()
         {
-            return View(db.Meal_Category.ToList());
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
+
+            return View(db.Meal_Category.Where(m => m.Customer_Id == CustomerId).ToList());
         }
         [HttpGet]
         public JsonResult GetData()
         {
-            //doesn't allow the model to get dependent table information
-            //db.Configuration.ProxyCreationEnabled = false;
-            List<Meal_Category> mealC = db.Meal_Category.OrderBy(m => m.Category_Name).ToList();
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+
+            List<Meal_Category> mealC = db.Meal_Category.Where(m => m.Customer_Id == CustomerId).OrderBy(m => m.Category_Name).ToList();
             if (mealC != null)
             {
                 return Json(mealC);
@@ -62,8 +69,18 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([FromForm] Meal_Category meal_Category)
         {
+
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
+
             if (ModelState.IsValid)
             {
+
+                meal_Category.Customer_Id = CustomerId;
+
                 db.Meal_Category.Add(meal_Category);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -94,8 +111,12 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([FromForm] Meal_Category meal_Category)
         {
+
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
             if (ModelState.IsValid)
             {
+                meal_Category.Customer_Id = CustomerId;
+
                 db.Entry(meal_Category).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");

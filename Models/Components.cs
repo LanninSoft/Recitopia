@@ -14,6 +14,7 @@ namespace Recitopia.Models
         public string Component_Name { get; set; }
         public string Notes { get; set; }
         public string Comp_Sort { get; set; }
+        public int Customer_Id { get; set; }
 
         public virtual ICollection<Ingredient_Components> Ingredient_Components { get; set; }
     }

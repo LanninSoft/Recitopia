@@ -10,6 +10,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace Recitopia.Controllers
 {
@@ -20,7 +21,13 @@ namespace Recitopia.Controllers
         // GET: Nutritions
         public ActionResult Index()
         {
-            var nutritionList = db.Nutrition.OrderBy(o => o.Nutrition_Item).ToList();
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
+
+            var nutritionList = db.Nutrition.Where(m => m.Customer_Id == CustomerId).OrderBy(o => o.Nutrition_Item).ToList();
 
             //nutritionList.Sort("Nutrition_Item");
 
@@ -29,9 +36,9 @@ namespace Recitopia.Controllers
         [HttpGet]
         public JsonResult GetData()
         {
-            //doesn't allow the model to get dependent table information
-            //db.Configuration.ProxyCreationEnabled = false;
-            List<Nutrition> nutrition = db.Nutrition.OrderBy(m => m.Nutrition_Item).ToList();
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+
+            List<Nutrition> nutrition = db.Nutrition.Where(m => m.Customer_Id == CustomerId).OrderBy(m => m.Nutrition_Item).ToList();
             if (nutrition != null)
             {
                 return Json(nutrition);
@@ -66,8 +73,15 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([FromForm] Nutrition nutrition)
         {
+
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (CustomerId == 0)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
             if (ModelState.IsValid)
             {
+                nutrition.Customer_Id = CustomerId;
                 db.Nutrition.Add(nutrition);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -98,8 +112,10 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([FromForm] Nutrition nutrition)
         {
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
             if (ModelState.IsValid)
             {
+                nutrition.Customer_Id = CustomerId;
                 db.Entry(nutrition).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
