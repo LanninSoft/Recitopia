@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Recitopia.Models;
 
-namespace Recitopia.Migrations
+namespace Recitopia.Data.Migrations
 {
     [DbContext(typeof(RecitopiaDBContext))]
-    [Migration("20191130134726_AddAllOtherRecitopiaTables")]
-    partial class AddAllOtherRecitopiaTables
+    [Migration("20191130133043_AddCustomerTables")]
+    partial class AddCustomerTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

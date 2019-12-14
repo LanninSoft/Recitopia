@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Recitopia.Models;
 
-namespace Recitopia.Migrations
+namespace Recitopia.Data.Migrations
 {
     [DbContext(typeof(RecitopiaDBContext))]
-    [Migration("20191214135507_InitialSetup")]
-    partial class InitialSetup
+    partial class RecitopiaDBContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

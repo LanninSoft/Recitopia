@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Recitopia.Migrations
+namespace Recitopia.Data.Migrations
 {
     public partial class ExtendSecurityModels : Migration
     {
