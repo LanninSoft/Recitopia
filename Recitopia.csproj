@@ -34,6 +34,20 @@
     <Compile Remove="Migrations\20191210200512_initial.Designer.cs" />
     <Compile Remove="Migrations\20191210201536_discrepency.cs" />
     <Compile Remove="Migrations\20191210201536_discrepency.Designer.cs" />
+    <Compile Remove="Migrations\20191210211939_theBIGsetup.cs" />
+    <Compile Remove="Migrations\20191210211939_theBIGsetup.Designer.cs" />
+    <Compile Remove="Migrations\20191212201817_addCascadeDeleteFluent.cs" />
+    <Compile Remove="Migrations\20191212201817_addCascadeDeleteFluent.Designer.cs" />
+    <Compile Remove="Migrations\20191213111051_addCustomerIDtoASPNetUser.cs" />
+    <Compile Remove="Migrations\20191213111051_addCustomerIDtoASPNetUser.Designer.cs" />
+    <Compile Remove="Migrations\20191213111614_addCustomerIDtoASPNetUserUpdateType.cs" />
+    <Compile Remove="Migrations\20191213111614_addCustomerIDtoASPNetUserUpdateType.Designer.cs" />
+    <Compile Remove="Migrations\20191213154855_updateComponentsAddCustId.cs" />
+    <Compile Remove="Migrations\20191213154855_updateComponentsAddCustId.Designer.cs" />
+    <Compile Remove="Migrations\20191213192559_updateASPNetUserAddCustName.cs" />
+    <Compile Remove="Migrations\20191213192559_updateASPNetUserAddCustName.Designer.cs" />
+    <Compile Remove="Migrations\20191214134819_testit.cs" />
+    <Compile Remove="Migrations\20191214134819_testit.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

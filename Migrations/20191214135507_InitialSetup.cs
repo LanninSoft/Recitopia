@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Recitopia.Migrations
 {
-    public partial class theBIGsetup : Migration
+    public partial class InitialSetup : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -49,7 +49,9 @@ namespace Recitopia.Migrations
                     ZipCode = table.Column<string>(nullable: true),
                     WebUrl = table.Column<string>(nullable: true),
                     Notes = table.Column<string>(nullable: true),
-                    Site_Role_Id = table.Column<string>(nullable: true)
+                    Site_Role_Id = table.Column<string>(nullable: true),
+                    Customer_Id = table.Column<int>(nullable: false),
+                    Customer_Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -64,7 +66,8 @@ namespace Recitopia.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Component_Name = table.Column<string>(maxLength: 50, nullable: false),
                     Notes = table.Column<string>(type: "text", nullable: true),
-                    Comp_Sort = table.Column<string>(maxLength: 50, nullable: true)
+                    Comp_Sort = table.Column<string>(maxLength: 50, nullable: true),
+                    Customer_Id = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -302,13 +305,13 @@ namespace Recitopia.Migrations
                         column: x => x.Category_Id,
                         principalTable: "Meal_Category",
                         principalColumn: "Category_Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Serving_Size_ToTable",
                         column: x => x.SS_Id,
                         principalTable: "Serving_Sizes",
                         principalColumn: "SS_Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -350,7 +353,7 @@ namespace Recitopia.Migrations
                         column: x => x.Vendor_Id,
                         principalTable: "Vendor",
                         principalColumn: "Vendor_Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -395,13 +398,13 @@ namespace Recitopia.Migrations
                         column: x => x.Comp_Id,
                         principalTable: "Components",
                         principalColumn: "Comp_Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Ingredient_Comp_ToTable",
                         column: x => x.Ingred_Id,
                         principalTable: "Ingredient",
                         principalColumn: "Ingredient_Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -423,13 +426,13 @@ namespace Recitopia.Migrations
                         column: x => x.Ingred_Id,
                         principalTable: "Ingredient",
                         principalColumn: "Ingredient_Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Ingredient_Nutrients_ToTable_1",
                         column: x => x.Nutrition_Item_Id,
                         principalTable: "Nutrition",
                         principalColumn: "Nutrition_Item_Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -451,13 +454,13 @@ namespace Recitopia.Migrations
                         column: x => x.Ingredient_Id,
                         principalTable: "Ingredient",
                         principalColumn: "Ingredient_Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Recipe_Ingredients_ToTable",
                         column: x => x.Recipe_Id,
                         principalTable: "Recipe",
                         principalColumn: "Recipe_Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

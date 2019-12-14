@@ -10,8 +10,8 @@ using Recitopia.Models;
 namespace Recitopia.Migrations
 {
     [DbContext(typeof(RecitopiaDBContext))]
-    [Migration("20191212201817_addCascadeDeleteFluent")]
-    partial class addCascadeDeleteFluent
+    [Migration("20191214135507_InitialSetup")]
+    partial class InitialSetup
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -173,6 +173,12 @@ namespace Recitopia.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Customer_Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Customer_Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
@@ -262,6 +268,9 @@ namespace Recitopia.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
+
+                    b.Property<int>("Customer_Id")
+                        .HasColumnType("int");
 
                     b.Property<string>("Notes")
                         .HasColumnType("text");
