@@ -40,10 +40,6 @@ namespace Recitopia
               .AddDefaultUI()
               .AddDefaultTokenProviders();
 
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("DefaultConnection")));
-
             services.AddEntityFrameworkSqlServer()
                 .AddDbContext<RecitopiaDBContext>(options =>
                 {
