@@ -17,11 +17,10 @@ namespace Recitopia.Controllers
         public Customer_UsersController(RecitopiaDBContext context)
         {
             db = context;
-
-
-
         }
-        [Authorize]
+
+        [Authorize(Roles = "Administrator")]
+
         // GET: Customer_Users
         public async Task<IActionResult> Index()
         {
@@ -48,7 +47,34 @@ namespace Recitopia.Controllers
 
 
         }
+        [HttpGet]
+        public JsonResult GetData()
+        {
+            //BUILD VIEW FOR ANGULARJS RENDERING
+            var query =
+               from t1 in db.Customer_Users.AsQueryable()
+               join t2 in db.AppUsers.AsQueryable() on t1.Id equals t2.Id into t2g
+               from t2 in t2g.DefaultIfEmpty()
+               join t3 in db.Customers.AsQueryable() on t1.Customer_Id equals t3.Customer_Id into t3g
+               from t3 in t3g.DefaultIfEmpty()
+               select new Customer_Users()
+               {
+                   CU_Id = t1.CU_Id,
+                   Id = t1.Id,
+                   Customer_Id = t1.Customer_Id,
+                   Notes = t1.Notes,
+                   Customer_Name = t3.Customer_Name,
+                   User_Name = t2.FirstName + ' ' + t2.LastName
+               };
 
+            List<Customer_Users> customerusers = query.ToList();
+
+            if (customerusers != null)
+            {
+                return Json(customerusers);
+            }
+            return Json(new { Status = "Failure" });
+        }
         // GET: Customer_Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -58,7 +84,27 @@ namespace Recitopia.Controllers
             }
 
             var customer_Users = await db.Customer_Users
-                .FirstOrDefaultAsync(m => m.CU_Id == id);
+               .FirstOrDefaultAsync(m => m.CU_Id == id);
+
+            //BUILD VIEW FOR ANGULARJS RENDERING
+            //var customer_Users =
+            //   from t1 in db.Customer_Users.AsQueryable()
+            //   join t2 in db.AppUsers.AsQueryable() on t1.Id equals t2.Id into t2g
+            //   from t2 in t2g.Take(1).DefaultIfEmpty()
+            //   join t3 in db.Customers.AsQueryable() on t1.Customer_Id equals t3.Customer_Id into t3g
+            //   from t3 in t3g.Take(1).DefaultIfEmpty()
+            //   where t1.CU_Id == id
+            //   select new Customer_Users()
+            //   {
+            //       CU_Id = t1.CU_Id,
+            //       Id = t1.Id,
+            //       Customer_Id = t1.Customer_Id,
+            //       Notes = t1.Notes,
+            //       Customer_Name = t3.Customer_Name,
+            //       User_Name = t2.FirstName + ' ' + t2.LastName
+            //   };
+
+
             if (customer_Users == null)
             {
                 return NotFound();

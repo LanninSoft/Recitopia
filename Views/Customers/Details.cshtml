@@ -5,11 +5,21 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
+    <table width="100%" class="table-borderless">
+        <tr>
+            <th style="font-size:20px">
+                Customer Details
+            </th>
+        </tr>
+        <tr>
+            <th style="font-size:30px;background-color:blanchedalmond">
+                @Model.Customer_Name
+            </th>
+        </tr>
+    </table>
 
 <div>
-    <h4>Customers</h4>
-    <hr />
+    
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Customer_Name)

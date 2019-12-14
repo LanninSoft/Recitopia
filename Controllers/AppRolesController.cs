@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -18,14 +19,29 @@ namespace Recitopia.Controllers
         {
             db = context;
         }
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         // GET: AppRoles
         public async Task<IActionResult> Index()
         {
             return View(await db.Roles.ToListAsync());
         }
 
-        
+        [HttpGet]
+        public JsonResult GetData()
+        {
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+
+            //BUILD VIEW FOR ANGULARJS RENDERING
+            var query = db.AppRoles;
+
+            List<AppRole> appRoles = query.ToList();
+
+            if (appRoles != null)
+            {
+                return Json(appRoles);
+            }
+            return Json(new { Status = "Failure" });
+        }
 
         // GET: AppRoles/Details/5
         public async Task<IActionResult> Details(string id)

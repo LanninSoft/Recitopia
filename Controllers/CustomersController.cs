@@ -12,7 +12,7 @@ using Recitopia.Models;
 
 namespace Recitopia.Controllers
 {
-    public class CustomersController : Controller
+    public class CustomersController : AuthorizeController
     {
         private readonly RecitopiaDBContext db;
         
@@ -21,11 +21,28 @@ namespace Recitopia.Controllers
         {
             db = context;
         }
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         // GET: Customers
         public async Task<IActionResult> Index()
         {
             return View(await db.Customers.ToListAsync());
+        }
+
+        [HttpGet]
+        public JsonResult GetData()
+        {
+            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+
+            //BUILD VIEW FOR ANGULARJS RENDERING
+            var query = db.Customers;
+
+            List<Customers> customers = query.ToList();
+
+            if (customers != null)
+            {
+                return Json(customers);
+            }
+            return Json(new { Status = "Failure" });
         }
         public IActionResult CustomerLogin()
         {

@@ -5,45 +5,69 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Customer_Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Notes)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.User_Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Customer_Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Notes)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CU_Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CU_Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CU_Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
+<table width="100%" class="table table-borderless">
+    <tr class="pageBannerAdmin">
+        <th>
+            Customer Users
+        </th>
+    </tr>
 </table>
+
+<div ng-app="myApp" ng-controller="Customer_Users" class="container-fluid" style="font-size:13px">
+    @* Use ng-controller *@
+
+
+    <table  class="table table-condensed table-hover table-striped table-bordered table-responsive-lg" style="width:75%">
+        <tr>
+            <th class="AngularTableHeaderColor" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('customer_Name')"><font style="color:black">Customer Name</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('customer_Name')"></i>
+            </th>
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('user_Name')"><font style="color:black">User Name</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('user_Name')"></i>
+            </th>
+            
+
+
+            <th style="text-align:right" class="AngularTableHeaderColor"><a href="@Url.Action("Create", "Customer_Users")" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i>Add User to Customer</a></th>
+
+
+        </tr>
+        <tr>
+            <td style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.customer_Name"></td>
+            <td style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.user_Name"></td>
+          
+
+            <td></td>
+
+
+        </tr>
+      
+
+        <tr ng-repeat="customeruser in Customer_Users | filter:f | orderBy:sort.active:sort.descending">
+            @* Fetch All the Recipe record using ng-repeat *@
+
+            <td style="height:15px;padding:1px">{{customeruser.customer_Name}}</td>
+            <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{customeruser.user_Name}}</td>
+           
+
+
+
+            <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:200px">
+                <button ng-click="RedirectToEdit(customeruser)" class="btn btn-outline-success AngularButtons">
+                    <i class="fa fa-pen"></i>
+                </button> |
+                <button ng-click="RedirectToDetails(customeruser)" class="btn btn-outline-info AngularButtons">
+                    <i class="fa fa-clipboard"></i>
+                </button> |
+
+                <button ng-click="DelCustomerUser(customeruser)" class="btn btn-outline-danger AngularButtons">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+
+    </table>
+</div>
+

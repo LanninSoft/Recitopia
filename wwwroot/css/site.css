@@ -73,7 +73,10 @@ textarea {
     background-color: blanchedalmond;
     font-size: 25px;
 }
-
+.pageBannerAdmin {
+    background-color:lightcoral;
+    font-size: 25px;
+}
 body {
     /* Location of the image */
     background-image: url(/images/spices3.jpg);

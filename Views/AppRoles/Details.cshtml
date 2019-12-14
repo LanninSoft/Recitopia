@@ -5,28 +5,38 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
+<table width="100%" class="table-borderless">
+    <tr>
+        <th style="font-size:20px">
+            Role Details
+        </th>
+    </tr>
+    <tr>
+        <th style="font-size:30px;background-color:blanchedalmond">
+            @Model.Name
+        </th>
+    </tr>
+</table>
 
 <div>
-    <h4>AppRole</h4>
-    <hr />
+    
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.NormalizedName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.NormalizedName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ConcurrencyStamp)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ConcurrencyStamp)
         </dd>
     </dl>

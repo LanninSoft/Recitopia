@@ -5,44 +5,66 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NormalizedName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ConcurrencyStamp)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NormalizedName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ConcurrencyStamp)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
+<table width="100%" class="table table-borderless ">
+    <tr class="pageBannerAdmin">
+        <th>
+            Application Site Roles
+        </th>
+    </tr>
 </table>
+
+
+<div ng-app="myApp" ng-controller="AppRoles" style="font-size:13px" class="container-fluid">
+    @* Use ng-controller *@
+
+
+    <table style="width:75%" class="table table-condensed table-hover table-striped table-bordered table-responsive-lg">
+        <tr>
+            <th class="AngularTableHeaderColor" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('name')"><font style="color:black">Role Name</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('name')"></i>
+            </th>
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('concurrencyStamp')"><font style="color:black">Concurrency Stamp</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('concurrencyStamp')"></i>
+            </th>
+
+            
+
+            <th style="text-align:right" class="AngularTableHeaderColor"><a href="@Url.Action("Create", "AppRoles")" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> New Role</a></th>
+
+
+        </tr>
+        <tr>
+            <td style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.lastName"></td>
+            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"></td>
+            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"></td>
+            
+        </tr>
+
+
+        <tr ng-repeat="role in AppRoles | filter:f | orderBy:sort.active:sort.descending ">
+            @* Fetch All the Recipe record using ng-repeat *@
+
+            <td style="height:15px;padding:1px">{{role.name}}</td>
+            <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{role.concurrencyStamp}}</td>
+            
+
+
+            <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:175px">
+
+                <button ng-click="RedirectToEdit(role)" class="btn btn-outline-success AngularButtons">
+                    <i class="fa fa-pen"></i>
+                </button> |
+                <button ng-click="RedirectToDetails(role)" class="btn btn-outline-info AngularButtons">
+                    <i class="fa fa-clipboard"></i>
+                </button> |
+
+                <button ng-click="DelRole(role)" class="btn btn-outline-danger AngularButtons">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+
+    </table>
+</div>

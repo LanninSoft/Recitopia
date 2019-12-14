@@ -385,7 +385,7 @@ namespace Recitopia.Controllers
 
             Ingredient ingredient = db.Ingredient.Find(id);
            
-            var nutrients = db.Nutrition.Where(m => m.ShowOnNutrientPanel == true).ToList();
+            var nutrients = db.Nutrition.Where(m => m.ShowOnNutrientPanel == true && m.Customer_Id == CustomerId).ToList();
 
             foreach (Nutrition thing in nutrients)
             {

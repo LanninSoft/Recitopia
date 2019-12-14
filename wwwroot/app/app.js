@@ -750,4 +750,288 @@
 
 
     });
+
+    //AppUser CONTROLLER
+    app.controller('AppUsers', function ($scope, $http) {
+
+        $http.get("/AppUsers/GetData")
+            .then(function (response) {
+                // First function handles success
+                $scope.AppUsers = response.data;
+
+            }, function (response) {
+                // Second function handles error
+                    $scope.AppUsers = "Something went wrong";
+
+            });
+
+        //Redrect index form to edit form with parameter
+        $scope.RedirectToEdit = function (appusers) {
+
+            window.location.href = '/AppUsers/Edit/' + appusers.id;
+        };
+
+        //Redrect index form to delete form with parameter
+        $scope.DelAppUser = function (appusers) {
+
+            window.location.href = '/AppUsers/Delete/' + appusers.id;
+        };
+        
+        //Redrect index form to details form with parameter
+        $scope.RedirectToDetails = function (appusers) {
+
+            window.location.href = '/AppUsers/Details/' + appusers.id;
+        };
+        app.filter('YesNo', function () {
+            return function (text) {
+                return text ? "Yes" : "No";
+            }
+        })
+        //SORTING ICON CONTROL
+        $scope.sort = {
+            active: '',
+            descending: undefined
+        }
+
+        $scope.changeSorting = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                sort.descending = !sort.descending;
+
+            } else {
+                sort.active = column;
+                sort.descending = false;
+            }
+        };
+
+        $scope.getIcon = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                return sort.descending
+                    ? 'fa fa-caret-up'
+                    : 'fa fa-caret-down';
+            }
+
+            return 'fa fa-caret-left';
+        }
+
+    });
+    //Customers CONTROLLER
+    app.controller('Customers', function ($scope, $http) {
+
+        $http.get("/Customers/GetData")
+            .then(function (response) {
+                // First function handles success
+                $scope.Customers = response.data;
+
+            }, function (response) {
+                // Second function handles error
+                    $scope.Customers = "Something went wrong";
+
+            });
+
+        //Redrect index form to edit form with parameter
+        $scope.RedirectToEdit = function (customers) {
+
+            window.location.href = '/Customers/Edit/' + customers.customer_Id;
+        };
+
+        //Redrect index form to delete form with parameter
+        $scope.DelCustomer = function (customers) {
+
+            window.location.href = '/Customers/Delete/' + customers.customer_Id;
+        };
+
+        //Redrect index form to details form with parameter
+        $scope.RedirectToDetails = function (customers) {
+
+            window.location.href = '/Customers/Details/' + customers.customer_Id;
+        };
+        app.filter('YesNo', function () {
+            return function (text) {
+                return text ? "Yes" : "No";
+            }
+        })
+        //SORTING ICON CONTROL
+        $scope.sort = {
+            active: '',
+            descending: undefined
+        }
+
+        $scope.changeSorting = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                sort.descending = !sort.descending;
+
+            } else {
+                sort.active = column;
+                sort.descending = false;
+            }
+        };
+
+        $scope.getIcon = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                return sort.descending
+                    ? 'fa fa-caret-up'
+                    : 'fa fa-caret-down';
+            }
+
+            return 'fa fa-caret-left';
+        }
+
+    });
+    //AppRoles CONTROLLER
+    app.controller('AppRoles', function ($scope, $http) {
+
+        $http.get("/AppRoles/GetData")
+            .then(function (response) {
+                // First function handles success
+                $scope.AppRoles = response.data;
+
+            }, function (response) {
+                // Second function handles error
+                    $scope.AppRoles = "Something went wrong";
+
+            });
+
+        //Redrect index form to edit form with parameter
+        $scope.RedirectToEdit = function (approles) {
+
+            window.location.href = '/AppRoles/Edit/' + approles.id;
+        };
+
+        //Redrect index form to delete form with parameter
+        $scope.DelRole = function (approles) {
+
+            window.location.href = '/AppRoles/Delete/' + approles.id;
+        };
+
+        //Redrect index form to details form with parameter
+        $scope.RedirectToDetails = function (approles) {
+
+            window.location.href = '/AppRoles/Details/' + approles.id;
+        };
+        app.filter('YesNo', function () {
+            return function (text) {
+                return text ? "Yes" : "No";
+            }
+        })
+        //SORTING ICON CONTROL
+        $scope.sort = {
+            active: '',
+            descending: undefined
+        }
+
+        $scope.changeSorting = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                sort.descending = !sort.descending;
+
+            } else {
+                sort.active = column;
+                sort.descending = false;
+            }
+        };
+
+        $scope.getIcon = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                return sort.descending
+                    ? 'fa fa-caret-up'
+                    : 'fa fa-caret-down';
+            }
+
+            return 'fa fa-caret-left';
+        }
+
+    });
+    //CUSTOMER_USERS CONTROLLER
+    app.controller('Customer_Users', function ($scope, $http) {
+
+       
+
+        $http.get("/Customer_Users/GetData")
+                .then(function (response) {
+                    // First function handles success
+
+                    $scope.Customer_Users = response.data;
+
+                }, function (response) {
+                    // Second function handles error
+                        $scope.Customer_Users = "Something went wrong";
+
+                });
+        
+       
+        //SORTING ICON CONTROL
+        $scope.sort = {
+            active: '',
+            descending: undefined
+        }
+
+        $scope.changeSorting = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                sort.descending = !sort.descending;
+
+            } else {
+                sort.active = column;
+                sort.descending = false;
+            }
+        };
+
+        $scope.getIcon = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                return sort.descending
+                    ? 'fa fa-caret-up'
+                    : 'fa fa-caret-down';
+            }
+
+            return 'fa fa-caret-left';
+        }
+        //Redrect index form to edit form with parameter
+        $scope.RedirectToEdit = function (customerusers) {
+
+            window.location.href = '/Customer_Users/Edit/?id=' + customerusers.cU_Id;
+        };
+
+        //Redrect index form to delete form with parameter
+        $scope.DelCustomerUser = function (customerusers) {
+
+            window.location.href = '/Customer_Users/Delete/?id=' + customerusers.cU_Id;
+        };
+
+        //Redrect index form to details form with parameter
+        $scope.RedirectToDetails = function (customerusers) {
+
+
+            window.location.href = '/Customer_Users/Details/?id=' + customerusers.cU_Id;
+        };
+        
+        app.filter('YesNo', function () {
+            return function (text) {
+                return text ? "Yes" : "No";
+            }
+        })
+
+
+    });
 })();

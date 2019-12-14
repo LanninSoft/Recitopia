@@ -5,10 +5,18 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Edit</h1>
-
-<h4>Customers</h4>
-<hr />
+<table width="100%" class="table-borderless">
+    <tr>
+        <th style="font-size:20px">
+            Edit Customer
+        </th>
+    </tr>
+    <tr>
+        <th style="font-size:30px;background-color:blanchedalmond">
+            @Model.Customer_Name
+        </th>
+    </tr>
+</table>
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
