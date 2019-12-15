@@ -37,13 +37,12 @@ namespace Recitopia
             services.AddEntityFrameworkSqlServer()
                 .AddDbContext<RecitopiaDBContext>(options =>
                 {
-                    options.UseSqlServer(Configuration["DefaultConnection"],
+                    options.UseSqlServer(Configuration["DataConnectionString"],
                         sqlServerOptionsAction: sqlOptions =>
                         {
                             sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
                         });
-                }
-                );
+                });
 
             services.AddControllersWithViews()
                     .AddRazorRuntimeCompilation();
