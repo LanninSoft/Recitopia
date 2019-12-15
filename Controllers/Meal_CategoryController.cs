@@ -1,77 +1,85 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Recitopia.Data;
 using Recitopia.Models;
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
 using System.Linq;
-using System.Net;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace Recitopia.Controllers
 {
     public class Meal_CategoryController : AuthorizeController
     {
-       private RecitopiaDBContext db = new RecitopiaDBContext();
-        [Authorize]
-        // GET: Meal_Category
-        public ActionResult Index()
+        private readonly RecitopiaDBContext _recitopiaDbContext;
+        public Meal_CategoryController(RecitopiaDBContext recitopiaDbContext)
         {
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-            if (CustomerId == 0)
+            _recitopiaDbContext = recitopiaDbContext ?? throw new ArgumentNullException(nameof(recitopiaDbContext));
+        }
+
+        [Authorize]
+        public async Task<ActionResult> Index()
+        {
+            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+
+            if (customerId == 0)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
 
-            return View(db.Meal_Category.Where(m => m.Customer_Id == CustomerId).ToList());
-        }
-        [HttpGet]
-        public JsonResult GetData()
-        {
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            var mealCategories = await _recitopiaDbContext.Meal_Category
+                .Where(m => m.Customer_Id == customerId)
+                .ToListAsync();
 
-            List<Meal_Category> mealC = db.Meal_Category.Where(m => m.Customer_Id == CustomerId).OrderBy(m => m.Category_Name).ToList();
-            if (mealC != null)
-            {
-                return Json(mealC);
-            }
-            return Json(new { Status = "Failure" });
+            return View(mealCategories);
         }
-        // GET: Meal_Category/Details/5
-        public ActionResult Details(int? id)
+
+        [HttpGet]
+        public async Task<JsonResult> GetData()
+        {
+            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+
+            var mealCategories = await _recitopiaDbContext.Meal_Category
+                .Where(m => m.Customer_Id == customerId)
+                .OrderBy(m => m.Category_Name)
+                .ToListAsync();
+
+            return mealCategories != null
+                ? Json(mealCategories)
+                : Json(new { Status = "Failure" });
+        }
+
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new StatusCodeResult(0);
             }
-            Meal_Category meal_Category = db.Meal_Category.Find(id);
-            if (meal_Category == null)
+
+            var mealCategory = await _recitopiaDbContext.Meal_Category.FindAsync(id);
+
+            if (mealCategory == null)
             {
                 return NotFound();
             }
-            return View(meal_Category);
+
+            return View(mealCategory);
         }
 
-        // GET: Meal_Category/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Meal_Category/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([FromForm] Meal_Category meal_Category)
+        public async Task<ActionResult> Create([FromForm] Meal_Category mealCategory)
         {
 
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-            if (CustomerId == 0)
+            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+
+            if (customerId == 0)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -79,102 +87,83 @@ namespace Recitopia.Controllers
             if (ModelState.IsValid)
             {
 
-                meal_Category.Customer_Id = CustomerId;
+                mealCategory.Customer_Id = customerId;
 
-                db.Meal_Category.Add(meal_Category);
-                db.SaveChanges();
+                _recitopiaDbContext.Meal_Category.Add(mealCategory);
+                await _recitopiaDbContext.SaveChangesAsync();
+
                 return RedirectToAction("Index");
             }
 
-            return View(meal_Category);
+            return View(mealCategory);
         }
 
-        // GET: Meal_Category/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return new StatusCodeResult(0);
-            }
-            Meal_Category meal_Category = db.Meal_Category.Find(id);
-            if (meal_Category == null)
+            var mealCategory = await _recitopiaDbContext.Meal_Category.FindAsync(id);
+
+            if (mealCategory == null)
             {
                 return NotFound();
             }
-            return View(meal_Category);
+
+            return View(mealCategory);
         }
 
-        // POST: Meal_Category/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([FromForm] Meal_Category meal_Category)
+        public async Task<ActionResult> Edit([FromForm] Meal_Category mealCategory)
         {
+            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
 
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
             if (ModelState.IsValid)
             {
-                meal_Category.Customer_Id = CustomerId;
+                mealCategory.Customer_Id = customerId;
 
-                db.Entry(meal_Category).State = EntityState.Modified;
-                db.SaveChanges();
+                _recitopiaDbContext.Entry(mealCategory).State = EntityState.Modified;
+                await _recitopiaDbContext.SaveChangesAsync();
+
                 return RedirectToAction("Index");
             }
-            return View(meal_Category);
+            return View(mealCategory);
         }
 
-        // GET: Meal_Category/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int id)
         {
-            if (id == null)
-            {
-                return new StatusCodeResult(0);
-            }
-            Meal_Category meal_Category = db.Meal_Category.Find(id);
-            if (meal_Category == null)
+            var mealCategory = _recitopiaDbContext.Meal_Category.Find(id);
+
+            if (mealCategory == null)
             {
                 return NotFound();
             }
-            return View(meal_Category);
+
+            return View(mealCategory);
         }
 
-        // POST: Meal_Category/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Meal_Category meal_Category = db.Meal_Category.Find(id);
+            var mealCategory = await _recitopiaDbContext.Meal_Category.FindAsync(id);
 
             try
             {
-                db.Meal_Category.Remove(meal_Category);
-                db.SaveChanges();
+                _recitopiaDbContext.Meal_Category.Remove(mealCategory);
+                await _recitopiaDbContext.SaveChangesAsync();
+
                 return RedirectToAction("Index");
             }
-            
+
             catch (InvalidOperationException) // This will catch SqlConnection Exception
             {
                 ViewBag.ErrorMessage = "Uh Oh, There is a problem 2";
-                return View(meal_Category);
+                return View(mealCategory);
             }
             catch (Exception)
             {
                 ViewBag.ErrorMessage = "This Meal Category is associated to a Recipe and cannot be deleted.";
-                return View(meal_Category);
+                return View(mealCategory);
             }
-
-
-
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

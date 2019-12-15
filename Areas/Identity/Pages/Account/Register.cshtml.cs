@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -14,33 +7,35 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Recitopia.Models;
-
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 
 namespace Recitopia.Areas.Identity.Pages.Account
 {
-    
+
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _userManager;
-        private readonly RoleManager<AppRole> _roleManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        private RecitopiaDBContext db = new RecitopiaDBContext();
 
         public RegisterModel(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender,
-            RoleManager<AppRole> roleManager)
+            IEmailSender emailSender)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _logger = logger;
-            _emailSender = emailSender;
-            _roleManager = roleManager;
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
         }
 
         [BindProperty]
@@ -76,7 +71,7 @@ namespace Recitopia.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
@@ -87,11 +82,9 @@ namespace Recitopia.Areas.Identity.Pages.Account
                     Site_Role_Id = "User",
                     Id = Guid.NewGuid().ToString()
                 };
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
-
-
-                var doIt = await _userManager.AddToRoleAsync(user, "User");
-
+                await _userManager.AddToRoleAsync(user, "User");
 
                 if (result.Succeeded)
                 {
@@ -102,7 +95,7 @@ namespace Recitopia.Areas.Identity.Pages.Account
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
-                        values: new { area = "Identity", userId = user.Id, code = code },
+                        values: new { area = "Identity", userId = user.Id, code },
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
@@ -112,11 +105,9 @@ namespace Recitopia.Areas.Identity.Pages.Account
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
                     }
-                    else
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
-                    }
+
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return LocalRedirect(returnUrl);
                 }
                 foreach (var error in result.Errors)
                 {

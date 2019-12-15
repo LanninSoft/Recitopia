@@ -1,42 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Recitopia.Data;
 using Recitopia.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Recitopia.Controllers
 {
     public class AppUsersController : AuthorizeController
     {
-        private readonly RecitopiaDBContext db;
+        private readonly RecitopiaDBContext _recitopiaDbContext;
         private readonly UserManager<AppUser> _userManager;
-        public AppUsersController(RecitopiaDBContext context, UserManager<AppUser> userManager)
+        public AppUsersController(RecitopiaDBContext recitopiaDbContext, UserManager<AppUser> userManager)
         {
-            db = context;
-            _userManager = userManager;
-
+            _recitopiaDbContext = recitopiaDbContext ?? throw new ArgumentNullException(nameof(recitopiaDbContext));
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
+
         [Authorize(Roles ="Administrator")]
         // GET: AppUsers
         public async Task<IActionResult> Index()
         {
-            return View(await db.AppUsers.ToListAsync());
+            return View(await _recitopiaDbContext.AppUsers.ToListAsync());
         }
         [HttpGet]
-        public JsonResult GetData()
+        public async Task<JsonResult> GetData()
         {
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-
-            //BUILD VIEW FOR ANGULARJS RENDERING
-            var query = db.AppUsers;
-               
-            List<AppUser> appUsers = query.ToList();
+            var appUsers = await _recitopiaDbContext.AppUsers.ToListAsync();
 
             if (appUsers != null)
             {
@@ -44,6 +39,7 @@ namespace Recitopia.Controllers
             }
             return Json(new { Status = "Failure" });
         }
+
         // GET: AppUsers/Details/5
         public async Task<IActionResult> Details(string id)
         {
@@ -52,8 +48,9 @@ namespace Recitopia.Controllers
                 return NotFound();
             }
 
-            var appUser = await db.AppUsers
+            var appUser = await _recitopiaDbContext.AppUsers
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (appUser == null)
             {
                 return NotFound();
@@ -77,8 +74,8 @@ namespace Recitopia.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Add(appUser);
-                await db.SaveChangesAsync();
+                _recitopiaDbContext.Add(appUser);
+                await _recitopiaDbContext.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(appUser);
@@ -92,21 +89,21 @@ namespace Recitopia.Controllers
                 return NotFound();
             }
 
-            var appUser = await db.AppUsers.FindAsync(id);
+            var appUser = await _recitopiaDbContext.AppUsers.FindAsync(id);
 
             if (appUser == null)
             {
                 return NotFound();
             }
 
-            var userRoles = db.AppRoles;
+            IEnumerable<SelectListItem> appUserRoles = await _recitopiaDbContext.AppRoles
+                .Select(c => new SelectListItem
+                    {
+                        Value = c.Name,
+                        Text = c.Name
+                    })
+                .ToListAsync();
 
-            IEnumerable<SelectListItem> appUserRoles = db.AppRoles.Select(c => new SelectListItem
-            {
-                Value = c.Name,
-                Text = c.Name
-
-            });
             ViewBag.UserRoles = appUserRoles;
 
             return View(appUser);
@@ -128,7 +125,7 @@ namespace Recitopia.Controllers
             {
                 
                 //USE LINQ TO UPDATE USER
-                var appuser = db.AppUsers.Find(id);
+                var appuser = await _recitopiaDbContext.AppUsers.FindAsync(id);
                 try
                 {
                     if (appuser != null)
@@ -152,13 +149,13 @@ namespace Recitopia.Controllers
                         appuser.LockoutEnabled = appUser.LockoutEnabled;
                         appuser.AccessFailedCount = appUser.AccessFailedCount;
 
-                        await db.SaveChangesAsync();
+                        await _recitopiaDbContext.SaveChangesAsync();
                     }
 
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AppUserExists(appUser.Id))
+                    if (!await AppUserExists(appUser.Id))
                     {
                         return NotFound();
                     }
@@ -187,8 +184,9 @@ namespace Recitopia.Controllers
                 return NotFound();
             }
 
-            var appUser = await db.AppUsers
+            var appUser = await _recitopiaDbContext.AppUsers
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (appUser == null)
             {
                 return NotFound();
@@ -202,15 +200,17 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var appUser = await db.AppUsers.FindAsync(id);
-            db.AppUsers.Remove(appUser);
-            await db.SaveChangesAsync();
+            var appUser = await _recitopiaDbContext.AppUsers.FindAsync(id);
+            _recitopiaDbContext.AppUsers.Remove(appUser);
+            await _recitopiaDbContext.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AppUserExists(string id)
+        private async Task<bool> AppUserExists(string id)
         {
-            return db.AppUsers.Any(e => e.Id == id);
+            return await _recitopiaDbContext.AppUsers
+                .AnyAsync(e => e.Id == id);
         }
     }
 }

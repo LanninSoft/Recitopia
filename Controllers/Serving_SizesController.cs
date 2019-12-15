@@ -1,62 +1,67 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Recitopia.Data;
 using Recitopia.Models;
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
 using System.Linq;
-using System.Net;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace Recitopia.Controllers
 {
     public class Serving_SizesController : AuthorizeController
     {
-       private RecitopiaDBContext db = new RecitopiaDBContext();
-        [Authorize]
-        // GET: Serving_Sizes
-        public ActionResult Index()
+        private readonly RecitopiaDBContext _recitopiaDbContext;
+        public Serving_SizesController(RecitopiaDBContext recitopiaDbContext)
         {
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-            if (CustomerId == 0)
+            _recitopiaDbContext = recitopiaDbContext ?? throw new ArgumentNullException(nameof(recitopiaDbContext));
+        }
+
+        [Authorize]
+        public async Task<ActionResult> Index()
+        {
+            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+
+            if (customerId == 0)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
 
-            return View(db.Serving_Sizes.Where(m => m.Customer_Id == CustomerId).ToList());
-        }
-        [HttpGet]
-        public JsonResult GetData()
-        {
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            var servingSizes = await _recitopiaDbContext.Serving_Sizes
+                .Where(m => m.Customer_Id == customerId)
+                .ToListAsync();
 
-            List<Serving_Sizes> SS = db.Serving_Sizes.Where(m => m.Customer_Id == CustomerId).OrderBy(m => m.Serving_Size).ToList();
-            if (SS != null)
-            {
-                return Json(SS);
-            }
-            return Json(new { Status = "Failure" });
+            return View(servingSizes);
         }
-        // GET: Serving_Sizes/Details/5
-        public ActionResult Details(int? id)
+
+        [HttpGet]
+        public async Task<JsonResult> GetData()
         {
-            if (id == null)
-            {
-                return new StatusCodeResult(0);
-            }
-            Serving_Sizes serving_Sizes = db.Serving_Sizes.Find(id);
-            if (serving_Sizes == null)
+            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+
+            var servingSizes = await _recitopiaDbContext.Serving_Sizes
+                .Where(m => m.Customer_Id == customerId)
+                .OrderBy(m => m.Serving_Size)
+                .ToListAsync();
+
+            return servingSizes != null 
+                ? Json(servingSizes) 
+                : Json(new { Status = "Failure" });
+        }
+
+        public async Task<ActionResult> Details(int id)
+        {
+            var servingSize = await _recitopiaDbContext.Serving_Sizes.FindAsync(id);
+
+            if (servingSize == null)
             {
                 return NotFound();
             }
-            return View(serving_Sizes);
+
+            return View(servingSize);
         }
 
-        // GET: Serving_Sizes/Create
         public ActionResult Create()
         {
             return View();
@@ -78,8 +83,8 @@ namespace Recitopia.Controllers
             if (ModelState.IsValid)
             {
                 serving_Sizes.Customer_Id = CustomerId;
-                db.Serving_Sizes.Add(serving_Sizes);
-                db.SaveChanges();
+                _recitopiaDbContext.Serving_Sizes.Add(serving_Sizes);
+                _recitopiaDbContext.SaveChanges();
                 return RedirectToAction("Index");
             }
 
@@ -98,7 +103,7 @@ namespace Recitopia.Controllers
             {
                 return new StatusCodeResult(0);
             }
-            Serving_Sizes serving_Sizes = db.Serving_Sizes.Find(id);
+            Serving_Sizes serving_Sizes = _recitopiaDbContext.Serving_Sizes.Find(id);
             if (serving_Sizes == null)
             {
                 return NotFound();
@@ -117,8 +122,8 @@ namespace Recitopia.Controllers
             if (ModelState.IsValid)
             {
                 serving_Sizes.Customer_Id = CustomerId;
-                db.Entry(serving_Sizes).State = EntityState.Modified;
-                db.SaveChanges();
+                _recitopiaDbContext.Entry(serving_Sizes).State = EntityState.Modified;
+                _recitopiaDbContext.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(serving_Sizes);
@@ -137,7 +142,7 @@ namespace Recitopia.Controllers
             {
                 return new StatusCodeResult(0);
             }
-            Serving_Sizes serving_Sizes = db.Serving_Sizes.Find(id);
+            Serving_Sizes serving_Sizes = _recitopiaDbContext.Serving_Sizes.Find(id);
             if (serving_Sizes == null)
             {
                 return NotFound();
@@ -150,9 +155,9 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Serving_Sizes serving_Sizes = db.Serving_Sizes.Find(id);
-            db.Serving_Sizes.Remove(serving_Sizes);
-            db.SaveChanges();
+            Serving_Sizes serving_Sizes = _recitopiaDbContext.Serving_Sizes.Find(id);
+            _recitopiaDbContext.Serving_Sizes.Remove(serving_Sizes);
+            _recitopiaDbContext.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -160,7 +165,7 @@ namespace Recitopia.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                _recitopiaDbContext.Dispose();
             }
             base.Dispose(disposing);
         }

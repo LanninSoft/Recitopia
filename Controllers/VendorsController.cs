@@ -1,188 +1,181 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Recitopia.Data;
 using Recitopia.Models;
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
 using System.Linq;
-using System.Net;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace Recitopia.Controllers
 {
-
     public class VendorsController : AuthorizeController
     {
-       private RecitopiaDBContext db = new RecitopiaDBContext();
+        private readonly RecitopiaDBContext _recitopiaDbContext;
+
+        public VendorsController(RecitopiaDBContext recitopiaDbContext)
+        {
+            _recitopiaDbContext = recitopiaDbContext ?? throw new ArgumentNullException(nameof(recitopiaDbContext));
+        }
+
         [Authorize]
-        // GET: Vendors
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-            if (CustomerId == 0)
+            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+
+            if (customerId == 0)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
-            var vendors = db.Vendor.Where(m => m.Customer_Id == CustomerId).OrderBy(m => m.Vendor_Name).ToList();
-            if (vendors != null)
-            {
-                
 
-                var tempCheckit = vendors.ToList();
+            var vendors = await _recitopiaDbContext.Vendor
+                .Where(m => m.Customer_Id == customerId)
+                .OrderBy(m => m.Vendor_Name)
+                .ToListAsync();
 
-                return View(tempCheckit);
-            }
-            else
-            {
-                return View();
-            }
-
-
+            return View(vendors);
         }
+
         [HttpGet]
-        public JsonResult GetData()
+        public async Task<JsonResult> GetData()
         {
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-            List<Vendor> vendors = db.Vendor.Where(m => m.Customer_Id == CustomerId).OrderBy(m => m.Vendor_Name).ToList();
-            if (vendors != null)
-            {
-                return Json(vendors);
-            }
-            return Json(new { Status = "Failure" });
+            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+
+            var vendors = await _recitopiaDbContext.Vendor
+                .Where(m => m.Customer_Id == customerId)
+                .OrderBy(m => m.Vendor_Name)
+                .ToListAsync();
+
+            return Json(vendors);
         }
 
-
-        // GET: Vendors/Details/5
-        public ActionResult Details(int? id)
+        public async Task<ActionResult> Details(int id)
         {
+            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
 
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-            if (CustomerId == 0)
+            if (customerId == 0)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
-            if (id == null)
-            {
-                return new StatusCodeResult(0);
-            }
-            Vendor vendor = db.Vendor.Find(id);
+         
+            var vendor = await _recitopiaDbContext.Vendor.FindAsync(id);
+
             if (vendor == null)
             {
                 return NotFound();
             }
+
             return View(vendor);
         }
 
-        // GET: Vendors/Create
         public ActionResult Create()
         {
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-            if (CustomerId == 0)
+            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+
+            if (customerId == 0)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
+
             return View();
         }
 
-        // POST: Vendors/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([FromForm] Vendor vendor)
+        public async Task<ActionResult> Create([FromForm] Vendor vendor)
         {
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-            if (CustomerId == 0)
+            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+
+            if (customerId == 0)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
+
             if (ModelState.IsValid)
             {
-                vendor.Customer_Id = CustomerId;
-                db.Vendor.Add(vendor);
-                db.SaveChanges();
+                vendor.Customer_Id = customerId;
+                _recitopiaDbContext.Vendor.Add(vendor);
+
+                await _recitopiaDbContext.SaveChangesAsync();
+
                 return RedirectToAction("Index");
             }
 
             return View(vendor);
         }
 
-        // GET: Vendors/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int id)
         {
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-            if (CustomerId == 0)
+            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+
+            if (customerId == 0)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
-            if (id == null)
-            {
-                return new StatusCodeResult(0);
-            }
-            Vendor vendor = db.Vendor.Find(id);
+
+            var vendor = await _recitopiaDbContext.Vendor.FindAsync(id);
+
             if (vendor == null)
             {
                 return NotFound();
             }
+
             return View(vendor);
         }
 
-        // POST: Vendors/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([FromForm] Vendor vendor)
+        public async Task<ActionResult> Edit([FromForm] Vendor vendor)
         {
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+
             if (ModelState.IsValid)
             {
-                vendor.Customer_Id = CustomerId;
-                db.Entry(vendor).State = EntityState.Modified;
-                db.SaveChanges();
+                vendor.Customer_Id = customerId;
+                _recitopiaDbContext.Entry(vendor).State = EntityState.Modified;
+
+                await _recitopiaDbContext.SaveChangesAsync();
+
                 return RedirectToAction("Index");
             }
+
             return View(vendor);
         }
 
-        // GET: Vendors/Delete/5
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-            if (CustomerId == 0)
+            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+
+            if (customerId == 0)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
-            if (id == null)
-            {
-                return new StatusCodeResult(0);
-            }
-            Vendor vendor = db.Vendor.Find(id);
+
+            var vendor = await _recitopiaDbContext.Vendor.FindAsync(id);
+
             if (vendor == null)
             {
                 return NotFound();
             }
+
             return View(vendor);
         }
 
-        // POST: Vendors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Vendor vendor = db.Vendor.Find(id);
+            var vendor = await _recitopiaDbContext.Vendor.FindAsync(id);
 
             try
             {
-                db.Vendor.Remove(vendor);
-                db.SaveChanges();
+                _recitopiaDbContext.Vendor.Remove(vendor);
+                await _recitopiaDbContext.SaveChangesAsync();
+
                 return RedirectToAction("Index");
             }
-           
+
             catch (InvalidOperationException) // This will catch SqlConnection Exception
             {
                 ViewBag.ErrorMessage = "Uh Oh, There is a problem 2";
@@ -193,19 +186,6 @@ namespace Recitopia.Controllers
                 ViewBag.ErrorMessage = "This Vendor is associated to an Ingredient and cannot be removed.";
                 return View(vendor);
             }
-
-
         }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-
     }
 }

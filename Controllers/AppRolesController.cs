@@ -1,46 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Recitopia.Data;
+using Recitopia.Models;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Recitopia.Models;
 
 namespace Recitopia.Controllers
 {
     public class AppRolesController : AuthorizeController
     {
-        private readonly RecitopiaDBContext db;
+        private readonly RecitopiaDBContext _recitopiaDbContext;
 
-        public AppRolesController(RecitopiaDBContext context)
+        public AppRolesController(RecitopiaDBContext recitopiaDbContext)
         {
-            db = context;
+            _recitopiaDbContext = recitopiaDbContext ?? throw new ArgumentNullException(nameof(recitopiaDbContext));
         }
+
         [Authorize(Roles = "Administrator")]
         // GET: AppRoles
         public async Task<IActionResult> Index()
         {
-            return View(await db.Roles.ToListAsync());
+            return View(await _recitopiaDbContext.Roles.ToListAsync());
         }
 
         [HttpGet]
-        public JsonResult GetData()
+        public async Task<JsonResult> GetData()
         {
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            var appRoles = await _recitopiaDbContext.AppRoles.ToListAsync();
 
-            //BUILD VIEW FOR ANGULARJS RENDERING
-            var query = db.AppRoles;
-
-            List<AppRole> appRoles = query.ToList();
-
-            if (appRoles != null)
-            {
-                return Json(appRoles);
-            }
-            return Json(new { Status = "Failure" });
+            return appRoles != null
+                ? Json(appRoles)
+                : Json(new { Status = "Failure" });
         }
 
         // GET: AppRoles/Details/5
@@ -51,8 +43,9 @@ namespace Recitopia.Controllers
                 return NotFound();
             }
 
-            var appRole = await db.Roles
+            var appRole = await _recitopiaDbContext.Roles
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (appRole == null)
             {
                 return NotFound();
@@ -79,8 +72,8 @@ namespace Recitopia.Controllers
                 //CREATE GROUP ID
                 appRole.Id = Guid.NewGuid().ToString();
 
-                db.Add(appRole);
-                await db.SaveChangesAsync();
+                _recitopiaDbContext.Add(appRole);
+                await _recitopiaDbContext.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(appRole);
@@ -94,7 +87,7 @@ namespace Recitopia.Controllers
                 return NotFound();
             }
 
-            var appRole = await db.Roles.FindAsync(id);
+            var appRole = await _recitopiaDbContext.Roles.FindAsync(id);
             if (appRole == null)
             {
                 return NotFound();
@@ -118,8 +111,8 @@ namespace Recitopia.Controllers
             {
                 try
                 {
-                    db.Update(appRole);
-                    await db.SaveChangesAsync();
+                    _recitopiaDbContext.Update(appRole);
+                    await _recitopiaDbContext.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -127,13 +120,13 @@ namespace Recitopia.Controllers
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(appRole);
         }
 
@@ -145,8 +138,9 @@ namespace Recitopia.Controllers
                 return NotFound();
             }
 
-            var appRole = await db.Roles
+            var appRole = await _recitopiaDbContext.Roles
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (appRole == null)
             {
                 return NotFound();
@@ -160,15 +154,16 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var appRole = await db.Roles.FindAsync(id);
-            db.Roles.Remove(appRole);
-            await db.SaveChangesAsync();
+            var appRole = await _recitopiaDbContext.Roles.FindAsync(id);
+            _recitopiaDbContext.Roles.Remove(appRole);
+            await _recitopiaDbContext.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
         private bool AppRoleExists(string id)
         {
-            return db.Roles.Any(e => e.Id == id);
+            return _recitopiaDbContext.Roles.Any(e => e.Id == id);
         }
     }
 }

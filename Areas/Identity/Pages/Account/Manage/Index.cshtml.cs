@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Recitopia.Data;
 using Recitopia.Models;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace Recitopia.Areas.Identity.Pages.Account.Manage
 {
@@ -14,13 +13,14 @@ namespace Recitopia.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
-        private RecitopiaDBContext db = new RecitopiaDBContext();
-        public IndexModel(
-            UserManager<AppUser> userManager,
-            SignInManager<AppUser> signInManager)
+        private readonly RecitopiaDBContext _recitopiaDbContext;
+
+        public IndexModel(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,
+            RecitopiaDBContext recitopiaDbContext)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+            _recitopiaDbContext = recitopiaDbContext ?? throw new ArgumentNullException(nameof(recitopiaDbContext));
         }
 
         [Display(Name = "User Name")]
@@ -63,8 +63,6 @@ namespace Recitopia.Areas.Identity.Pages.Account.Manage
             public string WebUrl { get; set; }
 
             public int Customer_Id { get; set; }
-
-
         }
 
         private async Task LoadAsync(AppUser user)
@@ -87,7 +85,6 @@ namespace Recitopia.Areas.Identity.Pages.Account.Manage
                 ZipCode = userInfo.ZipCode,
                 WebUrl = userInfo.WebUrl,
                 Customer_Id = userInfo.Customer_Id
-
             };
         }
 
@@ -116,27 +113,24 @@ namespace Recitopia.Areas.Identity.Pages.Account.Manage
                 await LoadAsync(user);
                 return Page();
             }
-            
-                //USE LINQ TO UPDATE USER
-                var appuser = db.AppUsers.Find(user.Id);
-                if (appuser != null)
-                {
-                    appuser.FirstName = Input.FirstName;
-                    appuser.LastName = Input.LastName;
-                    appuser.PhoneNumber = Input.PhoneNumber;
-                    appuser.Address1 = Input.Address1;
-                    appuser.Address2 = Input.Address2;
-                    appuser.City = Input.City;
-                    appuser.State = Input.State;
-                    appuser.ZipCode = Input.ZipCode;
-                    appuser.WebUrl = Input.WebUrl;
-                    appuser.Customer_Id = Input.Customer_Id;
-                
 
-                    await db.SaveChangesAsync();
-                }
+            //USE LINQ TO UPDATE USER
+            var appuser = await _recitopiaDbContext.AppUsers.FindAsync(user.Id);
+            if (appuser != null)
+            {
+                appuser.FirstName = Input.FirstName;
+                appuser.LastName = Input.LastName;
+                appuser.PhoneNumber = Input.PhoneNumber;
+                appuser.Address1 = Input.Address1;
+                appuser.Address2 = Input.Address2;
+                appuser.City = Input.City;
+                appuser.State = Input.State;
+                appuser.ZipCode = Input.ZipCode;
+                appuser.WebUrl = Input.WebUrl;
+                appuser.Customer_Id = Input.Customer_Id;
 
-
+                await _recitopiaDbContext.SaveChangesAsync();
+            }
 
             await _signInManager.RefreshSignInAsync(user);
 

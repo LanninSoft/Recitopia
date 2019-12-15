@@ -1,18 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Recitopia.Models
 {
-   
+
     public class AppUser : IdentityUser<string>
     {
-        
-
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
         [Display(Name = "Last Name")]
@@ -39,9 +33,5 @@ namespace Recitopia.Models
         public string Customer_Name { get; set; }
 
         public IEnumerable<Customers> Customers { get; set; }
-
-        private RecitopiaDBContext db = new RecitopiaDBContext();
-        
-       
     }
 }
