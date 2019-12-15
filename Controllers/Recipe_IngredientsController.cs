@@ -108,7 +108,7 @@ namespace Recitopia.Controllers
             }
 
             var recipe = await _recitopiaDbContext.Recipe.SingleAsync(i => i.Recipe_Id == recipeId);
-            recipe.LastModified = DateTime.Now;
+            recipe.LastModified = DateTime.UtcNow;
 
             await _recitopiaDbContext.SaveChangesAsync();
 
@@ -204,7 +204,7 @@ namespace Recitopia.Controllers
                 //DIRECT LINQ TO DB REPLACING STORED PROCEDURE
                 Recipe recipeFind = _recitopiaDbContext.Recipe.Where(i => i.Recipe_Id == recipe_Ingredients.Recipe_Id).Single();
 
-                recipeFind.LastModified = DateTime.Now;
+                recipeFind.LastModified = DateTime.UtcNow;
 
                 _recitopiaDbContext.SaveChanges();
 
@@ -316,7 +316,7 @@ namespace Recitopia.Controllers
                 //DIRECT LINQ TO DB REPLACING STORED PROCEDURE
                 Recipe recipeFind = _recitopiaDbContext.Recipe.Where(i => i.Recipe_Id == recipe_Ingredients.Recipe_Id).Single();
 
-                recipeFind.LastModified = DateTime.Now;
+                recipeFind.LastModified = DateTime.UtcNow;
 
                 _recitopiaDbContext.SaveChanges();
 

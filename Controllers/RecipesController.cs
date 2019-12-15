@@ -552,7 +552,7 @@ namespace Recitopia.Controllers
                 //DIRECT LINQ TO DB REPLACING STORED PROCEDURE
                 Recipe recipeFind = _recitopiaDbContext.Recipe.Where(i => i.Recipe_Id == recipe.Recipe_Id).Single();
 
-                recipeFind.LastModified = DateTime.Now;
+                recipeFind.LastModified = DateTime.UtcNow;
 
                 _recitopiaDbContext.SaveChanges();
 
@@ -608,7 +608,7 @@ namespace Recitopia.Controllers
                 //DIRECT LINQ TO DB REPLACING STORED PROCEDURE
                 Recipe recipeFind = _recitopiaDbContext.Recipe.Where(i => i.Recipe_Id == recipe.Recipe_Id).Single();
 
-                recipeFind.LastModified = DateTime.Now;
+                recipeFind.LastModified = DateTime.UtcNow;
 
                 _recitopiaDbContext.SaveChanges();
 
