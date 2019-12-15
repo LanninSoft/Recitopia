@@ -1,106 +1,106 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Recitopia.Data;
+using Recitopia.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Recitopia.Models;
 
 namespace Recitopia.Controllers
 {
     public class CustomersController : AuthorizeController
     {
-        private readonly RecitopiaDBContext db;
-        
+        private readonly RecitopiaDBContext _recitopiaDbContext;
 
-        public CustomersController(RecitopiaDBContext context)
+        public CustomersController(RecitopiaDBContext recitopiaDbContext)
         {
-            db = context;
+            _recitopiaDbContext = recitopiaDbContext ?? throw new ArgumentNullException(nameof(recitopiaDbContext));
         }
+
         [Authorize(Roles = "Administrator")]
         // GET: Customers
         public async Task<IActionResult> Index()
         {
-            return View(await db.Customers.ToListAsync());
+            return View(await _recitopiaDbContext.Customers.ToListAsync());
         }
 
         [HttpGet]
-        public JsonResult GetData()
+        public async Task<JsonResult> GetData()
         {
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-
             //BUILD VIEW FOR ANGULARJS RENDERING
-            var query = db.Customers;
+            var customers = await _recitopiaDbContext.Customers.ToListAsync();
 
-            List<Customers> customers = query.ToList();
-
-            if (customers != null)
-            {
-                return Json(customers);
-            }
-            return Json(new { Status = "Failure" });
+            return customers != null
+                ? Json(customers)
+                : Json(new { Status = "Failure" });
         }
-        public IActionResult CustomerLogin()
-        {
 
+        public async Task<IActionResult> CustomerLogin()
+        {
             //RETURN LIST OF CUSTOMERS THAT A MEMBER OF
             //IF ONLY ONE, TAKE THEM HOME.  IF MULTIPLE, PROVIDE LIST AND USER SELECTS WHICH CUSTOMER TO LOGIN TO
-            var currentUser = db.AppUsers.Where(m => m.UserName.Equals(User.Identity.Name)).First();
+            var currentUser = await _recitopiaDbContext.AppUsers
+                .SingleAsync(m => m.UserName == User.Identity.Name);
 
-            var customerList = db.Customer_Users.Where(m => m.Id == currentUser.Id);
+            var customerIds = await _recitopiaDbContext.Customer_Users
+                .Where(cu => cu.Id == currentUser.Id)
+                .Select(cu => cu.Customer_Id)
+                .ToListAsync();
 
-            if (customerList.Count() > 1)
+            if (customerIds.Count() > 1)
             {
                 //Provide selection view
 
                 //create list and populate with Customer name and Id
-                List<IList<string>> custList = new List<IList<string>>();
+                var custList = new List<List<string>>();
 
-                foreach (Customer_Users thing in customerList)
+                foreach (var customerId in customerIds)
                 {
-                    var tempResults = db.Customers.Where(m => m.Customer_Id == thing.Customer_Id).First();
-                    
-                    custList.Add(new List<string> { tempResults.Customer_Name, tempResults.Customer_Id.ToString() });
-                }
+                    var customer = await _recitopiaDbContext.Customers
+                        .SingleAsync(m => m.Customer_Id == customerId);
 
+                    // Dave: I'm not sure how this is used yet, but it seems like you need a keyvalue pair. A dictionary would 
+                    // work better.
+                    custList.Add(new List<string> { customer.Customer_Name, customer.Customer_Id.ToString() });
+                }
 
                 ViewBag.UserCustomers = custList;
 
                 return View();
             }
-            else if(customerList.Count() == 1)
+
+            if (customerIds.Count() == 1)
             {
                 //take them to home page
-                var customerCId = db.Customer_Users.Where(m => m.Id == currentUser.Id).First();
+                var customerCId = await _recitopiaDbContext.Customer_Users.SingleAsync(m => m.Id == currentUser.Id);
 
-                return RedirectToAction("CustomerLoginGo", new { id = customerCId.Customer_Id});
-            }
-            else
-            {
-                ViewBag.UserCustomers = null;
-
-                return View();
+                return RedirectToAction("CustomerLoginGo", new { id = customerCId.Customer_Id });
             }
 
+            ViewBag.UserCustomers = null;
+
+            return View();
         }
-        public IActionResult CustomerLoginGo (int id)
+
+        public async Task<IActionResult> CustomerLoginGo(int id)
         {
             //save customerid to appuser field to carry
-            var currentUser = db.AppUsers.Where(m => m.UserName.Equals(User.Identity.Name)).First();
-                                  
 
-            var getCustomerName = db.Customers.Where(m => m.Customer_Id == id).First();
+
+            var currentUser = await _recitopiaDbContext.AppUsers.Where(m => m.UserName ==  User.Identity.Name).FirstAsync();
+
+
+            var getCustomerName = await _recitopiaDbContext.Customers.Where(m => m.Customer_Id == id).FirstAsync();
 
             currentUser.Customer_Id = id;
             currentUser.Customer_Name = getCustomerName.Customer_Name;
 
             HttpContext.Session.SetString("CurrentUserCustomerId", id.ToString());
 
-            db.SaveChanges();
+            _recitopiaDbContext.SaveChanges();
 
             return LocalRedirect("~/Home/Index");
         }
@@ -113,8 +113,9 @@ namespace Recitopia.Controllers
                 return NotFound();
             }
 
-            var customers = await db.Customers
+            var customers = await _recitopiaDbContext.Customers
                 .FirstOrDefaultAsync(m => m.Customer_Id == id);
+
             if (customers == null)
             {
                 return NotFound();
@@ -138,8 +139,8 @@ namespace Recitopia.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Add(customers);
-                await db.SaveChangesAsync();
+                _recitopiaDbContext.Add(customers);
+                await _recitopiaDbContext.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(customers);
@@ -153,11 +154,13 @@ namespace Recitopia.Controllers
                 return NotFound();
             }
 
-            var customers = await db.Customers.FindAsync(id);
+            var customers = await _recitopiaDbContext.Customers.FindAsync(id);
+
             if (customers == null)
             {
                 return NotFound();
             }
+
             return View(customers);
         }
 
@@ -177,19 +180,17 @@ namespace Recitopia.Controllers
             {
                 try
                 {
-                    db.Update(customers);
-                    await db.SaveChangesAsync();
+                    _recitopiaDbContext.Update(customers);
+                    await _recitopiaDbContext.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CustomersExists(customers.Customer_Id))
+                    if (!await CustomersExists(customers.Customer_Id))
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -204,8 +205,9 @@ namespace Recitopia.Controllers
                 return NotFound();
             }
 
-            var customers = await db.Customers
+            var customers = await _recitopiaDbContext.Customers
                 .FirstOrDefaultAsync(m => m.Customer_Id == id);
+
             if (customers == null)
             {
                 return NotFound();
@@ -219,15 +221,16 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var customers = await db.Customers.FindAsync(id);
-            db.Customers.Remove(customers);
-            await db.SaveChangesAsync();
+            var customers = await _recitopiaDbContext.Customers.FindAsync(id);
+            _recitopiaDbContext.Customers.Remove(customers);
+            await _recitopiaDbContext.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CustomersExists(int id)
+        private async Task<bool> CustomersExists(int id)
         {
-            return db.Customers.Any(e => e.Customer_Id == id);
+            return await _recitopiaDbContext.Customers.AnyAsync(e => e.Customer_Id == id);
         }
     }
 }

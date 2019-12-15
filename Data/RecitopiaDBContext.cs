@@ -1,53 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Recitopia.Models;
 
-namespace Recitopia.Models
+namespace Recitopia.Data
 {
     public class RecitopiaDBContext : IdentityDbContext<AppUser, AppRole, string>
     {
-        private string connstr;
-
         public RecitopiaDBContext()
-        {
-            var builder = new Microsoft.Extensions.Configuration.ConfigurationBuilder()
-             .SetBasePath(AppContext.BaseDirectory)
-             .AddJsonFile("appsettings.json")
-             .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("Hosting:Environment")}.json", true)
-             .AddEnvironmentVariables();
+        { }
 
-            var config = builder.Build();
-
-            connstr = config.GetConnectionString("DefaultConnection");
-        }
         public RecitopiaDBContext(DbContextOptions<RecitopiaDBContext> options)
            : base(options)
-        {
-            var builder = new Microsoft.Extensions.Configuration.ConfigurationBuilder()
-             .SetBasePath(AppContext.BaseDirectory)
-             .AddJsonFile("appsettings.json")
-             .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("Hosting:Environment")}.json", true)
-             .AddEnvironmentVariables();
+        { }
 
-            var config = builder.Build();
-
-            connstr = config.GetConnectionString("DefaultConnection");
-
-        }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-
-                optionsBuilder.UseSqlServer(connstr);
-            }
-        }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             

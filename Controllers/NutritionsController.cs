@@ -1,154 +1,150 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Recitopia.Data;
 using Recitopia.Models;
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
 using System.Linq;
-using System.Net;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace Recitopia.Controllers
 {
     public class NutritionsController : AuthorizeController
     {
-        private RecitopiaDBContext db = new RecitopiaDBContext();
-        [Authorize]
-        // GET: Nutritions
-        public ActionResult Index()
+        private readonly RecitopiaDBContext _recitopiaDbContext;
+
+        public NutritionsController(RecitopiaDBContext recitopiaDbContext)
         {
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-            if (CustomerId == 0)
+            _recitopiaDbContext = recitopiaDbContext ?? throw new ArgumentNullException(nameof(recitopiaDbContext));
+        }
+
+        [Authorize]
+        public async Task<ActionResult> Index()
+        {
+            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+
+            if (customerId == 0)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
 
-            var nutritionList = db.Nutrition.Where(m => m.Customer_Id == CustomerId).OrderBy(o => o.Nutrition_Item).ToList();
-
-            //nutritionList.Sort("Nutrition_Item");
+            var nutritionList = await _recitopiaDbContext.Nutrition
+                .Where(m => m.Customer_Id == customerId)
+                .OrderBy(o => o.Nutrition_Item)
+                .ToListAsync();
 
             return View(nutritionList);
         }
-        [HttpGet]
-        public JsonResult GetData()
-        {
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
 
-            List<Nutrition> nutrition = db.Nutrition.Where(m => m.Customer_Id == CustomerId).OrderBy(m => m.Nutrition_Item).ToList();
-            if (nutrition != null)
-            {
-                return Json(nutrition);
-            }
-            return Json(new { Status = "Failure" });
-        }
-        // GET: Nutritions/Details/5
-        public ActionResult Details(int? id)
+        [HttpGet]
+        public async Task<JsonResult> GetData()
         {
-            if (id == null)
-            {
-                return new StatusCodeResult(0);
-            }
-            Nutrition nutrition = db.Nutrition.Find(id);
+            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+
+            var nutritions = await _recitopiaDbContext.Nutrition
+                .Where(m => m.Customer_Id == customerId)
+                .OrderBy(m => m.Nutrition_Item)
+                .ToListAsync();
+
+            return nutritions != null 
+                ? Json(nutritions) 
+                : Json(new { Status = "Failure" });
+        }
+
+        public async Task<ActionResult> Details(int id)
+        {
+            var nutrition = await _recitopiaDbContext.Nutrition.FindAsync(id);
+
             if (nutrition == null)
             {
                 return NotFound();
             }
+
             return View(nutrition);
         }
 
-        // GET: Nutritions/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Nutritions/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([FromForm] Nutrition nutrition)
+        public async Task<ActionResult> Create([FromForm] Nutrition nutrition)
         {
+            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
 
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-            if (CustomerId == 0)
+            if (customerId == 0)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
+
             if (ModelState.IsValid)
             {
-                nutrition.Customer_Id = CustomerId;
-                db.Nutrition.Add(nutrition);
-                db.SaveChanges();
+                nutrition.Customer_Id = customerId;
+                _recitopiaDbContext.Nutrition.Add(nutrition);
+                await _recitopiaDbContext.SaveChangesAsync();
+
                 return RedirectToAction("Index");
             }
 
             return View(nutrition);
         }
 
-        // GET: Nutritions/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return new StatusCodeResult(0);
-            }
-            Nutrition nutrition = db.Nutrition.Find(id);
+            var nutrition = await _recitopiaDbContext.Nutrition.FindAsync(id);
+
             if (nutrition == null)
             {
                 return NotFound();
             }
+
             return View(nutrition);
         }
 
-        // POST: Nutritions/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([FromForm] Nutrition nutrition)
+        public async Task<ActionResult> Edit([FromForm] Nutrition nutrition)
         {
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+
             if (ModelState.IsValid)
             {
-                nutrition.Customer_Id = CustomerId;
-                db.Entry(nutrition).State = EntityState.Modified;
-                db.SaveChanges();
+                nutrition.Customer_Id = customerId;
+                _recitopiaDbContext.Entry(nutrition).State = EntityState.Modified;
+                await _recitopiaDbContext.SaveChangesAsync();
+
                 return RedirectToAction("Index");
             }
+
             return View(nutrition);
         }
 
-        // GET: Nutritions/Delete/5
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int id)
         {
-            if (id == null)
-            {
-                return new StatusCodeResult(0);
-            }
-            Nutrition nutrition = db.Nutrition.Find(id);
+            var nutrition = await _recitopiaDbContext.Nutrition.FindAsync(id);
+
             if (nutrition == null)
             {
                 return NotFound();
             }
+
             return View(nutrition);
         }
 
-        // POST: Nutritions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Nutrition nutrition = db.Nutrition.Find(id);
+            var nutrition = await _recitopiaDbContext.Nutrition.FindAsync(id);
            
             try
             {
-                db.Nutrition.Remove(nutrition);
-                db.SaveChanges();
+                _recitopiaDbContext.Nutrition.Remove(nutrition);
+                await _recitopiaDbContext.SaveChangesAsync();
+
                 return RedirectToAction("Index");
             }
             
@@ -162,17 +158,6 @@ namespace Recitopia.Controllers
                 ViewBag.ErrorMessage = "This Nutrition Item is associated with Ingredient(s) and cannot be deleted.";
                 return View(nutrition);
             }
-
-
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

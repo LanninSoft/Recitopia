@@ -3,21 +3,19 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Recitopia.Models;
+using Recitopia.Data;
 
-namespace Recitopia.Migrations
+namespace Recitopia.Data.Migrations
 {
     [DbContext(typeof(RecitopiaDBContext))]
-    [Migration("20191207125516_ExtendSecurityModels")]
-    partial class ExtendSecurityModels
+    partial class RecitopiaDBContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.0.1")
+                .HasAnnotation("ProductVersion", "3.1.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -176,6 +174,9 @@ namespace Recitopia.Migrations
                     b.Property<int>("Customer_Id")
                         .HasColumnType("int");
 
+                    b.Property<string>("Customer_Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
@@ -216,6 +217,9 @@ namespace Recitopia.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Site_Role_Id")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("State")
@@ -263,6 +267,9 @@ namespace Recitopia.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
+                    b.Property<int>("Customer_Id")
+                        .HasColumnType("int");
+
                     b.Property<string>("Notes")
                         .HasColumnType("text");
 
@@ -270,6 +277,85 @@ namespace Recitopia.Migrations
                         .HasName("PK__Componen__DC0BCC2082D90BE8");
 
                     b.ToTable("Components");
+                });
+
+            modelBuilder.Entity("Recitopia.Models.Customer_Users", b =>
+                {
+                    b.Property<int>("CU_Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Customer_Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Customer_Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CustomersCustomer_Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("User_Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CU_Id");
+
+                    b.HasIndex("CustomersCustomer_Id");
+
+                    b.ToTable("Customer_Users");
+                });
+
+            modelBuilder.Entity("Recitopia.Models.Customers", b =>
+                {
+                    b.Property<int>("Customer_Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Address1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Address2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Customer_Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("State")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Web_URL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Zip")
+                        .HasColumnType("int");
+
+                    b.HasKey("Customer_Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("Recitopia.Models.Ingredient", b =>
@@ -702,12 +788,27 @@ namespace Recitopia.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Recitopia.Models.Customer_Users", b =>
+                {
+                    b.HasOne("Recitopia.Models.Customers", null)
+                        .WithMany("Customer_Users")
+                        .HasForeignKey("CustomersCustomer_Id");
+                });
+
+            modelBuilder.Entity("Recitopia.Models.Customers", b =>
+                {
+                    b.HasOne("Recitopia.Models.AppUser", null)
+                        .WithMany("Customers")
+                        .HasForeignKey("AppUserId");
+                });
+
             modelBuilder.Entity("Recitopia.Models.Ingredient", b =>
                 {
                     b.HasOne("Recitopia.Models.Vendor", "Vendor")
                         .WithMany("Ingredient")
                         .HasForeignKey("Vendor_Id")
                         .HasConstraintName("FK_Ingredient_ToTable")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -717,12 +818,14 @@ namespace Recitopia.Migrations
                         .WithMany("Ingredient_Components")
                         .HasForeignKey("Comp_Id")
                         .HasConstraintName("FK_Ingredient_Comp_ToTable_1")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Recitopia.Models.Ingredient", "Ingredients")
                         .WithMany("Ingredient_Components")
                         .HasForeignKey("Ingred_Id")
                         .HasConstraintName("FK_Ingredient_Comp_ToTable")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -732,12 +835,14 @@ namespace Recitopia.Migrations
                         .WithMany("Ingredient_Nutrients")
                         .HasForeignKey("Ingred_Id")
                         .HasConstraintName("FK_Ingredient_Nutrients_ToTable")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Recitopia.Models.Nutrition", "Nutrition")
                         .WithMany("Ingredient_Nutrients")
                         .HasForeignKey("Nutrition_Item_Id")
                         .HasConstraintName("FK_Ingredient_Nutrients_ToTable_1")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -747,12 +852,14 @@ namespace Recitopia.Migrations
                         .WithMany("Recipe")
                         .HasForeignKey("Category_Id")
                         .HasConstraintName("FK_Recipe_ToTable")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Recitopia.Models.Serving_Sizes", "Serving_Sizes")
                         .WithMany("Recipe")
                         .HasForeignKey("SS_Id")
                         .HasConstraintName("FK_Serving_Size_ToTable")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -762,12 +869,14 @@ namespace Recitopia.Migrations
                         .WithMany("Recipe_Ingredients")
                         .HasForeignKey("Ingredient_Id")
                         .HasConstraintName("FK_Recipe_Ingredients_ToTable_1")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Recitopia.Models.Recipe", "Recipe")
                         .WithMany("Recipe_Ingredients")
                         .HasForeignKey("Recipe_Id")
                         .HasConstraintName("FK_Recipe_Ingredients_ToTable")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618
