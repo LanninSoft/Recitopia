@@ -10,8 +10,8 @@ using Recitopia.Data;
 namespace Recitopia.Data.Migrations
 {
     [DbContext(typeof(RecitopiaDBContext))]
-    [Migration("20191215191121_OutstandingChanges")]
-    partial class OutstandingChanges
+    [Migration("20191215204908_InitialCreateWithIdentity")]
+    partial class InitialCreateWithIdentity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

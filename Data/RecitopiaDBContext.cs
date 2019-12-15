@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Recitopia.Models;
-using System;
 
 namespace Recitopia.Data
 {
@@ -10,6 +8,7 @@ namespace Recitopia.Data
     {
         public RecitopiaDBContext()
         { }
+
         public RecitopiaDBContext(DbContextOptions<RecitopiaDBContext> options)
            : base(options)
         { }
