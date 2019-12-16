@@ -1,0 +1,1 @@
+[![Build Status](https://dev.azure.com/tech0486/Recitopia/_apis/build/status/LanninSoft.Recitopia_NEW?branchName=master)](https://dev.azure.com/tech0486/Recitopia/_build/latest?definitionId=1&branchName=master)
