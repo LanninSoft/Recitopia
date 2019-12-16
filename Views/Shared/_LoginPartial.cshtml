@@ -7,16 +7,18 @@
     <table border="0" width="100%">
 
         <tr style="font-size:15px">
-            <td align="left" width="80%">
-                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name</a>
-                <a href="@Url.Action("CustomerLogin", "Customers")">(@UserManager.Users.Where(m => m.UserName == @User.Identity.Name).First().Customer_Name)</a>
-                @*<a class="text-dark" href="@Url.Action("Index", "/Account/Manage/Index/")">Hello @User.Identity.Name!</a>*@
+            <td style="text-align:left">
+               
+                <a href="@Url.Action("CustomerLogin", "Customers", new { clickLinktoChange = true } )"><font style="color:saddlebrown">@UserManager.Users.Where(m => m.UserName == @User.Identity.Name).First().Customer_Name <i class="fa fa-users"></i></font></a>
+               
 
-</td>
-            
-            <td align="right" width="20%">
+                </td>
+            <td style="text-align:right;width:200px">
+                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><i class="fa fa-pen-fancy"></i>Hello @User.Identity.Name</a>
+            </td>
+            <td style="text-align:left;width:75px">
                 <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                    <button type="submit" class="btn btn-link btn-sm">Logout</button>
+                    <button style="padding:0px" type="submit" class="btn btn-link btn-sm">(Logout)</button>
                 </form>
 
             </td>

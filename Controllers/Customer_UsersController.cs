@@ -26,6 +26,7 @@ namespace Recitopia.Controllers
         public async Task<IActionResult> Index()
         {
             //BUILD VIEW FOR ANGULARJS RENDERING
+            //For some reason, I am unable to recreate this quagmire in LINQ format.  most likely to do with Models
             var query =
                from t1 in _recitopiaDbContext.Customer_Users.AsQueryable()
                join t2 in _recitopiaDbContext.AppUsers.AsQueryable() on t1.Id equals t2.Id into t2g
@@ -49,6 +50,7 @@ namespace Recitopia.Controllers
         public JsonResult GetData()
         {
             //BUILD VIEW FOR ANGULARJS RENDERING
+            //For some reason, I am unable to recreate this quagmire in LINQ format.  most likely to do with Models
             var query =
                from t1 in _recitopiaDbContext.Customer_Users.AsQueryable()
                join t2 in _recitopiaDbContext.AppUsers.AsQueryable() on t1.Id equals t2.Id into t2g
@@ -85,26 +87,7 @@ namespace Recitopia.Controllers
             var customer_Users = await _recitopiaDbContext.Customer_Users
                .FirstOrDefaultAsync(m => m.CU_Id == id);
 
-            //BUILD VIEW FOR ANGULARJS RENDERING
-            //var customer_Users =
-            //   from t1 in db.Customer_Users.AsQueryable()
-            //   join t2 in db.AppUsers.AsQueryable() on t1.Id equals t2.Id into t2g
-            //   from t2 in t2g.Take(1).DefaultIfEmpty()
-            //   join t3 in db.Customers.AsQueryable() on t1.Customer_Id equals t3.Customer_Id into t3g
-            //   from t3 in t3g.Take(1).DefaultIfEmpty()
-            //   where t1.CU_Id == id
-            //   select new Customer_Users()
-            //   {
-            //       CU_Id = t1.CU_Id,
-            //       Id = t1.Id,
-            //       Customer_Id = t1.Customer_Id,
-            //       Notes = t1.Notes,
-            //       Customer_Name = t3.Customer_Name,
-            //       User_Name = t2.FirstName + ' ' + t2.LastName
-            //   };
-
-
-            if (customer_Users == null)
+           if (customer_Users == null)
             {
                 return NotFound();
             }
@@ -113,10 +96,10 @@ namespace Recitopia.Controllers
         }
 
         // GET: Customer_Users/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
 
-            var Customers = _recitopiaDbContext.Customers;
+            var Customers = await _recitopiaDbContext.Customers.ToListAsync();
 
             IEnumerable<SelectListItem> appUserCustomers = _recitopiaDbContext.Customers.Select(c => new SelectListItem
             {
@@ -126,7 +109,7 @@ namespace Recitopia.Controllers
             });
             ViewBag.Customers = appUserCustomers;
 
-            var appUsers = _recitopiaDbContext.AppUsers;
+            var appUsers = await _recitopiaDbContext.AppUsers.ToListAsync();
 
             IEnumerable<SelectListItem> appUserList = _recitopiaDbContext.AppUsers.Select(c => new SelectListItem
             {
@@ -171,7 +154,7 @@ namespace Recitopia.Controllers
                 return NotFound();
             }
 
-            var Customers = _recitopiaDbContext.Customers;
+            var Customers = await _recitopiaDbContext.Customers.ToListAsync();
 
             IEnumerable<SelectListItem> appUserCustomers = _recitopiaDbContext.Customers.Select(c => new SelectListItem
             {
@@ -181,7 +164,7 @@ namespace Recitopia.Controllers
 
             ViewBag.Customers = appUserCustomers;
 
-            var appUsers = _recitopiaDbContext.AppUsers;
+            var appUsers = await _recitopiaDbContext.AppUsers.ToListAsync();
 
             IEnumerable<SelectListItem> appUserList = _recitopiaDbContext.AppUsers.Select(c => new SelectListItem
             {

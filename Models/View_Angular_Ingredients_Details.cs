@@ -5,7 +5,7 @@ namespace Recitopia.Models
 {
     public partial class View_Angular_Ingredients_Details
     {
-        public long? NID { get; set; }
+        
         public int Ingredient_Id { get; set; }
         public int Customer_Id { get; set; }
         public string Ingred_name { get; set; }

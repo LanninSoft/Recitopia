@@ -128,9 +128,9 @@ namespace Recitopia.Controllers
             return View(mealCategory);
         }
 
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var mealCategory = _recitopiaDbContext.Meal_Category.Find(id);
+            var mealCategory = await _recitopiaDbContext.Meal_Category.FindAsync(id);
 
             if (mealCategory == null)
             {

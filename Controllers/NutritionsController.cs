@@ -50,6 +50,7 @@ namespace Recitopia.Controllers
             return nutritions != null 
                 ? Json(nutritions) 
                 : Json(new { Status = "Failure" });
+
         }
 
         public async Task<ActionResult> Details(int id)

@@ -62,7 +62,7 @@ namespace Recitopia.Controllers
             return View(servingSize);
         }
 
-        public ActionResult Create()
+        public  ActionResult Create()
         {
             return View();
         }
@@ -72,7 +72,7 @@ namespace Recitopia.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([FromForm] Serving_Sizes serving_Sizes)
+        public async Task<ActionResult> Create([FromForm] Serving_Sizes serving_Sizes)
         {
             int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
             if (CustomerId == 0)
@@ -83,8 +83,8 @@ namespace Recitopia.Controllers
             if (ModelState.IsValid)
             {
                 serving_Sizes.Customer_Id = CustomerId;
-                _recitopiaDbContext.Serving_Sizes.Add(serving_Sizes);
-                _recitopiaDbContext.SaveChanges();
+                await _recitopiaDbContext.Serving_Sizes.AddAsync(serving_Sizes);
+                await _recitopiaDbContext.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
@@ -92,7 +92,7 @@ namespace Recitopia.Controllers
         }
 
         // GET: Serving_Sizes/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
             if (CustomerId == 0)
@@ -103,7 +103,7 @@ namespace Recitopia.Controllers
             {
                 return new StatusCodeResult(0);
             }
-            Serving_Sizes serving_Sizes = _recitopiaDbContext.Serving_Sizes.Find(id);
+            Serving_Sizes serving_Sizes = await _recitopiaDbContext.Serving_Sizes.FindAsync(id);
             if (serving_Sizes == null)
             {
                 return NotFound();
@@ -116,21 +116,21 @@ namespace Recitopia.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([FromForm] Serving_Sizes serving_Sizes)
+        public async Task<ActionResult> Edit([FromForm] Serving_Sizes serving_Sizes)
         {
             int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
             if (ModelState.IsValid)
             {
                 serving_Sizes.Customer_Id = CustomerId;
                 _recitopiaDbContext.Entry(serving_Sizes).State = EntityState.Modified;
-                _recitopiaDbContext.SaveChanges();
+                await _recitopiaDbContext.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return View(serving_Sizes);
         }
 
         // GET: Serving_Sizes/Delete/5
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
 
             int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
@@ -142,7 +142,7 @@ namespace Recitopia.Controllers
             {
                 return new StatusCodeResult(0);
             }
-            Serving_Sizes serving_Sizes = _recitopiaDbContext.Serving_Sizes.Find(id);
+            Serving_Sizes serving_Sizes = await _recitopiaDbContext.Serving_Sizes.FindAsync(id);
             if (serving_Sizes == null)
             {
                 return NotFound();
@@ -153,11 +153,11 @@ namespace Recitopia.Controllers
         // POST: Serving_Sizes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Serving_Sizes serving_Sizes = _recitopiaDbContext.Serving_Sizes.Find(id);
             _recitopiaDbContext.Serving_Sizes.Remove(serving_Sizes);
-            _recitopiaDbContext.SaveChanges();
+            await _recitopiaDbContext.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 

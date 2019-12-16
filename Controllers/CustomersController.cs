@@ -38,52 +38,99 @@ namespace Recitopia.Controllers
                 : Json(new { Status = "Failure" });
         }
 
-        public async Task<IActionResult> CustomerLogin()
+        public async Task<IActionResult> CustomerLogin(bool? clickLinktoChange)
         {
+            var customerCount = 0;
             //RETURN LIST OF CUSTOMERS THAT A MEMBER OF
             //IF ONLY ONE, TAKE THEM HOME.  IF MULTIPLE, PROVIDE LIST AND USER SELECTS WHICH CUSTOMER TO LOGIN TO
-            var currentUser = await _recitopiaDbContext.AppUsers
+            if (User.Identity.Name != null)
+            {
+
+                var currentUser = await _recitopiaDbContext.AppUsers
                 .SingleAsync(m => m.UserName == User.Identity.Name);
 
-            var customerIds = await _recitopiaDbContext.Customer_Users
-                .Where(cu => cu.Id == currentUser.Id)
-                .Select(cu => cu.Customer_Id)
-                .ToListAsync();
+                var customerIds = await _recitopiaDbContext.Customer_Users
+                    .Where(cu => cu.Id == currentUser.Id)
+                    .Select(cu => cu.Customer_Id)
+                    .ToListAsync();
+            
+                customerCount = customerIds.Count();
 
-            if (customerIds.Count() > 1)
-            {
-                //Provide selection view
-
-                //create list and populate with Customer name and Id
-                var custList = new List<List<string>>();
-
-                foreach (var customerId in customerIds)
+                if (customerCount > 1 && clickLinktoChange != true)
                 {
-                    var customer = await _recitopiaDbContext.Customers
-                        .SingleAsync(m => m.Customer_Id == customerId);
 
-                    // Dave: I'm not sure how this is used yet, but it seems like you need a keyvalue pair. A dictionary would 
-                    // work better.
-                    custList.Add(new List<string> { customer.Customer_Name, customer.Customer_Id.ToString() });
+                    //Look to see if company id and name saved prior.  If so, bypass selection page and take to home
+                    var checkLastLoginCompanyInfo = _recitopiaDbContext.AppUsers.Where(m => m.Id == currentUser.Id).First();
+
+                    if (checkLastLoginCompanyInfo.Customer_Id > 0 && checkLastLoginCompanyInfo.Customer_Name != null)
+                    {
+                        HttpContext.Session.SetString("CurrentUserCustomerId", checkLastLoginCompanyInfo.Customer_Id.ToString());
+
+                        return LocalRedirect("~/Home/Index");
+                    }
+                    else
+                    {
+                        //Provide selection view
+                        //create list and populate with Customer name and Id
+                        List<IList<string>> custList = new List<IList<string>>();
+
+                        foreach (int thing in customerIds)
+                        {
+                            var tempResults = _recitopiaDbContext.Customers.Where(m => m.Customer_Id == thing).First();
+
+                            custList.Add(new List<string> { tempResults.Customer_Name, tempResults.Customer_Id.ToString() });
+                        }
+
+
+                        ViewBag.UserCustomers = custList;
+
+                        return View();
+                    }
+
+
+                }
+                else if (customerCount > 1 && clickLinktoChange == true)
+                {
+                    //Provide selection view
+                    //create list and populate with Customer name and Id
+                    List<IList<string>> custList = new List<IList<string>>();
+
+                    foreach (int thing in customerIds)
+                    {
+                        var tempResults = _recitopiaDbContext.Customers.Where(m => m.Customer_Id == thing).First();
+
+                        custList.Add(new List<string> { tempResults.Customer_Name, tempResults.Customer_Id.ToString() });
+                    }
+
+
+                    ViewBag.UserCustomers = custList;
+
+                    return View();
+                }
+                else if (customerCount == 1)
+                {
+                    //take them to home page
+                    var customerCId = _recitopiaDbContext.Customer_Users.Where(m => m.Id == currentUser.Id).First();
+
+                    return RedirectToAction("CustomerLoginGo", new { id = customerCId.Customer_Id });
+                }
+                else
+                {
+                    ViewBag.UserCustomers = null;
+
+                    return View();
                 }
 
-                ViewBag.UserCustomers = custList;
+                }
+                else
+                {
+                    ViewBag.UserCustomers = null;
 
-                return View();
+                    return LocalRedirect("~/Home/Index");
+                }
+
+    
             }
-
-            if (customerIds.Count() == 1)
-            {
-                //take them to home page
-                var customerCId = await _recitopiaDbContext.Customer_Users.SingleAsync(m => m.Id == currentUser.Id);
-
-                return RedirectToAction("CustomerLoginGo", new { id = customerCId.Customer_Id });
-            }
-
-            ViewBag.UserCustomers = null;
-
-            return View();
-        }
 
         public async Task<IActionResult> CustomerLoginGo(int id)
         {

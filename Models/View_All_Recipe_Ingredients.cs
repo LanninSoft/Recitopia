@@ -5,7 +5,7 @@ namespace Recitopia.Models
 {
     public partial class View_All_Recipe_Ingredients
     {
-        public long? NID { get; set; }
+        
         public int Id { get; set; }
         public int Customer_Id { get; set; }
         public int Recipe_Id { get; set; }

@@ -66,18 +66,27 @@
                                         <li class="nav-item">
                                             <a class="nav-link" href="@Url.Action("Index", "Nutritions")">Nutrition</a>
                                         </li>
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownOther" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Other
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="navbarDropdownOther">
 
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="@Url.Action("Index", "Components")">Allergens</a>
+                                                <a class="dropdown-item" href="@Url.Action("Index", "Components")">Allergens</a>
+                                                <a class="dropdown-item" href="@Url.Action("Index", "Serving_Sizes")">Serving Sizes</a>
+                                                <a class="dropdown-item" href="@Url.Action("Index", "Meal_Category")">Categories</a>
+                                                <a class="dropdown-item" href="@Url.Action("Index", "Vendors")">Vendors</a>
+                                            </div>
                                         </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="@Url.Action("Index", "Serving_Sizes")">Serving Sizes</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="@Url.Action("Index", "Meal_Category")">Categories</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="@Url.Action("Index", "Vendors")">Vendors</a>
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownTools" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Tools
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="navbarDropdownTools">
+
+                                                <a class="dropdown-item" href="">Packaging</a>
+
+                                            </div>
                                         </li>
                                         @if (User.IsInRole("Administrator"))
                                         {

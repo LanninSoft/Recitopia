@@ -83,7 +83,7 @@
        
         $scope.$watch('Recipe_Id', function () {
 
-            $http.get("/Recipe_Ingredients/GetData?recipe_Id=" + $scope.Recipe_Id)
+            $http.get("/Recipe_Ingredients/GetData?recipeId=" + $scope.Recipe_Id)
                 .then(function (response) {
                     // First function handles success
 
@@ -337,7 +337,7 @@
         };
 
         //Redrect index form to delete form with parameter
-        $scope.DelIngredientNutrient = function (IngredientNutrition) {
+        $scope.DelNutrient = function (IngredientNutrition) {
 
             window.location.href = '/Ingredient_Nutrients/Delete/?id=' + IngredientNutrition.id;
         };
