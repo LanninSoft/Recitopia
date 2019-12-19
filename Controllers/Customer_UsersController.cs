@@ -27,23 +27,37 @@ namespace Recitopia.Controllers
         {
             //BUILD VIEW FOR ANGULARJS RENDERING
             //For some reason, I am unable to recreate this quagmire in LINQ format.  most likely to do with Models
-            var query =
-               from t1 in _recitopiaDbContext.Customer_Users.AsQueryable()
-               join t2 in _recitopiaDbContext.AppUsers.AsQueryable() on t1.Id equals t2.Id into t2g
-               from t2 in t2g.DefaultIfEmpty()
-               join t3 in _recitopiaDbContext.Customers.AsQueryable() on t1.Customer_Id equals t3.Customer_Id into t3g
-               from t3 in t3g.DefaultIfEmpty()
-               select new Customer_Users()
-               {
-                   CU_Id = t1.CU_Id,
-                   Id = t1.Id,
-                   Customer_Id = t1.Customer_Id,
-                   Notes = t1.Notes,
-                   Customer_Name = t3.Customer_Name,
-                   User_Name = t2.FirstName + ' ' + t2.LastName
-               };
+            var customerUsers = await _recitopiaDbContext.Customer_Users
+                           .Include(ri => ri.AppUser)
+                           .Include(ri => ri.Customers)
+                           .OrderBy(ri => ri.Customers.Customer_Name)
+                           .Select(ri => new Customer_Users()
+                           {
+                               CU_Id = ri.CU_Id,
+                               Id = ri.Id,
+                               Customer_Id = ri.Customer_Id,
+                               Notes = ri.Notes,
+                               Customer_Name = ri.Customer_Name,
+                               User_Name = ri.AppUser.FirstName + ' ' + ri.AppUser.LastName
+                           }).ToListAsync();
 
-            return View(await query.ToListAsync());
+            //var query =
+            //   from t1 in _recitopiaDbContext.Customer_Users.AsQueryable()
+            //   join t2 in _recitopiaDbContext.AppUsers.AsQueryable() on t1.Id equals t2.Id into t2g
+            //   from t2 in t2g.DefaultIfEmpty()
+            //   join t3 in _recitopiaDbContext.Customers.AsQueryable() on t1.Customer_Id equals t3.Customer_Id into t3g
+            //   from t3 in t3g.DefaultIfEmpty()
+            //   select new Customer_Users()
+            //   {
+            //       CU_Id = t1.CU_Id,
+            //       Id = t1.Id,
+            //       Customer_Id = t1.Customer_Id,
+            //       Notes = t1.Notes,
+            //       Customer_Name = t3.Customer_Name,
+            //       User_Name = t2.FirstName + ' ' + t2.LastName
+            //   };
+
+            return View(customerUsers);
         }
 
         [HttpGet]
@@ -51,6 +65,23 @@ namespace Recitopia.Controllers
         {
             //BUILD VIEW FOR ANGULARJS RENDERING
             //For some reason, I am unable to recreate this quagmire in LINQ format.  most likely to do with Models
+
+
+
+            //var customerUsers =  _recitopiaDbContext.Customer_Users
+            //               .Include(ri => ri.AppUser)
+            //               .Include(ri => ri.Customers)
+            //               .OrderBy(ri => ri.Customers.Customer_Name)
+            //               .Select(ri => new Customer_Users()
+            //               {
+            //                   CU_Id = ri.CU_Id,
+            //                   Id = ri.Id,
+            //                   Customer_Id = ri.Customer_Id,
+            //                   Notes = ri.Notes,
+            //                   Customer_Name = ri.Customer_Name,
+            //                   User_Name = ri.AppUser.FirstName + ' ' + ri.AppUser.LastName
+            //               }).ToList();
+
             var query =
                from t1 in _recitopiaDbContext.Customer_Users.AsQueryable()
                join t2 in _recitopiaDbContext.AppUsers.AsQueryable() on t1.Id equals t2.Id into t2g
@@ -99,24 +130,22 @@ namespace Recitopia.Controllers
         public async Task<IActionResult> Create()
         {
 
-            var Customers = await _recitopiaDbContext.Customers.ToListAsync();
-
-            IEnumerable<SelectListItem> appUserCustomers = _recitopiaDbContext.Customers.Select(c => new SelectListItem
+           
+            IEnumerable<SelectListItem> appUserCustomers = await _recitopiaDbContext.Customers.Select(c => new SelectListItem
             {
                 Value = c.Customer_Id.ToString(),
                 Text = c.Customer_Name
 
-            });
+            }).ToListAsync();
+
             ViewBag.Customers = appUserCustomers;
 
-            var appUsers = await _recitopiaDbContext.AppUsers.ToListAsync();
-
-            IEnumerable<SelectListItem> appUserList = _recitopiaDbContext.AppUsers.Select(c => new SelectListItem
+            IEnumerable<SelectListItem> appUserList = await _recitopiaDbContext.AppUsers.Select(c => new SelectListItem
             {
                 Value = c.Id.ToString(),
                 Text = c.FirstName + ' ' + c.LastName
 
-            });
+            }).ToListAsync();
             ViewBag.AppUsers = appUserList;
 
 
@@ -154,23 +183,21 @@ namespace Recitopia.Controllers
                 return NotFound();
             }
 
-            var Customers = await _recitopiaDbContext.Customers.ToListAsync();
-
-            IEnumerable<SelectListItem> appUserCustomers = _recitopiaDbContext.Customers.Select(c => new SelectListItem
+            
+            IEnumerable<SelectListItem> appUserCustomers = await _recitopiaDbContext.Customers.Select(c => new SelectListItem
             {
                 Value = c.Customer_Id.ToString(),
                 Text = c.Customer_Name
-            });
+            }).ToListAsync();
 
             ViewBag.Customers = appUserCustomers;
 
-            var appUsers = await _recitopiaDbContext.AppUsers.ToListAsync();
-
-            IEnumerable<SelectListItem> appUserList = _recitopiaDbContext.AppUsers.Select(c => new SelectListItem
+           
+            IEnumerable<SelectListItem> appUserList = await _recitopiaDbContext.AppUsers.Select(c => new SelectListItem
             {
                 Value = c.Id.ToString(),
                 Text = c.FirstName + ' ' + c.LastName
-            });
+            }).ToListAsync();
 
             ViewBag.AppUsers = appUserList;
 

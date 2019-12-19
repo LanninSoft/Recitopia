@@ -21,14 +21,15 @@ namespace Recitopia.Controllers
         {
             _logger = logger;
             _recitopiaDbContext = recitopiaDbContext ?? throw new ArgumentNullException(nameof(recitopiaDbContext));
+          
         }
 
-        public async Task<ActionResult> Index()
+        public async Task<IActionResult> Index()
         {
             if (User.Identity.Name != null)
             {
                 //Look to see if company id and name saved prior.  If so, bypass selection page and take to home
-                var currentUser = await _recitopiaDbContext.AppUsers.Where(m => m.UserName.Equals(User.Identity.Name)).FirstOrDefaultAsync();
+                var currentUser = await _recitopiaDbContext.AppUsers.Where(m => m.UserName == User.Identity.Name).FirstOrDefaultAsync();
 
                 var checkLastLoginCompanyInfo = await _recitopiaDbContext.AppUsers.Where(m => m.Id == currentUser.Id).FirstOrDefaultAsync();
 

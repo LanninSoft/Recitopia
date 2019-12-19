@@ -74,15 +74,15 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([FromForm] Serving_Sizes serving_Sizes)
         {
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-            if (CustomerId == 0)
+            int customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (customerId == 0)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
 
             if (ModelState.IsValid)
             {
-                serving_Sizes.Customer_Id = CustomerId;
+                serving_Sizes.Customer_Id = customerId;
                 await _recitopiaDbContext.Serving_Sizes.AddAsync(serving_Sizes);
                 await _recitopiaDbContext.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -94,8 +94,8 @@ namespace Recitopia.Controllers
         // GET: Serving_Sizes/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-            if (CustomerId == 0)
+            int customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (customerId == 0)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -118,10 +118,10 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([FromForm] Serving_Sizes serving_Sizes)
         {
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            int customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
             if (ModelState.IsValid)
             {
-                serving_Sizes.Customer_Id = CustomerId;
+                serving_Sizes.Customer_Id = customerId;
                 _recitopiaDbContext.Entry(serving_Sizes).State = EntityState.Modified;
                 await _recitopiaDbContext.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -133,8 +133,8 @@ namespace Recitopia.Controllers
         public async Task<ActionResult> Delete(int? id)
         {
 
-            int CustomerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-            if (CustomerId == 0)
+            int customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            if (customerId == 0)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }

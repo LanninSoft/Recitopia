@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Recitopia.Models
 {
+
     public partial class Customer_Users
     {
         [Key]
@@ -23,6 +24,7 @@ namespace Recitopia.Models
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
 
-
+        public virtual AppUser AppUser { get; set; }
+        public virtual Customers Customers { get; set; }
     }
 }
