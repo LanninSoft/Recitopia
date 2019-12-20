@@ -10,8 +10,8 @@ using Recitopia.Data;
 namespace Recitopia.Data.Migrations
 {
     [DbContext(typeof(RecitopiaDBContext))]
-    [Migration("20191215204908_InitialCreateWithIdentity")]
-    partial class InitialCreateWithIdentity
+    [Migration("20191220123629_renameColumnCustomerUser")]
+    partial class renameColumnCustomerUser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -297,10 +297,10 @@ namespace Recitopia.Data.Migrations
                     b.Property<int?>("CustomersCustomer_Id")
                         .HasColumnType("int");
 
-                    b.Property<string>("Id")
+                    b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Notes")
+                    b.Property<string>("User_Id")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("User_Name")
@@ -326,7 +326,8 @@ namespace Recitopia.Data.Migrations
                     b.Property<string>("Address2")
                         .HasColumnType("nvarchar(max)");
 
-                    
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
@@ -354,7 +355,7 @@ namespace Recitopia.Data.Migrations
 
                     b.HasKey("Customer_Id");
 
-                   
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Customers");
                 });
@@ -791,12 +792,17 @@ namespace Recitopia.Data.Migrations
 
             modelBuilder.Entity("Recitopia.Models.Customer_Users", b =>
                 {
-                    b.HasOne("Recitopia.Models.Customers", null)
+                    b.HasOne("Recitopia.Models.Customers", "Customers")
                         .WithMany("Customer_Users")
                         .HasForeignKey("CustomersCustomer_Id");
                 });
 
-         
+            modelBuilder.Entity("Recitopia.Models.Customers", b =>
+                {
+                    b.HasOne("Recitopia.Models.AppUser", null)
+                        .WithMany("Customers")
+                        .HasForeignKey("AppUserId");
+                });
 
             modelBuilder.Entity("Recitopia.Models.Ingredient", b =>
                 {

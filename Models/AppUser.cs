@@ -33,5 +33,10 @@ namespace Recitopia.Models
         public string Customer_Name { get; set; }
 
         public IEnumerable<Customers> Customers { get; set; }
+
+        public string FullName
+        {
+            get { return FirstName + " " + LastName; }
+        }
     }
 }

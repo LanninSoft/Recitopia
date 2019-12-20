@@ -281,13 +281,10 @@ namespace Recitopia.Data.Migrations
 
             modelBuilder.Entity("Recitopia.Models.Customer_Users", b =>
                 {
-                    b.Property<int>("CU_Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Customer_Id")
                         .HasColumnType("int");
@@ -298,18 +295,16 @@ namespace Recitopia.Data.Migrations
                     b.Property<int?>("CustomersCustomer_Id")
                         .HasColumnType("int");
 
-                    b.Property<string>("Id")
+                    b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Notes")
+                    b.Property<string>("User_Id")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("User_Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CU_Id");
-
-                    b.HasIndex("AppUserId");
+                    b.HasKey("Id");
 
                     b.HasIndex("CustomersCustomer_Id");
 
@@ -795,10 +790,6 @@ namespace Recitopia.Data.Migrations
 
             modelBuilder.Entity("Recitopia.Models.Customer_Users", b =>
                 {
-                    b.HasOne("Recitopia.Models.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId");
-
                     b.HasOne("Recitopia.Models.Customers", "Customers")
                         .WithMany("Customer_Users")
                         .HasForeignKey("CustomersCustomer_Id");

@@ -266,18 +266,12 @@ namespace Recitopia.Data.Migrations
                     State = table.Column<string>(nullable: true),
                     Zip = table.Column<int>(nullable: true),
                     Web_URL = table.Column<string>(nullable: true),
-                    Notes = table.Column<string>(nullable: true),
-                    AppUserId = table.Column<string>(nullable: true)
+                    Notes = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Customers", x => x.Customer_Id);
-                    table.ForeignKey(
-                        name: "FK_Customers_AspNetUsers_AppUserId",
-                        column: x => x.AppUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                   
                 });
 
             migrationBuilder.CreateTable(
@@ -507,10 +501,7 @@ namespace Recitopia.Data.Migrations
                 table: "Customer_Users",
                 column: "CustomersCustomer_Id");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Customers_AppUserId",
-                table: "Customers",
-                column: "AppUserId");
+           
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ingredient_Vendor_Id",

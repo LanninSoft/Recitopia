@@ -10,8 +10,8 @@ using Recitopia.Data;
 namespace Recitopia.Data.Migrations
 {
     [DbContext(typeof(RecitopiaDBContext))]
-    [Migration("20191217233842_ModelUpdate")]
-    partial class ModelUpdate
+    [Migration("20191219170223_DifferencesPart2")]
+    partial class DifferencesPart2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -288,9 +288,6 @@ namespace Recitopia.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("Customer_Id")
                         .HasColumnType("int");
 
@@ -310,8 +307,6 @@ namespace Recitopia.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CU_Id");
-
-                    b.HasIndex("AppUserId");
 
                     b.HasIndex("CustomersCustomer_Id");
 
@@ -797,10 +792,6 @@ namespace Recitopia.Data.Migrations
 
             modelBuilder.Entity("Recitopia.Models.Customer_Users", b =>
                 {
-                    b.HasOne("Recitopia.Models.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId");
-
                     b.HasOne("Recitopia.Models.Customers", "Customers")
                         .WithMany("Customer_Users")
                         .HasForeignKey("CustomersCustomer_Id");

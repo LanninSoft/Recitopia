@@ -5,28 +5,32 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <table width="100%" class="table-borderless">
-        <tr>
-            <th style="font-size:30px;background-color:blanchedalmond">
-               Create Customer User
-            </th>
-        </tr>
+<table width="100%" class="table-borderless">
+    <tr>
+        <th style="font-size:30px;background-color:blanchedalmond">
+            Create Customer User
+        </th>
+    </tr>
 
-    </table>
+</table>
+@if (ViewBag.ErrorMessage != null)
+{
+    <font style="color:red">@ViewBag.ErrorMessage</font>
+}
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            
+
             <div>
-                <label asp-for="Id" class="control-label"></label><br />
-                <select asp-for="Id"
+                <label asp-for="User_Name" class="control-label"></label><br />
+                <select asp-for="User_Id"
                         asp-items="ViewBag.AppUsers">
                 </select>
-                <span asp-validation-for="Id" class="text-danger"></span>
+                <span asp-validation-for="User_Id" class="text-danger"></span>
             </div>
             <div>
-                <label asp-for="Customer_Id" class="control-label"></label><br />
+                <label asp-for="Customer_Name" class="control-label"></label><br />
                 <select asp-for="Customer_Id"
                         asp-items="ViewBag.Customers">
                 </select>

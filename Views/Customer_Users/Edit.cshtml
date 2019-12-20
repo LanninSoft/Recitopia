@@ -21,23 +21,38 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="CU_Id" />
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="User_Id" />
+            <input type="hidden" asp-for="User_Name" />
+            
+            @*<div>
+            <label asp-for="User_Name" class="control-label"></label><br />
+            <select asp-for="Id"
+                    asp-items="ViewBag.AppUsers">
+            </select>
+            <span asp-validation-for="Id" class="text-danger"></span>
+        </div>*@
+            <br />
             <div>
-                <label asp-for="Id" class="control-label"></label><br />
-                <select asp-for="Id"
-                        asp-items="ViewBag.AppUsers">
-                </select>
-                <span asp-validation-for="Id" class="text-danger"></span>
+                <font style="font-weight:bold">User Name</font>
             </div>
             <div>
-                <label asp-for="Customer_Id" class="control-label"></label><br />
+                <input disabled value="@ViewBag.AppUsers.User_Name" />
+            </div>
+            <br />
+            <div>
+
+                <font style="font-weight:bold">Associated Customer Name</font>
+            </div>
+            <div>
                 <select asp-for="Customer_Id"
                         asp-items="ViewBag.Customers">
                 </select>
                 <span asp-validation-for="Customer_Id" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
-                <label asp-for="Notes" class="control-label"></label>
+                <font style="font-weight:bold">Notes</font>
                 <textarea asp-for="Notes" class="form-control"></textarea>
                 <span asp-validation-for="Notes" class="text-danger"></span>
             </div>

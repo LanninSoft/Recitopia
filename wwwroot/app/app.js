@@ -1010,20 +1010,20 @@
         //Redrect index form to edit form with parameter
         $scope.RedirectToEdit = function (customerusers) {
 
-            window.location.href = '/Customer_Users/Edit/?id=' + customerusers.cU_Id;
+            window.location.href = '/Customer_Users/Edit/?id=' + customerusers.id;
         };
 
         //Redrect index form to delete form with parameter
         $scope.DelCustomerUser = function (customerusers) {
 
-            window.location.href = '/Customer_Users/Delete/?id=' + customerusers.cU_Id;
+            window.location.href = '/Customer_Users/Delete/?id=' + customerusers.id;
         };
 
         //Redrect index form to details form with parameter
         $scope.RedirectToDetails = function (customerusers) {
 
 
-            window.location.href = '/Customer_Users/Details/?id=' + customerusers.cU_Id;
+            window.location.href = '/Customer_Users/Details/?id=' + customerusers.id;
         };
         
         app.filter('YesNo', function () {

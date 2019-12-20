@@ -50,7 +50,7 @@ namespace Recitopia.Controllers
                 .SingleAsync(m => m.UserName == User.Identity.Name);
 
                 var customerIds = await _recitopiaDbContext.Customer_Users
-                    .Where(cu => cu.Id == currentUser.Id)
+                    .Where(cu => cu.User_Id == currentUser.Id)
                     .Select(cu => cu.Customer_Id)
                     .ToListAsync();
             
@@ -110,7 +110,7 @@ namespace Recitopia.Controllers
                 else if (customerCount == 1)
                 {
                     //take them to home page
-                    var customerCId = await _recitopiaDbContext.Customer_Users.SingleAsync(m => m.Id == currentUser.Id);
+                    var customerCId = await _recitopiaDbContext.Customer_Users.SingleAsync(m => m.User_Id == currentUser.Id);
 
                     return RedirectToAction("CustomerLoginGo", new { id = customerCId.Customer_Id });
                 }
