@@ -95,9 +95,7 @@ namespace Recitopia.Controllers
 
             foreach (View_Angular_Recipe_Ingredients_Details detail in recipeIngredientsDetails)
             {
-                // Dave: why only update if the weight is greater than zero?
-                // Mat: I think I was working through some null or empty value issues. updated
-
+                
                 var recipeIngredient = await _recitopiaDbContext.Recipe_Ingredients
                         .SingleAsync(i => i.Id == detail.Id);                
 
@@ -368,8 +366,6 @@ namespace Recitopia.Controllers
                 rIngreds.Recipe = tRec;
                 rIngreds.Customer_Id = recipeIngredient.Customer_Id;
             }
-            
-
 
             return View(rIngreds);
         }

@@ -29,8 +29,7 @@ namespace Recitopia.Controllers
             if (customerId == 0)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
-            }
-            
+            }            
 
             var ingredient_Components = await _recitopiaDbContext.Ingredient_Components
                 .Include(ic => ic.Components)
@@ -38,8 +37,6 @@ namespace Recitopia.Controllers
                 .Where(ic => ic.Customer_Id == customerId).ToListAsync();
             //Filter down to id looking for
             var Ingred_nut = ingredient_Components.Where(i => i.Ingred_Id == IngredID && i.Customer_Id == customerId);
-
-
 
             //get Ingred name from db and pass in viewbag
             Ingredient ingredient = await _recitopiaDbContext.Ingredient.FindAsync(IngredID);
@@ -136,7 +133,6 @@ namespace Recitopia.Controllers
             ViewBag.Components = comList;
 
             return View();
-
 
         }
 
@@ -260,11 +256,7 @@ namespace Recitopia.Controllers
                 rIngreds.Ingredients = tIngred;
                 rIngreds.Comp_Id = ingredientComponent.Comp_Id;
                 rIngreds.Components = tCom;
-
             }
-
-
-           
             return View(rIngreds);
         }
 

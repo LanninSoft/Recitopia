@@ -90,7 +90,7 @@ namespace Recitopia.Controllers
             var ingredientNutrients = await _recitopiaDbContext.Ingredient_Nutrients
               .Include(ri => ri.Ingredients)
               .Include(ri => ri.Nutrition)
-               .Where(ri => ri.Customer_Id == customerId && ri.Ingred_Id == id)
+              .Where(ri => ri.Customer_Id == customerId && ri.Ingred_Id == id)
               .OrderBy(ri => ri.Nutrition.Nutrition_Item)
               .Select(ri => new View_All_Ingredient_Nutrients()
               {

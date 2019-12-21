@@ -76,6 +76,7 @@
                                                 <a class="dropdown-item" href="@Url.Action("Index", "Serving_Sizes")">Serving Sizes</a>
                                                 <a class="dropdown-item" href="@Url.Action("Index", "Meal_Category")">Categories</a>
                                                 <a class="dropdown-item" href="@Url.Action("Index", "Vendors")">Vendors</a>
+                                                
                                             </div>
                                         </li>
                                         <li class="nav-item dropdown">
@@ -100,6 +101,7 @@
                                                     <a class="dropdown-item" href="@Url.Action("Index", "Customers")">Customers</a>
                                                     <a class="dropdown-item" href="@Url.Action("Index", "Customer_Users")">Customer Users</a>
                                                     <a class="dropdown-item" href="@Url.Action("Index", "AppRoles")">Role Management</a>
+                                                    <a class="dropdown-item" href="@Url.Action("Index", "Feedback")">Feedback!</a>
                                                 </div>
                                             </li>
                                         }
@@ -136,13 +138,26 @@
         </table>
         <br />
         <div style="width:100%;background-color:#343a40">
-            <font style="color:lightgray;font-size:12px">
+            
                 <footer>
-
-                    <p>&copy; @DateTime.Now.Year - Recitopia</p>
+                    <table style="width:100%">
+                        <tr>
+                            <td style="text-align:left;width:50%">
+                                <font style="color:lightgrey;font-size:12px">&nbsp;&copy; @DateTime.Now.Year - Recitopia</font>
+                                
+                            </td>
+                            <td style="text-align:right;width:50%">
+                                @if (User.Identity.IsAuthenticated)
+                                {                                    
+                                <a class="nav-link" href="@Url.Action("FeedbackUser", "Feedback")"><font style="color:whitesmoke;font-size:12px">FEEDBACK</font></a>                                 
+                                }
+                            </td>
+                        </tr>
+                    </table>
+                    
                 </footer>
 
-            </font>
+            
         </div>
         <br />
     </div>

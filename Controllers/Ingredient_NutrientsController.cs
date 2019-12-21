@@ -84,7 +84,6 @@ namespace Recitopia.Controllers
             ViewBag.Ingred_Id = new SelectList(await _recitopiaDbContext.Ingredient.Where(m => m.Customer_Id == customerId).OrderBy(m => m.Ingred_name).ToListAsync(), "Ingredient_Id", "Ingred_name");
             ViewBag.Nutrition_Item_Id = new SelectList(await _recitopiaDbContext.Nutrition.Where(m => m.Customer_Id == customerId).OrderBy(m => m.Nutrition_Item).ToListAsync(), "Nutrition_Item_Id", "Nutrition_Item");
 
-
             //BUILD VIEW FOR ALREADY ADDED NUTRIENTS
             var ingredientNutrients =  _recitopiaDbContext.Ingredient_Nutrients
                 .Include(ri => ri.Ingredients)
@@ -100,8 +99,6 @@ namespace Recitopia.Controllers
                     Nutrition_Item = ri.Nutrition.Nutrition_Item
                 })
                 .ToListAsync();
-
-
 
             //Get View and filter and sort            
             var TempV = ingredientNutrients.Result;
@@ -168,14 +165,13 @@ namespace Recitopia.Controllers
             {
                 return NotFound();
             }
+
             //get name from db and pass in viewbag
             Ingredient ingredient = await _recitopiaDbContext.Ingredient.FindAsync(ingredient_nutrients.Ingred_Id);
 
             //Assign to temp local to put on view
             ViewBag.IngredName = ingredient.Ingred_name;
             ViewBag.IngredId = ingredient.Ingredient_Id;
-
-
 
             ViewBag.Ingred_Id = new SelectList(await _recitopiaDbContext.Ingredient.Where(m => m.Customer_Id == customerId).OrderBy(m => m.Ingred_name).ToListAsync(), "Ingredient_Id", "Ingred_name", ingredient_nutrients.Ingred_Id);
             ViewBag.Nutrition_Item_Id = new SelectList(await _recitopiaDbContext.Nutrition.Where(m => m.Customer_Id == customerId).OrderBy(m => m.Nutrition_Item).ToListAsync(), "Nutrition_Item_Id", "Nutrition_Item", ingredient_nutrients.Nutrition_Item_Id);
@@ -228,14 +224,13 @@ namespace Recitopia.Controllers
                   Nut_per_100_grams = ri.Nut_per_100_grams
               })
               .ToListAsync();
-
             
             return ingredientNutrients != null
                 ? Json(ingredientNutrients)
                 : Json(new { Status = "Failure" });
         }
-        //UPDATE FROM ANGULAR
 
+        //UPDATE FROM ANGULAR
         [HttpPost]
         public async Task<JsonResult> UpdateFromAngularController([FromBody]IEnumerable<View_Angular_Ingredient_Nutrients_Details> jsonstring)
         {
@@ -244,31 +239,18 @@ namespace Recitopia.Controllers
             {
                 if (ingredientNutrient.Nut_per_100_grams > 0)
                 {
-
-                    //DIRECT LINQ TO DB REPLACING STORED PROCEDURE
                     Ingredient_Nutrients ingredient_nutrients = await _recitopiaDbContext.Ingredient_Nutrients.Where(i => i.Id == ingredientNutrient.Id).SingleAsync();
 
                     ingredient_nutrients.Nut_per_100_grams = ingredientNutrient.Nut_per_100_grams;
 
                     await _recitopiaDbContext.SaveChangesAsync();
-
                 }
 
             }
-
-
             return Json(jsonstring);
 
         }
-        public class GetAll
-        {
-            public string FirstName { get; set; }
-            public string SecondName { get; set; }
-            public int Ingred_Id { get; set; }
-            public int Nutrition_Item_Id { get; set; }
-
-        }
-
+        
         // GET: Ingredient_Nutrients/Delete/5
         public async Task<ActionResult> Delete(int? id)
         {
@@ -309,9 +291,7 @@ namespace Recitopia.Controllers
                 rIngreds.Nutrition = tNut;
                 rIngreds.Customer_Id = ingredientNutrient.Customer_Id;
 
-            }
-
-           
+            }           
             return View(rIngreds);
         }
 
@@ -321,7 +301,6 @@ namespace Recitopia.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Ingredient_Nutrients ingredient_Nutrients = await _recitopiaDbContext.Ingredient_Nutrients.FindAsync(id);
-
 
             try
             {
@@ -340,10 +319,7 @@ namespace Recitopia.Controllers
                 ViewBag.ErrorMessage = "There was an issue deleting this Nutrient from this Ingredient.";
                 return View(ingredient_Nutrients);
             }
-
-
-
-
+            
         }
         public async Task<ActionResult> PrimeIngredNutrient(int? id)
         {
@@ -351,7 +327,6 @@ namespace Recitopia.Controllers
             {
                 return new StatusCodeResult(0);
             }
-
 
             Ingredient ingredient = await _recitopiaDbContext.Ingredient.FindAsync(id);
 
@@ -390,12 +365,8 @@ namespace Recitopia.Controllers
                 await _recitopiaDbContext.SaveChangesAsync();
                 
             }
-
            
             return RedirectToAction("Index", new { IngredID = ingredient.Ingredient_Id });
-
-
-
         }
     }
 }

@@ -41,8 +41,6 @@ namespace Recitopia.Controllers
         [HttpGet]
         public async Task<JsonResult> GetData()
         {
-            //doesn't allow the model to get dependent table information
-            //db.Configuration.ProxyCreationEnabled = false;
             int customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
 
             var allergen = await _recitopiaDbContext.Components

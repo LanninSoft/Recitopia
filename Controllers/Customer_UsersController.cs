@@ -23,84 +23,52 @@ namespace Recitopia.Controllers
         [Authorize(Roles = "Administrator")]
 
         // GET: Customer_Users
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            //BUILD VIEW FOR ANGULARJS RENDERING
-            //For some reason, I am unable to recreate this quagmire in LINQ format.  most likely to do with Models
-            //var customerUsers = await _recitopiaDbContext.Customer_Users
-            //               .Include(ri => ri.AppUser)
-            //               .Include(ri => ri.Customers)
-            //               .OrderBy(ri => ri.Customers.Customer_Name)
-            //               .Select(ri => new Customer_Users()
-            //               {
-            //                   CU_Id = ri.CU_Id,
-            //                   Id = ri.Id,
-            //                   Customer_Id = ri.Customer_Id,
-            //                   Notes = ri.Notes,
-            //                   Customer_Name = ri.Customer_Name,
-            //                   User_Name = ri.AppUser.FirstName + ' ' + ri.AppUser.LastName
-            //               }).ToListAsync();
+          
+            var customerUsers =
+                await (from cu in _recitopiaDbContext.Customer_Users
+                join c in _recitopiaDbContext.Customers
+                on cu.Customer_Id equals c.Customer_Id
+                join au in _recitopiaDbContext.AppUsers
+                on cu.User_Id equals au.Id
+                orderby c.Customer_Name
+                select new Customer_Users
+                {
+                    Id = cu.Id,
+                    User_Id = cu.User_Id,
+                    Customer_Id = cu.Customer_Id,
+                    Notes = cu.Notes,
+                    Customer_Name = c.Customer_Name,
+                    User_Name = au.FullName
+                })
+                .ToListAsync();
 
-            var query = 
-               from t1 in _recitopiaDbContext.Customer_Users.AsQueryable()
-               join t2 in _recitopiaDbContext.AppUsers.AsQueryable() on t1.User_Id equals t2.Id into t2g
-               from t2 in t2g.DefaultIfEmpty()
-               join t3 in _recitopiaDbContext.Customers.AsQueryable() on t1.Customer_Id equals t3.Customer_Id into t3g
-               from t3 in t3g.DefaultIfEmpty()
-               orderby t3.Customer_Name
-               select new Customer_Users()
-               {
-                   Id = t1.Id,
-                   User_Id = t1.User_Id,
-                   Customer_Id = t1.Customer_Id,
-                   Notes = t1.Notes,
-                   Customer_Name = t3.Customer_Name,
-                   User_Name = t2.FullName
-               };
-
-            return View(query.ToList());
+            return View(customerUsers);
         }
 
         [HttpGet]
-        public JsonResult GetData()
+        public async Task<JsonResult> GetData()
         {
-            //BUILD VIEW FOR ANGULARJS RENDERING
-            //For some reason, I am unable to recreate this quagmire in LINQ format.  most likely to do with Models
+            var customerUsers =
+                 await (from cu in _recitopiaDbContext.Customer_Users
+                 join c in _recitopiaDbContext.Customers
+                 on cu.Customer_Id equals c.Customer_Id
+                 join au in _recitopiaDbContext.AppUsers
+                 on cu.User_Id equals au.Id
+                 orderby c.Customer_Name
+                 select new Customer_Users
+                 {
+                     Id = cu.Id,
+                     User_Id = cu.User_Id,
+                     Customer_Id = cu.Customer_Id,
+                     Notes = cu.Notes,
+                     Customer_Name = c.Customer_Name,
+                     User_Name = au.FullName
+                 })
+                .ToListAsync();
 
-
-
-            //var customerUsers =  _recitopiaDbContext.Customer_Users
-            //               .Include(ri => ri.AppUser)
-            //               .Include(ri => ri.Customers)
-            //               .OrderBy(ri => ri.Customers.Customer_Name)
-            //               .Select(ri => new Customer_Users()
-            //               {
-            //                   CU_Id = ri.CU_Id,
-            //                   Id = ri.Id,
-            //                   Customer_Id = ri.Customer_Id,
-            //                   Notes = ri.Notes,
-            //                   Customer_Name = ri.Customer_Name,
-            //                   User_Name = ri.AppUser.FirstName + ' ' + ri.AppUser.LastName
-            //               }).ToList();
-
-            var query =
-               from t1 in _recitopiaDbContext.Customer_Users.AsQueryable()
-               join t2 in _recitopiaDbContext.AppUsers.AsQueryable() on t1.User_Id equals t2.Id into t2g
-               from t2 in t2g.DefaultIfEmpty()
-               join t3 in _recitopiaDbContext.Customers.AsQueryable() on t1.Customer_Id equals t3.Customer_Id into t3g
-               from t3 in t3g.DefaultIfEmpty()
-               orderby t3.Customer_Name
-               select new Customer_Users()
-               {
-                   Id = t1.Id,
-                   User_Id = t1.User_Id,
-                   Customer_Id = t1.Customer_Id,
-                   Notes = t1.Notes,
-                   Customer_Name = t3.Customer_Name,
-                   User_Name = t2.FullName
-               };
-
-            List<Customer_Users> customerusers = query.ToList();
+            List<Customer_Users> customerusers = customerUsers;
 
             if (customerusers != null)
             {
@@ -218,29 +186,28 @@ namespace Recitopia.Controllers
                 return NotFound();
             }
 
-            var query =
-               from t1 in _recitopiaDbContext.Customer_Users.AsQueryable()
-               join t2 in _recitopiaDbContext.AppUsers.AsQueryable() on t1.User_Id equals t2.Id into t2g
-               from t2 in t2g.DefaultIfEmpty()
-               join t3 in _recitopiaDbContext.Customers.AsQueryable() on t1.Customer_Id equals t3.Customer_Id into t3g
-               from t3 in t3g.DefaultIfEmpty()
-               where t1.Id == id
-               select new Customer_Users()
-               {
-                   Id = t1.Id,
-                   User_Id = t1.User_Id,
-                   Customer_Id = t1.Customer_Id,
-                   Notes = t1.Notes,
-                   Customer_Name = t3.Customer_Name,
-                   User_Name = t2.FirstName + ' ' + t2.LastName
-               };
+            var customerUsers =
+                 await (from cu in _recitopiaDbContext.Customer_Users
+                        join c in _recitopiaDbContext.Customers
+                        on cu.Customer_Id equals c.Customer_Id
+                        join au in _recitopiaDbContext.AppUsers
+                        on cu.User_Id equals au.Id
+                        where cu.Id == id
+                        select new Customer_Users
+                        {
+                            Id = cu.Id,
+                            User_Id = cu.User_Id,
+                            Customer_Id = cu.Customer_Id,
+                            Notes = cu.Notes,
+                            Customer_Name = c.Customer_Name,
+                            User_Name = au.FullName
+                        })
+                .SingleAsync();            
 
-            ViewBag.AppUsers = await query.SingleAsync();
+            ViewBag.AppUsers = customerUsers;
 
             var customer_Users = await _recitopiaDbContext.Customer_Users
                 .SingleAsync(m => m.Id == id);
-
-
 
             if (customer_Users == null)
             {
@@ -331,22 +298,7 @@ namespace Recitopia.Controllers
             {
                 return NotFound();
             }
-            //var customer_Users =
-            //   from t1 in _recitopiaDbContext.Customer_Users.AsQueryable()
-            //   join t2 in _recitopiaDbContext.AppUsers.AsQueryable() on t1.Id equals t2.Id into t2g
-            //   from t2 in t2g.DefaultIfEmpty()
-            //   join t3 in _recitopiaDbContext.Customers.AsQueryable() on t1.Customer_Id equals t3.Customer_Id into t3g
-            //   from t3 in t3g.DefaultIfEmpty()
-            //   where t1.CU_Id == id
-            //   select new Customer_Users()
-            //   {
-            //       CU_Id = t1.CU_Id,
-            //       Id = t1.Id,
-            //       Customer_Id = t1.Customer_Id,
-            //       Notes = t1.Notes,
-            //       Customer_Name = t3.Customer_Name,
-            //       User_Name = t2.FirstName + ' ' + t2.LastName
-            //   };
+            
             var customer_Users = await _recitopiaDbContext.Customer_Users.SingleAsync(m => m.Id == id);
             if (customer_Users == null)
             {

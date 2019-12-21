@@ -1034,4 +1034,73 @@
 
 
     });
+    //FEEDBACK CONTROLLER
+    app.controller('Feedback', function ($scope, $http) {
+
+        $http.get("/Feedback/GetData")
+            .then(function (response) {
+                // First function handles success
+                $scope.Feedback = response.data;
+
+            }, function (response) {
+                // Second function handles error
+                    $scope.Feedback = "Something went wrong";
+
+            });
+
+        //Redrect index form to edit form with parameter
+        $scope.RedirectToEdit = function (feedback) {
+
+            window.location.href = '/Feedback/Edit/' + feedback.id;
+        };
+
+        //Redrect index form to delete form with parameter
+        $scope.DelFeedback = function (feedback) {
+
+            window.location.href = '/Feedback/Delete/' + feedback.id;
+        };
+
+        //Redrect index form to details form with parameter
+        $scope.RedirectToDetails = function (feedback) {
+
+            window.location.href = '/Feedback/Details/' + feedback.id;
+        };
+        app.filter('YesNo', function () {
+            return function (text) {
+                return text ? "Yes" : "No";
+            }
+        })
+        //SORTING ICON CONTROL
+        $scope.sort = {
+            active: '',
+            descending: undefined
+        }
+
+        $scope.changeSorting = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                sort.descending = !sort.descending;
+
+            } else {
+                sort.active = column;
+                sort.descending = false;
+            }
+        };
+
+        $scope.getIcon = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                return sort.descending
+                    ? 'fa fa-caret-up'
+                    : 'fa fa-caret-down';
+            }
+
+            return 'fa fa-caret-left';
+        }
+
+    });
 })();

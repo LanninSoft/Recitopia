@@ -80,14 +80,10 @@ namespace Recitopia.Controllers
 
                             custList.Add(new List<string> { tempResults.Customer_Name, tempResults.Customer_Id.ToString() });
                         }
-
-
                         ViewBag.UserCustomers = custList;
 
                         return View();
                     }
-
-
                 }
                 else if (customerCount > 1 && clickLinktoChange == true)
                 {
@@ -101,8 +97,6 @@ namespace Recitopia.Controllers
 
                         custList.Add(new List<string> { tempResults.Customer_Name, tempResults.Customer_Id.ToString() });
                     }
-
-
                     ViewBag.UserCustomers = custList;
 
                     return View();
@@ -135,14 +129,12 @@ namespace Recitopia.Controllers
         public async Task<IActionResult> CustomerLoginGo(int id)
         {
             //save customerid to appuser field to carry
-
-
             var currentUser = await _recitopiaDbContext.AppUsers.Where(m => m.UserName ==  User.Identity.Name).FirstAsync();
-
 
             var getCustomerName = await _recitopiaDbContext.Customers.Where(m => m.Customer_Id == id).FirstAsync();
 
             currentUser.Customer_Id = id;
+
             currentUser.Customer_Name = getCustomerName.Customer_Name;
 
             HttpContext.Session.SetString("CurrentUserCustomerId", id.ToString());

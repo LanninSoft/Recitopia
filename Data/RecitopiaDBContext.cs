@@ -419,7 +419,7 @@ namespace Recitopia.Data
         public virtual DbSet<AppRole> AppRoles { get; set; }
 
         public virtual DbSet<Customers> Customers { get; set; }
-
+        public virtual DbSet<Feedback> Feedback { get; set; }
         public virtual DbSet<Customer_Users> Customer_Users { get; set; }
 
         //public virtual DbSet<AppUser> AppUser { get; set; }

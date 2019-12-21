@@ -86,7 +86,11 @@ namespace Recitopia.Controllers
                 return RedirectToAction("CustomerLogin", "Customers");
             }
 
-            var recipe = await _recitopiaDbContext.Recipe.FindAsync(id);
+            var recipe = await _recitopiaDbContext.Recipe
+                .Include(r => r.Meal_Category)
+                .Include(r => r.Serving_Sizes)
+                .Where(r => r.Recipe_Id == id)
+                .SingleAsync();
 
             if (recipe == null)
             {
@@ -267,106 +271,73 @@ namespace Recitopia.Controllers
             var ListFields = new List<View_All_Ingredient_Nutrients>();
 
             //BUILD OUT NUTRITION PANEL
-            //For some reason, I am unable to recreate this quagmire in LINQ format.  most likely to do with Models
+            var nutritionPanel =
+                 await (from ri in _recitopiaDbContext.Recipe_Ingredients
+                        join r in _recitopiaDbContext.Recipe
+                        on ri.Recipe_Id equals r.Recipe_Id
+                        join ss in _recitopiaDbContext.Serving_Sizes
+                        on r.SS_Id equals ss.SS_Id
+                        join inn in _recitopiaDbContext.Ingredient_Nutrients
+                        on ri.Ingredient_Id equals inn.Ingred_Id
+                        join i in _recitopiaDbContext.Ingredient
+                        on ri.Ingredient_Id equals i.Ingredient_Id
+                        join n in _recitopiaDbContext.Nutrition
+                        on inn.Nutrition_Item_Id equals n.Nutrition_Item_Id
+                        where ri.Recipe_Id == id && n.ShowOnNutrientPanel == true && ri.Customer_Id == customerId
+                        orderby n.OrderOnNutrientPanel, n.Nutrition_Item
+                        select new View_Nutrition_Panel
+                        {
+                            Customer_Id = ri.Customer_Id,
+                            Recipe_Id = ri.Recipe_Id,
+                            Recipe_Name = r.Recipe_Name,
+                            Serving_Size = ss.Serving_Size,
+                            Ingred_Id = ri.Ingredient_Id,
+                            Ingred_name = i.Ingred_name,
+                            ShowOnNutrientPanel = n.ShowOnNutrientPanel,
+                            OrderOnNutrientPanel = n.OrderOnNutrientPanel,
+                            Nut_per_100_grams = inn.Nut_per_100_grams,
+                            Amount_g = ri.Amount_g,
+                            Nutrition_Item = n.Nutrition_Item,
+                            DV = n.DV,
+                            Measurement = n.Measurement,
+                            Nutrition_Item_Id = n.Nutrition_Item_Id
+                        })
+                .ToListAsync();
 
-            //var nutritionPanel = await _recitopiaDbContext.Recipe_Ingredients
-            //               .Include(ri => ri.Recipe)                           
-            //               .Include(ri => ri.Recipe.Serving_Sizes)
-            //               .Include(ri => ri.Ingredient.Ingredient_Nutrients)
-            //               .Include(ri => ri.Ingredient)
-            //               .Include(ri => ri.Nutrition)
-            //               .Where(ri => ri.Customer_Id == customerId && ri.Recipe_Id == id)
-            //               .OrderBy(ri => ri.Ingredient.Ingred_name)
-            //               .Select(ri => new View_Nutrition_Panel()
-            //               {
-            //                   Customer_Id = ri.Customer_Id,
-            //                   Recipe_Id = ri.Recipe_Id,
-            //                   Recipe_Name = ri.Recipe.Recipe_Name,
-            //                   Serving_Size = ri.Recipe.Serving_Sizes.Serving_Size,
-            //                   Ingred_Id = ri.Ingredient_Id,
-            //                   Ingred_name = ri.Ingredient.Ingred_name,
-            //                   ShowOnNutrientPanel = ri.Nutrition.ShowOnNutrientPanel,
-            //                   OrderOnNutrientPanel = ri.Nutrition.OrderOnNutrientPanel,
-            //                   Nut_per_100_grams = ri.Ingredient.Ingredient_Nutrients.Nut_per_100_grams, //CANNOT FIGURE HOW TO ACCESS THIS FIELD
-            //                   Amount_g = ri.Amount_g,
-            //                   Nutrition_Item = ri.Nutrition.Nutrition_Item,
-            //                   DV = ri.Nutrition.DV,
-            //                   Measurement = ri.Nutrition.Measurement,
-            //                   Nutrition_Item_Id = ri.Nutrition.Nutrition_Item_Id
-            //               })
-            //                .ToListAsync();
 
-           
-            var queryRI =
-               from t1 in _recitopiaDbContext.Recipe_Ingredients.AsQueryable()
-               join t2 in _recitopiaDbContext.Recipe.AsQueryable() on t1.Recipe_Id equals t2.Recipe_Id into t2g
-               from t2 in t2g.DefaultIfEmpty() //DefaultIfEmpty is used for left joins
-               join t4 in _recitopiaDbContext.Serving_Sizes.AsQueryable() on t2.SS_Id equals t4.SS_Id into t4g
-               from t4 in t4g.DefaultIfEmpty() //DefaultIfEmpty is used for left joins
-               join t5 in _recitopiaDbContext.Ingredient_Nutrients.AsQueryable() on t1.Ingredient_Id equals t5.Ingred_Id into t5g
-               from t5 in t5g.DefaultIfEmpty() //DefaultIfEmpty is used for left joins
-               join t3 in _recitopiaDbContext.Ingredient.AsQueryable() on t1.Ingredient_Id equals t3.Ingredient_Id into t3g
-               from t3 in t3g.DefaultIfEmpty() //DefaultIfEmpty is used for left joins
-               join t6 in _recitopiaDbContext.Nutrition.AsQueryable() on t5.Nutrition_Item_Id equals t6.Nutrition_Item_Id into t6g
-               from t6 in t6g.DefaultIfEmpty() //DefaultIfEmpty is used for left joins
-
-               where t1.Recipe_Id == id && t6.ShowOnNutrientPanel == true && t1.Customer_Id == customerId
-               orderby t6.OrderOnNutrientPanel, t6.Nutrition_Item
-               select new View_Nutrition_Panel()
-               {
-                   Customer_Id = t1.Customer_Id,
-                   Recipe_Id = t1.Recipe_Id,
-                   Recipe_Name = t2.Recipe_Name,
-                   Serving_Size = t4.Serving_Size,
-                   Ingred_Id = t1.Ingredient_Id,
-                   Ingred_name = t3.Ingred_name,
-                   ShowOnNutrientPanel = t6.ShowOnNutrientPanel,
-                   OrderOnNutrientPanel = t6.OrderOnNutrientPanel,
-                   Nut_per_100_grams = t5.Nut_per_100_grams,
-                   Amount_g = t1.Amount_g,
-                   Nutrition_Item = t6.Nutrition_Item,
-                   DV = t6.DV,
-                   Measurement = t6.Measurement,
-                   Nutrition_Item_Id = t6.Nutrition_Item_Id
-
-               };
-
-            List<View_Nutrition_Panel> nuts = queryRI.ToList();
+            List<View_Nutrition_Panel> nutritionPanelList = nutritionPanel;
            
             var NutrientTable = new List<View_Nutrition_Panel>();
             decimal nutValue = 0;
             int nDV = 0;
             string nM = "";
-            int servingSize = 1;
-            
-
+            int servingSize = 1;    
 
             //LOOP THROUGH VIEW AND GET ALL INGREDIENT NUTRIENTS THAT EQUAL ASSOCIATED INGRED IDS
-            for (int i = 0; i < nuts.Count(); i++)
+            for (int i = 0; i < nutritionPanelList.Count(); i++)
             {
-                if (nuts[i].DV != null)
+                if (nutritionPanelList[i].DV != null)
                 {
-                    nDV = (int)nuts[i].DV;
+                    nDV = (int)nutritionPanelList[i].DV;
                 }
                 else
                 {
                     nDV = 0;
                 }
 
-
-                nM = nuts[i].Measurement;
-                if (nuts[i].Serving_Size != null)
+                nM = nutritionPanelList[i].Measurement;
+                if (nutritionPanelList[i].Serving_Size != null)
                 {
-                    servingSize = (int)nuts[i].Serving_Size;
+                    servingSize = (int)nutritionPanelList[i].Serving_Size;
                 }
                 else
                 {
                     servingSize = 1;
                 }
 
-                if (nuts[i].Nut_per_100_grams != null && nuts[i].Amount_g.ToString() != null)
+                if (nutritionPanelList[i].Nut_per_100_grams != null && nutritionPanelList[i].Amount_g.ToString() != null)
                 {
-                    nutValue += ((decimal)nuts[i].Nut_per_100_grams / (decimal)100) * (decimal)nuts[i].Amount_g;
+                    nutValue += ((decimal)nutritionPanelList[i].Nut_per_100_grams / (decimal)100) * (decimal)nutritionPanelList[i].Amount_g;
                 }
 
                 //IF THE NEXT NUTRIENT IS DIFFERENT, DUMP nutValue and reset 
@@ -375,7 +346,7 @@ namespace Recitopia.Controllers
                 {
                     decimal tempAmountg = 0;
 
-                    if (nuts[i].Nutrition_Item_Id != nuts[i + 1].Nutrition_Item_Id)
+                    if (nutritionPanelList[i].Nutrition_Item_Id != nutritionPanelList[i + 1].Nutrition_Item_Id)
                     {
                         if (nDV != 0)
                         {
@@ -390,7 +361,7 @@ namespace Recitopia.Controllers
                         //BUILD LIST ITEM
                         var Fieldproperties = new View_Nutrition_Panel
                         {
-                            Nutrition_Item = nuts[i].Nutrition_Item,
+                            Nutrition_Item = nutritionPanelList[i].Nutrition_Item,
                             //DIVIDE BY 100 MULTIPLY BY INGRED AMOUNT
                             Nut_per_100_grams = nutValue,
                             //Amount_g = (nutValue / servingSize) / (nDV),
@@ -421,7 +392,7 @@ namespace Recitopia.Controllers
                     //BUILD LIST ITEM
                     var Fieldproperties = new View_Nutrition_Panel
                     {
-                        Nutrition_Item = nuts[i].Nutrition_Item,
+                        Nutrition_Item = nutritionPanelList[i].Nutrition_Item,
                         //DIVIDE BY 100 MULTIPLY BY INGRED AMOUNT
                         Nut_per_100_grams = nutValue,
                         //Amount_g = (nutValue / servingSize) / (nDV),
@@ -437,43 +408,41 @@ namespace Recitopia.Controllers
 
             }
 
-
             ViewBag.Nutrition = NutrientTable;
-
 
             //---------------------------------------------------
             //GET ALLERGENS LIST     
             //---------------------------------------------------
-            //For some reason, I am unable to recreate this quagmire in LINQ format.  most likely to do with Models
-            var queryA =
-               from t1 in _recitopiaDbContext.Recipe.AsQueryable()
-               join t2 in _recitopiaDbContext.Recipe_Ingredients.AsQueryable() on t1.Recipe_Id equals t2.Recipe_Id into t2g
-               from t2 in t2g.DefaultIfEmpty() //DefaultIfEmpty is used for left joins
-               join t3 in _recitopiaDbContext.Ingredient_Components.AsQueryable() on t2.Ingredient_Id equals t3.Ingred_Id into t3g
-               from t3 in t3g.DefaultIfEmpty()
-               join t4 in _recitopiaDbContext.Components.AsQueryable() on t3.Comp_Id equals t4.Comp_Id into t4g
-               from t4 in t4g.DefaultIfEmpty()
-               where t1.Recipe_Id == id && t1.Customer_Id == customerId
-               orderby t4.Component_Name
-               select new View_All_Recipe_Components()
-               {
-                   Recipe_Id = t1.Recipe_Id,
-                   Customer_Id = t1.Customer_Id,
-                   Recipe_Name = t1.Recipe_Name,
-                   Ingredient_Id = t2.Ingredient_Id,
-                   Amount_g = t2.Amount_g,
-                   Comp_Id = t3.Comp_Id,
-                   Component_Name = t4.Component_Name,
-                   
-               };
+           
+            var allergensList =
+                 await (from r in _recitopiaDbContext.Recipe
+                        join ri in _recitopiaDbContext.Recipe_Ingredients
+                        on r.Recipe_Id equals ri.Recipe_Id
+                        join ic in _recitopiaDbContext.Ingredient_Components
+                        on ri.Ingredient_Id equals ic.Ingred_Id
+                        join c in _recitopiaDbContext.Components
+                        on ic.Comp_Id equals c.Comp_Id
 
+                        where r.Recipe_Id == id && r.Customer_Id == customerId
+                        orderby c.Component_Name
+                        select new View_All_Recipe_Components()
+                        {
+                            Recipe_Id = r.Recipe_Id,
+                            Customer_Id = r.Customer_Id,
+                            Recipe_Name = r.Recipe_Name,
+                            Ingredient_Id = ri.Ingredient_Id,
+                            Amount_g = ri.Amount_g,
+                            Comp_Id = ic.Comp_Id,
+                            Component_Name = c.Component_Name
+                        })
+                .ToListAsync();
 
-            List<View_All_Recipe_Components> TempV = queryA.ToList();
+            List<View_All_Recipe_Components> allergens = allergensList;
 
             //build allergen list to populate previously added items
             List<string> comList = new List<string>();
 
-            foreach (View_All_Recipe_Components comp in TempV)
+            foreach (View_All_Recipe_Components comp in allergens)
             {
                 comList.Add(comp.Component_Name);
             }
@@ -505,14 +474,14 @@ namespace Recitopia.Controllers
                             .ToListAsync();
 
 
-            List<View_All_Recipe_Ingredients> recipe_ing = ingredients;
+            List<View_All_Recipe_Ingredients> recipeIngredient = ingredients;
 
             //build ingredient list to populate panel  
             string paneList = "";
 
             List<string> cols = new List<string>();
 
-            foreach (View_All_Recipe_Ingredients comp in recipe_ing)
+            foreach (View_All_Recipe_Ingredients comp in recipeIngredient)
             {
                 if (comp.Package == false)
                 {

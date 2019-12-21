@@ -20,8 +20,7 @@ namespace Recitopia.Controllers
         public HomeController(ILogger<HomeController> logger, RecitopiaDBContext recitopiaDbContext)
         {
             _logger = logger;
-            _recitopiaDbContext = recitopiaDbContext ?? throw new ArgumentNullException(nameof(recitopiaDbContext));
-          
+            _recitopiaDbContext = recitopiaDbContext ?? throw new ArgumentNullException(nameof(recitopiaDbContext));          
         }
 
         public async Task<IActionResult> Index()
@@ -36,7 +35,6 @@ namespace Recitopia.Controllers
                 if (checkLastLoginCompanyInfo.Customer_Id > 0 && checkLastLoginCompanyInfo.Customer_Name != null)
                 {
                     HttpContext.Session.SetString("CurrentUserCustomerId", checkLastLoginCompanyInfo.Customer_Id.ToString());
-
 
                 }
                 return View();
