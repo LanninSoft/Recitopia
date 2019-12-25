@@ -261,6 +261,7 @@ namespace Recitopia.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var customers = await _recitopiaDbContext.Customers.FindAsync(id);
+            //Is this removing all info in all tables?
             _recitopiaDbContext.Customers.Remove(customers);
             await _recitopiaDbContext.SaveChangesAsync();
 
@@ -271,5 +272,65 @@ namespace Recitopia.Controllers
         {
             return await _recitopiaDbContext.Customers.AnyAsync(e => e.Customer_Id == id);
         }
+        
+        public async Task<IActionResult> CopyCustomer(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var customers = await _recitopiaDbContext.Customers
+                .FirstOrDefaultAsync(m => m.Customer_Id == id);
+
+            if (customers == null)
+            {
+                return NotFound();
+            }
+
+            return View(customers);
+        }
+        [HttpPost, ActionName("CopyCustomer")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CopyCustomerConfirmed(int id)
+        {
+            //int customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+
+            var customers = await _recitopiaDbContext.Customers.FindAsync(id);
+            try
+            {    
+                Customers customerNew = new Customers()
+                {
+                    Customer_Name = "Copy of - " + customers.Customer_Name,
+                    Phone = customers.Phone,
+                    Email = customers.Email,
+                    Address1 = customers.Address1,
+                    Address2 = customers.Address2,
+                    City = customers.City,
+                    State = customers.State,
+                    Zip = customers.Zip,
+                    Web_URL = customers.Web_URL,
+                    Notes = customers.Notes
+                };
+                await _recitopiaDbContext.Customers.AddAsync(customerNew);
+                await _recitopiaDbContext.SaveChangesAsync();
+                
+               
+
+            }
+            catch
+            {
+
+            }
+
+
+
+                return RedirectToAction(nameof(Index));
+        }
+
+
+
+
+
     }
 }

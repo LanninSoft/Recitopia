@@ -17,13 +17,16 @@ namespace Recitopia.Models
         public int Customer_Id { get; set; }
 
         [Display(Name = "Customer Name")]
+        [Required(ErrorMessage = "Customer Name Required.")]
         public string Customer_Name { get; set; }
 
-        [Phone]
+        
         [Display(Name = "Phone number")]
+        [Phone(ErrorMessage = "Improper Phone format. (1-234-567-8912)")]
         public string Phone { get; set; }
-
+        
         [Display(Name = "Email Address")]
+        [EmailAddress(ErrorMessage = "Improper Email format.")]
         public string Email { get; set; }
 
         [Display(Name = "Address 1")]
@@ -39,13 +42,16 @@ namespace Recitopia.Models
         public string State { get; set; }
         
         [Display(Name = "Postal Code")]
+        [DataType(DataType.PostalCode, ErrorMessage ="Improper Postal Code format.")]
+        
         public int? Zip { get; set; }
 
         [Display(Name = "Web URL")]
+        [Url(ErrorMessage = "Improper URL format. (http://www.example.com)")]
         public string Web_URL { get; set; }
 
-        [Display(Name = "Notes")]
-        [DataType(DataType.MultilineText)]
+        [Display(Name = "Notes")]        
+        [DataType(DataType.MultilineText)]        
         public string Notes { get; set; }       
 
         public virtual ICollection<Customer_Users> Customer_Users { get; set; }

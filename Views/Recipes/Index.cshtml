@@ -65,7 +65,11 @@
 
         <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:175px">
             <input type="button" style="background-color:lavender" class="btn btn-sm AngularButtons" value="Ingredients" ng-click="RedirectToRecipeIngredients(recipe)" /> |
+            <button ng-click="RedirectToCopy(recipe)" class="btn btn-outline-info AngularButtons">
+                <i class="fa fa-copy"></i>
+            </button> |
 
+           
             <button ng-click="RedirectToEdit(recipe)" class="btn btn-outline-success AngularButtons">
                 <i class="fa fa-pen"></i>
             </button> |

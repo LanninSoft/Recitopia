@@ -4,7 +4,7 @@
     ViewBag.Title = "Create";
 }
 
-    <div class="container">
+    
         <table width="100%" class="table-borderless">
             <tr>
                 <th style="font-size:30px;background-color:blanchedalmond">
@@ -13,95 +13,66 @@
             </tr>
 
         </table>
-        @using (Html.BeginForm())
-        {
-            @Html.AntiForgeryToken()
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    
+                    <div class="form-group">
+                        <label asp-for="Ingred_name" class="control-label"></label>
+                        <input asp-for="Ingred_name" class="form-control" />
+                        <span asp-validation-for="Ingred_name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Ingred_Comp_name" class="control-label"></label>
+                        <input asp-for="Ingred_Comp_name" class="form-control" />
+                        <span asp-validation-for="Ingred_Comp_name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="Package" /> @Html.DisplayNameFor(model => model.Package)
+                        </label>
+                    </div>
 
-    <div style="width:100%" class="form-horizontal">
-
-
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-
-            <font style="font-size:13px;font-weight:bolder">Ingredient Name</font>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Ingred_name, new { htmlAttributes = new { @class = "form-control", @required="required", style = "font-size:13px;height:25px" } })
-                @Html.ValidationMessageFor(model => model.Ingred_name, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-
-            <font style="font-size:13px;font-weight:bolder">Ingredient Component Name</font>
-            <div class="col-md-10">
-                @Html.TextAreaFor(model => model.Ingred_Comp_name,  new { @class = "form-control", @cols = "100", @rows = "4", @style="width:100%;font-size:13px"})
-                @Html.ValidationMessageFor(model => model.Ingred_Comp_name, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-
-            <font style="font-size:13px;font-weight:bolder">Packaging</font>
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.Package)
-                    @Html.ValidationMessageFor(model => model.Package, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-        
-        <div class="form-group">
-
-            <font style="font-size:13px;font-weight:bolder">Cost per lb</font>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Cost_per_lb, new { htmlAttributes = new { @class = "form-control", style = "font-size:13px;height:25px" } })
-                @Html.ValidationMessageFor(model => model.Cost_per_lb, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-
-            <font style="font-size:13px;font-weight:bolder">Cost $</font>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Cost, new { htmlAttributes = new { @class = "form-control", style = "font-size:13px;height:25px" } })
-                @Html.ValidationMessageFor(model => model.Cost, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-
-            <font style="font-size:13px;font-weight:bolder">Vendor Name</font>
-            <div class="col-md-10">
-                @Html.DropDownList("Vendor_Id", null, htmlAttributes: new { @class = "form-control", style = "font-size:13px;height:35px" })
-                @Html.ValidationMessageFor(model => model.Vendor_Id, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-
-        <div class="form-group">
-
-            <font style="font-size:13px;font-weight:bolder">Notes</font>
-            <div class="col-md-10">
-                @Html.TextAreaFor(model => model.Notes, new { @class = "form-control", @cols = "100", @rows = "4", @style = "width:100%;font-size:13px" })
-                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        <label asp-for="Cost_per_lb" class="control-label"></label>
+                        <input asp-for="Cost_per_lb" class="form-control" />
+                        <span asp-validation-for="Cost_per_lb" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Cost" class="control-label"></label>
+                        <input asp-for="Cost" class="form-control" />
+                        <span asp-validation-for="Cost" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Vendor_Id" class="control-label"></label>
+                        <select asp-for="Vendor_Id"
+                                asp-items="ViewBag.Vendor_Id">
+                        </select>
+                        <span asp-validation-for="Customer_Id" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Notes" class="control-label"></label>
+                        <textarea asp-for="Notes" class="form-control"></textarea>
+                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Brand" class="control-label"></label>
+                        <input asp-for="Brand" class="form-control" />
+                        <span asp-validation-for="Brand" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Website" class="control-label"></label>
+                        <input asp-for="Website" class="form-control" />
+                        <span asp-validation-for="Website" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn alert-success" />
+                    </div>
+                </form>
             </div>
         </div>
 
-
-        <div class="form-group">
-
-            <font style="font-size:13px;font-weight:bolder">Brand</font>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Brand, new { htmlAttributes = new { @class = "form-control", style = "font-size:13px;height:25px" } })
-                @Html.ValidationMessageFor(model => model.Brand, "", new { @class = "text-danger" })
-            </div>
+        <div>
+            <a asp-action="Index">Back to List</a>
         </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn alert-success" />
-            </div>
-        </div>
-    </div>
-        }
-    </div>
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>

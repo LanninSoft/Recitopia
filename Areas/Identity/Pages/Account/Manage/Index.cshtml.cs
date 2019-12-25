@@ -39,9 +39,11 @@ namespace Recitopia.Areas.Identity.Pages.Account.Manage
             public string PhoneNumber { get; set; }
 
             [Display(Name = "First Name")]
+            [Required]
             public string FirstName { get; set; }
 
             [Display(Name = "Last Name")]
+            [Required]
             public string LastName { get; set; }
 
             [Display(Name = "Address 1")]

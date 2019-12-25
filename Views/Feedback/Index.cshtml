@@ -18,11 +18,11 @@
 
         <table width="100%" class="table table-condensed table-hover table-striped table-bordered table-responsive-lg">
             <tr>
-                <th class="AngularTableHeaderColor" style="vertical-align:bottom">
+                <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
                     <a href="" ng-click="changeSorting('customer_Name')"><font style="color:black">Customer Name</font></a>
                     <i class="fa fa-caret-left" ng-class="getIcon('customer_Name')"></i>
                 </th>
-                <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                <th class="AngularTableHeaderColor" style="vertical-align:bottom">
                     <a href="" ng-click="changeSorting('user_Name')"><font style="color:black">User Name</font></a>
                     <i class="fa fa-caret-left" ng-class="getIcon('user_Name')"></i>
                 </th>
@@ -34,16 +34,20 @@
                     <a href="" ng-click="changeSorting('resolved')"><font style="color:black">Resolved</font></a>
                     <i class="fa fa-caret-left" ng-class="getIcon('resolved')"></i>
                 </th>
-
+                <th class="AngularTableHeaderColor" style="vertical-align:bottom">
+                    <a href="" ng-click="changeSorting('timeStamp')"><font style="color:black">TimeStamp</font></a>
+                    <i class="fa fa-caret-left" ng-class="getIcon('resolved')"></i>
+                </th>
                 <th style="text-align:right" class="AngularTableHeaderColor"><a href="@Url.Action("Create", "Feedback")" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> New Comment</a></th>
 
 
             </tr>
             <tr>
-                <td style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.customer_Name"></td>
-                <td class=" d-none d-lg-table-cell" style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.user_Name"></td>
+                <td class=" d-none d-lg-table-cell" style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.customer_Name"></td>
+                <td style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.user_Name"></td>
                 <td class=" d-none d-lg-table-cell" style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.subject"></td>
-                <td style="padding:1px;height:20px;font-size:13px"></td>
+                <td style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.resolved"></td>
+                <td class=" d-none d-lg-table-cell" style="padding:1px;height:20px;font-size:13px"></td>
                 <td></td>
 
 
@@ -54,13 +58,13 @@
         <tr ng-repeat="feedback in Feedback | filter:f | orderBy:sort.active:sort.descending">
             @* Fetch All the Recipe record using ng-repeat *@
 
-            <td style="height:15px;padding:1px">{{feedback.customer_Name}}</td>
-            <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{feedback.user_Name}}</td>
+            <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{feedback.customer_Name}}</td>
+            <td style="height:15px;padding:1px">{{feedback.user_Name}}</td>
             <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{feedback.subject}}</td>
-            <td style="height:15px;padding:1px">{{feedback.resolved ? "Yes":"No"}}</td>
+            <td style="height:15px;padding:1px;width:95px">{{feedback.resolved ? "T":"F"}}</td>
+            <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{feedback.timeStamp | utcToLocal:"MMM dd yyyy hh:mm:ss"}}</td>
 
-
-            <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:200px">
+            <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:175px">
                 <button ng-click="RedirectToEdit(feedback)" class="btn btn-outline-success AngularButtons">
                     <i class="fa fa-pen"></i>
                 </button> |

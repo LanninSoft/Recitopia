@@ -1,7 +1,23 @@
 ﻿(function () {
     'use strict';
-    var app = angular.module('myApp', []);
-   
+    var app = angular.module('myApp', [])
+    .filter('utcToLocal', utcToLocal);
+    //CONVERTS UTC TIME TO LOCAL
+    function utcToLocal($filter) {
+        return function (utcDateString, format) {
+            if (!utcDateString) {
+                return;
+            }
+
+            // append 'Z' to the date string to indicate UTC time if the timezone isn't already specified
+            if (utcDateString.indexOf('Z') === -1 && utcDateString.indexOf('+') === -1) {
+                utcDateString += 'Z';
+            }
+
+            return $filter('date')(utcDateString, format);
+        };
+    }
+
     //RECIPE CONTROLLER
     app.controller('Recipes', function ($scope, $http) {
 
@@ -17,6 +33,11 @@
             });
 
         //Redrect index form to edit form with parameter
+        //Redrect index form to details form with parameter
+        $scope.RedirectToCopy = function (recipes) {
+
+            window.location.href = '/Recipes/CreateCopy/' + recipes.recipe_Id;
+        };
         $scope.RedirectToEdit = function (recipes) {
 
             window.location.href = '/Recipes/Edit/' + recipes.recipe_Id;
@@ -847,9 +868,9 @@
         };
 
         //Redrect index form to details form with parameter
-        $scope.RedirectToDetails = function (customers) {
+        $scope.RedirectToCopy = function (customers) {
 
-            window.location.href = '/Customers/Details/' + customers.customer_Id;
+            window.location.href = '/Customers/CopyCustomer/' + customers.customer_Id;
         };
         app.filter('YesNo', function () {
             return function (text) {
@@ -1067,7 +1088,7 @@
         };
         app.filter('YesNo', function () {
             return function (text) {
-                return text ? "Yes" : "No";
+                return text ? "T" : "F";
             }
         })
         //SORTING ICON CONTROL
@@ -1088,7 +1109,7 @@
                 sort.descending = false;
             }
         };
-
+      
         $scope.getIcon = function (column) {
 
             var sort = $scope.sort;

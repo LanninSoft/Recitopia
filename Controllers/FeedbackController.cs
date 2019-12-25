@@ -31,13 +31,13 @@ namespace Recitopia.wwwroot
                 return RedirectToAction("CustomerLogin", "Customers");
             }
 
-            return View(await _recitopiaDbContext.Feedback.OrderBy(m => m.Resolved).ToListAsync());
+            return View(await _recitopiaDbContext.Feedback.OrderBy(m => m.Resolved).OrderByDescending(m => m.TimeStamp).ToListAsync());
         }
         [HttpGet]
         public async Task<JsonResult> GetData()
         {
             //BUILD VIEW FOR ANGULARJS RENDERING
-            var feedbacks = await _recitopiaDbContext.Feedback.OrderBy(m => m.Resolved).ToListAsync();
+            var feedbacks = await _recitopiaDbContext.Feedback.OrderBy(m => m.Resolved).OrderByDescending(m => m.TimeStamp).ToListAsync();
 
             return feedbacks != null
                 ? Json(feedbacks)

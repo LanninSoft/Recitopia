@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Recitopia.Models
 {
@@ -9,9 +10,13 @@ namespace Recitopia.Models
         {
             Ingredient_Components = new HashSet<Ingredient_Components>();
         }
-
+        
         public int Comp_Id { get; set; }
+        [Required(ErrorMessage = "Allergen Name Required.")]
+        [Display(Name = "Allergen Name")]
         public string Component_Name { get; set; }
+        [Display(Name = "Notes")]
+        [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
         public string Comp_Sort { get; set; }
         public int Customer_Id { get; set; }

@@ -9,20 +9,21 @@ namespace Recitopia.Models
        
 
         public int Id { get; set; }
+
         [Display(Name = "Subject")]
         [DataType(DataType.Text)]
-        [Required]
+        [Required(ErrorMessage = "Subject is Required.")]
         public string Subject { get; set; }
 
         [Display(Name = "Comment")]
         [DataType(DataType.MultilineText)]
-        [Required]
+        [Required(ErrorMessage = "Comment(s) Required.")]
         public string Comment { get; set; }
         [Display(Name = "Phone Number(optional)")]
-        [DataType(DataType.PhoneNumber)]
+        [Phone]
         public string PhoneNumber { get; set; }
         [Display(Name = "Email Address(optional)")]
-        [DataType(DataType.EmailAddress)]
+        [EmailAddress(ErrorMessage = "Improper Email format.")]
         public string EmailAddress { get; set; }
 
         public bool Resolved { get; set; }

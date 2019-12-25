@@ -8,8 +8,10 @@ namespace Recitopia.Models
     public class AppUser : IdentityUser<string>
     {
         [Display(Name = "First Name")]
+        [Required]
         public string FirstName { get; set; }
         [Display(Name = "Last Name")]
+        [Required]
         public string LastName { get; set; }
         [Display(Name = "Address 1")]
         public string Address1 { get; set; }
@@ -19,9 +21,12 @@ namespace Recitopia.Models
         public string City { get; set; }
         [Display(Name = "State")]
         public string State { get; set; }
+
         [Display(Name = "Postal Code")]
+        [DataType(DataType.PostalCode)]
         public string ZipCode { get; set; }
         [Display(Name = "Web URL")]
+        [Url]
         public string WebUrl { get; set; }
 
         [Display(Name = "Notes")]
