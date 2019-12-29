@@ -32,10 +32,10 @@ namespace Recitopia.Controllers
 
                 var checkLastLoginCompanyInfo = await _recitopiaDbContext.AppUsers.Where(m => m.Id == currentUser.Id).FirstOrDefaultAsync();
 
-                if (checkLastLoginCompanyInfo.Customer_Id > 0 && checkLastLoginCompanyInfo.Customer_Name != null)
+                if (checkLastLoginCompanyInfo.Customer_Guid != null && checkLastLoginCompanyInfo.Customer_Name != null)
                 {
-                    HttpContext.Session.SetString("CurrentUserCustomerId", checkLastLoginCompanyInfo.Customer_Id.ToString());
-
+                   
+                    HttpContext.Session.SetString("CurrentUserCustomerGuid", checkLastLoginCompanyInfo.Customer_Guid);
                 }
                 return View();
             }

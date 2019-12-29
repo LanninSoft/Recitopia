@@ -7,7 +7,7 @@ namespace Recitopia.Models
     {
         
         public int Ingredient_Id { get; set; }
-        public int Customer_Id { get; set; }
+        public string Customer_Guid { get; set; }
         public string Ingred_name { get; set; }
         public decimal? Cost_per_lb { get; set; }
         public decimal? Cost { get; set; }

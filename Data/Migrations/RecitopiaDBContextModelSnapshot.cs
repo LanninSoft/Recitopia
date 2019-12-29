@@ -171,8 +171,8 @@ namespace Recitopia.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Customer_Id")
-                        .HasColumnType("int");
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Customer_Name")
                         .HasColumnType("nvarchar(max)");
@@ -267,8 +267,8 @@ namespace Recitopia.Data.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
-                    b.Property<int>("Customer_Id")
-                        .HasColumnType("int");
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Notes")
                         .HasColumnType("text");
@@ -285,6 +285,9 @@ namespace Recitopia.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Customer_Id")
                         .HasColumnType("int");
@@ -328,6 +331,9 @@ namespace Recitopia.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Customer_Guid")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Customer_Name")
@@ -384,12 +390,24 @@ namespace Recitopia.Data.Migrations
                     b.Property<bool>("Resolved")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime>("ResolvedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Subject")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("User_Id")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("User_Name")
                         .HasColumnType("nvarchar(max)");
@@ -440,10 +458,8 @@ namespace Recitopia.Data.Migrations
                     b.Property<decimal?>("Cost_per_tsp")
                         .HasColumnType("decimal(18, 3)");
 
-                    b.Property<int>("Customer_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("((1))");
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ingred_Comp_name")
                         .HasColumnType("text");
@@ -503,10 +519,8 @@ namespace Recitopia.Data.Migrations
                     b.Property<int>("Comp_Id")
                         .HasColumnType("int");
 
-                    b.Property<int>("Customer_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("((1))");
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Ingred_Id")
                         .HasColumnType("int");
@@ -527,10 +541,8 @@ namespace Recitopia.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Customer_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("((1))");
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Ingred_Id")
                         .HasColumnType("int");
@@ -562,10 +574,8 @@ namespace Recitopia.Data.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
-                    b.Property<int>("Customer_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("((1))");
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Notes")
                         .HasColumnType("text");
@@ -583,10 +593,8 @@ namespace Recitopia.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Customer_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("((1))");
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("DV")
                         .HasColumnType("int");
@@ -624,10 +632,8 @@ namespace Recitopia.Data.Migrations
                     b.Property<int>("Category_Id")
                         .HasColumnType("int");
 
-                    b.Property<int>("Customer_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("((1))");
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Gluten_Free")
                         .HasColumnType("bit");
@@ -677,10 +683,8 @@ namespace Recitopia.Data.Migrations
                     b.Property<decimal>("Amount_g")
                         .HasColumnType("decimal(18, 3)");
 
-                    b.Property<int>("Customer_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("((1))");
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Ingredient_Id")
                         .HasColumnType("int");
@@ -704,10 +708,8 @@ namespace Recitopia.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Customer_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("((1))");
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Notes")
                         .HasColumnType("text");
@@ -740,10 +742,8 @@ namespace Recitopia.Data.Migrations
                         .HasColumnType("nvarchar(25)")
                         .HasMaxLength(25);
 
-                    b.Property<int>("Customer_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("((1))");
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(50)")

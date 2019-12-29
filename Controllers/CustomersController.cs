@@ -51,7 +51,7 @@ namespace Recitopia.Controllers
 
                 var customerIds = await _recitopiaDbContext.Customer_Users
                     .Where(cu => cu.User_Id == currentUser.Id)
-                    .Select(cu => cu.Customer_Id)
+                    .Select(cu => cu.Customer_Guid)
                     .ToListAsync();
             
                 customerCount = customerIds.Count();
@@ -62,9 +62,11 @@ namespace Recitopia.Controllers
                     //Look to see if company id and name saved prior.  If so, bypass selection page and take to home
                     var checkLastLoginCompanyInfo = await _recitopiaDbContext.AppUsers.SingleAsync(m => m.Id == currentUser.Id);
 
-                    if (checkLastLoginCompanyInfo.Customer_Id > 0 && checkLastLoginCompanyInfo.Customer_Name != null)
+                    if (checkLastLoginCompanyInfo.Customer_Guid != null && checkLastLoginCompanyInfo.Customer_Name != null)
                     {
-                        HttpContext.Session.SetString("CurrentUserCustomerId", checkLastLoginCompanyInfo.Customer_Id.ToString());
+                         var customerGuid = await _recitopiaDbContext.Customers.SingleAsync(m => m.Customer_Guid == checkLastLoginCompanyInfo.Customer_Guid);
+
+                        HttpContext.Session.SetString("CurrentUserCustomerGuid", customerGuid.Customer_Guid);
 
                         return LocalRedirect("~/Home/Index");
                     }
@@ -74,11 +76,11 @@ namespace Recitopia.Controllers
                         //create list and populate with Customer name and Id
                         List<IList<string>> custList = new List<IList<string>>();
 
-                        foreach (int customerId in customerIds)
+                        foreach (var customerId in customerIds)
                         {
-                            var tempResults = await _recitopiaDbContext.Customers.SingleAsync(m => m.Customer_Id == customerId);
+                            var tempResults = await _recitopiaDbContext.Customers.SingleAsync(m => m.Customer_Guid == customerId);
 
-                            custList.Add(new List<string> { tempResults.Customer_Name, tempResults.Customer_Id.ToString() });
+                            custList.Add(new List<string> { tempResults.Customer_Name, tempResults.Customer_Guid });
                         }
                         ViewBag.UserCustomers = custList;
 
@@ -91,11 +93,11 @@ namespace Recitopia.Controllers
                     //create list and populate with Customer name and Id
                     List<IList<string>> custList = new List<IList<string>>();
 
-                    foreach (int customerId in customerIds)
+                    foreach (var customerId in customerIds)
                     {
-                        var tempResults = await _recitopiaDbContext.Customers.SingleAsync(m => m.Customer_Id == customerId);
+                        var tempResults = await _recitopiaDbContext.Customers.SingleAsync(m => m.Customer_Guid == customerId);
 
-                        custList.Add(new List<string> { tempResults.Customer_Name, tempResults.Customer_Id.ToString() });
+                        custList.Add(new List<string> { tempResults.Customer_Name, tempResults.Customer_Guid });
                     }
                     ViewBag.UserCustomers = custList;
 
@@ -106,7 +108,7 @@ namespace Recitopia.Controllers
                     //take them to home page
                     var customerCId = await _recitopiaDbContext.Customer_Users.SingleAsync(m => m.User_Id == currentUser.Id);
 
-                    return RedirectToAction("CustomerLoginGo", new { id = customerCId.Customer_Id });
+                    return RedirectToAction("CustomerLoginGo", new { id = customerCId.Customer_Guid });
                 }
                 else
                 {
@@ -126,18 +128,18 @@ namespace Recitopia.Controllers
     
             }
 
-        public async Task<IActionResult> CustomerLoginGo(int id)
+        public async Task<IActionResult> CustomerLoginGo(string id)
         {
-            //save customerid to appuser field to carry
+            //save customerguid to appuser field to carry
             var currentUser = await _recitopiaDbContext.AppUsers.Where(m => m.UserName ==  User.Identity.Name).FirstAsync();
 
-            var getCustomerName = await _recitopiaDbContext.Customers.Where(m => m.Customer_Id == id).FirstAsync();
+            var getCustomerName = await _recitopiaDbContext.Customers.Where(m => m.Customer_Guid == id).FirstAsync();
 
-            currentUser.Customer_Id = id;
-
+            currentUser.Customer_Guid = id;
+            
             currentUser.Customer_Name = getCustomerName.Customer_Name;
-
-            HttpContext.Session.SetString("CurrentUserCustomerId", id.ToString());
+ 
+            HttpContext.Session.SetString("CurrentUserCustomerGuid", id);
 
             _recitopiaDbContext.SaveChanges();
 
@@ -178,6 +180,7 @@ namespace Recitopia.Controllers
         {
             if (ModelState.IsValid)
             {
+                customers.Customer_Guid = Guid.NewGuid().ToString();
                 _recitopiaDbContext.Add(customers);
                 await _recitopiaDbContext.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -261,7 +264,11 @@ namespace Recitopia.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var customers = await _recitopiaDbContext.Customers.FindAsync(id);
-            //Is this removing all info in all tables?
+            
+            
+            //NEED TO WRITE MULTIPLE CASCADING DELETES TO MAKE SURE THERE ARE NO ORPHANS
+
+
             _recitopiaDbContext.Customers.Remove(customers);
             await _recitopiaDbContext.SaveChangesAsync();
 
@@ -294,7 +301,7 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CopyCustomerConfirmed(int id)
         {
-            //int customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            //
 
             var customers = await _recitopiaDbContext.Customers.FindAsync(id);
             try

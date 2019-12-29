@@ -14,6 +14,7 @@ namespace Recitopia.Models
 
         
         public int Customer_Id { get; set; }
+        public string Customer_Guid { get; set; }
 
         [Display(Name = "Customer Name")]
         public string Customer_Name { get; set; }

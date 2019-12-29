@@ -18,6 +18,7 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="User_Id" />
             <div class="form-group">
                 <label asp-for="Subject" class="control-label"></label>
                 <input asp-for="Subject" class="form-control" />
@@ -48,10 +49,30 @@
                     <input class="form-check-input" asp-for="Resolved" /> @Html.DisplayNameFor(model => model.Resolved)
                 </label>
             </div>
+            @if (Model.ResolvedDate != DateTime.MinValue)
+            {
+                <div class="form-group">
+                    <font style="font-weight:bold"><label asp-for="ResolvedDate" class="control-label"></label></font>
+                    <input type="hidden" asp-for="ResolvedDate" />
+                    <div class="posted-date">
+                        @Html.DisplayFor(model => model.ResolvedDate)
+                    </div>
+                </div>
+            }
+
+
             <div class="form-group">
-                <label asp-for="TimeStamp" class="control-label"></label>
-                <input asp-for="TimeStamp" readonly="readonly" class="form-control" />
-                <span asp-validation-for="TimeStamp" class="text-danger"></span>
+                <font style="font-weight:bold"><label asp-for="UpdatedDate" class="control-label"></label></font>
+                <input type="hidden" asp-for="UpdatedDate" />
+                <div class="posted-date">
+                    @Html.DisplayFor(model => model.UpdatedDate)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="UpdatedBy" class="control-label"></label>
+                <input asp-for="UpdatedBy" readonly="readonly" class="form-control" />
+                <span asp-validation-for="UpdatedBy" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Customer_Name" class="control-label"></label>
@@ -62,6 +83,14 @@
                 <label asp-for="User_Name" class="control-label"></label>
                 <input asp-for="User_Name" readonly="readonly" class="form-control" />
                 <span asp-validation-for="User_Name" class="text-danger"></span>
+            </div>
+           
+            <div class="form-group">
+                <font style="font-weight:bold"><label asp-for="TimeStamp" class="control-label"></label></font>
+                <input type="hidden" asp-for="TimeStamp" />
+                <div class="posted-date">
+                    @Html.DisplayFor(model => model.TimeStamp)
+                </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

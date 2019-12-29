@@ -27,17 +27,23 @@ namespace Recitopia.Models
         public string EmailAddress { get; set; }
 
         public bool Resolved { get; set; }
-        [Display(Name = "Timestamp")]
+        [Display(Name = "Initial Submission")]
         [DataType(DataType.DateTime)]
         public DateTime TimeStamp { get; set; }
         [Display(Name = "Customer Name")]
         public string Customer_Name { get; set; }
         [Display(Name = "User Name")]
         public string User_Name { get; set; }
+        public string User_Id { get; set; }
 
-        
+
         [Display(Name = "What are we doing about it?")]
         [DataType(DataType.MultilineText)]
         public string Actions { get; set; }
+        [DataType(DataType.DateTime)]
+        public DateTime ResolvedDate { get; set; }
+        [DataType(DataType.DateTime)]
+        public DateTime UpdatedDate { get; set; }
+        public string UpdatedBy { get; set; }
     }
 }

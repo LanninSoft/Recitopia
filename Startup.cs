@@ -48,6 +48,7 @@ namespace Recitopia
                     .AddRazorRuntimeCompilation();
             services.AddRazorPages();
 
+          
             services.AddTransient<IEmailSender, EmailSender>(i =>
                 new EmailSender(
                     Configuration["EmailSender:PrimaryDomain"],

@@ -15,14 +15,15 @@ namespace Recitopia.Models
         }
         [Key]
         public int Customer_Id { get; set; }
+       
+        public string Customer_Guid { get; set; }
 
         [Display(Name = "Customer Name")]
-        [Required(ErrorMessage = "Customer Name Required.")]
         public string Customer_Name { get; set; }
 
         
         [Display(Name = "Phone number")]
-        [Phone(ErrorMessage = "Improper Phone format. (1-234-567-8912)")]
+        [Phone(ErrorMessage = "Improper Phone format. (X-XXX-XXX-XXXX)")]
         public string Phone { get; set; }
         
         [Display(Name = "Email Address")]

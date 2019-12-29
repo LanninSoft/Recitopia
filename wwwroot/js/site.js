@@ -1,4 +1,19 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿
+//Will convert UTC time to local time on views.  Use the .posted-date class on each field you wish to convert
+    $(document).ready(function () {
+        $('.posted-date').each(function () {
+            try {
 
-// Write your JavaScript code.
+                var text = $(this).html();
+
+                var mydate = new Date(text);
+
+                var serverDate = moment.utc(mydate).local().format('llll');
+
+                $(this).html(serverDate);
+            }
+            catch (ex) {
+                console.warn("Error converting date time", ex);
+            }
+        });
+});

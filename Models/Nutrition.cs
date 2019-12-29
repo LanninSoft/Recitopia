@@ -27,7 +27,8 @@ namespace Recitopia.Models
 
         [Display(Name = "Show On Nutrition Panel")]
         public bool ShowOnNutrientPanel { get; set; }
-        public int Customer_Id { get; set; }
+        //public int Customer_Id { get; set; }
+        public string Customer_Guid { get; set; }
 
         public virtual ICollection<Ingredient_Nutrients> Ingredient_Nutrients { get; set; }
     }

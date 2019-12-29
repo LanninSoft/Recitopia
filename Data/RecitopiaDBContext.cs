@@ -58,7 +58,7 @@ namespace Recitopia.Data
 
                 entity.Property(e => e.Cost_per_tsp).HasColumnType("decimal(18, 3)");
 
-                entity.Property(e => e.Customer_Id).HasDefaultValueSql("((1))");
+                //entity.Property(e => e.Customer_Id).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Ingred_Comp_name).HasColumnType("text");
 
@@ -87,7 +87,7 @@ namespace Recitopia.Data
 
             builder.Entity<Ingredient_Components>(entity =>
             {
-                entity.Property(e => e.Customer_Id).HasDefaultValueSql("((1))");
+                //entity.Property(e => e.Customer_Id).HasDefaultValueSql("((1))");
 
                 entity.HasOne(d => d.Components)
                     .WithMany(p => p.Ingredient_Components)
@@ -104,7 +104,7 @@ namespace Recitopia.Data
 
             builder.Entity<Ingredient_Nutrients>(entity =>
             {
-                entity.Property(e => e.Customer_Id).HasDefaultValueSql("((1))");
+                //entity.Property(e => e.Customer_Id).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Nut_per_100_grams).HasColumnType("decimal(18, 3)");
 
@@ -130,7 +130,7 @@ namespace Recitopia.Data
                     .IsRequired()
                     .HasMaxLength(50);
 
-                entity.Property(e => e.Customer_Id).HasDefaultValueSql("((1))");
+                //entity.Property(e => e.Customer_Id).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Notes).HasColumnType("text");
             });
@@ -140,7 +140,7 @@ namespace Recitopia.Data
                 entity.HasKey(e => e.Nutrition_Item_Id)
                     .HasName("PK__Nutritio__326DD8CD1CE0BF74");
 
-                entity.Property(e => e.Customer_Id).HasDefaultValueSql("((1))");
+                //entity.Property(e => e.Customer_Id).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Measurement).HasMaxLength(50);
 
@@ -156,7 +156,7 @@ namespace Recitopia.Data
                 entity.HasKey(e => e.Recipe_Id)
                     .HasName("PK__Recipe__0959CED94CA2B8C7");
 
-                entity.Property(e => e.Customer_Id).HasDefaultValueSql("((1))");
+                //entity.Property(e => e.Customer_Id).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.LaborCost).HasColumnType("decimal(18, 2)");
 
@@ -187,7 +187,7 @@ namespace Recitopia.Data
             {
                 entity.Property(e => e.Amount_g).HasColumnType("decimal(18, 3)");
 
-                entity.Property(e => e.Customer_Id).HasDefaultValueSql("((1))");
+                //entity.Property(e => e.Customer_Id).HasDefaultValueSql("((1))");
 
                 entity.HasOne(d => d.Ingredient)
                     .WithMany(p => p.Recipe_Ingredients)
@@ -207,7 +207,7 @@ namespace Recitopia.Data
                 entity.HasKey(e => e.SS_Id)
                     .HasName("PK__Serving___456F9402CBFF87ED");
 
-                entity.Property(e => e.Customer_Id).HasDefaultValueSql("((1))");
+                //entity.Property(e => e.Customer_Id).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Notes).HasColumnType("text");
             });
@@ -223,7 +223,7 @@ namespace Recitopia.Data
 
                 entity.Property(e => e.City).HasMaxLength(25);
 
-                entity.Property(e => e.Customer_Id).HasDefaultValueSql("((1))");
+                //entity.Property(e => e.Customer_Id).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Email).HasMaxLength(50);
 

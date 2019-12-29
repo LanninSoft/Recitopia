@@ -20,7 +20,8 @@ namespace Recitopia.Models
         [Display(Name = "Notes")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
-        public int Customer_Id { get; set; }
+        //public int Customer_Id { get; set; }
+        public string Customer_Guid { get; set; }
 
         public virtual ICollection<Recipe> Recipe { get; set; }
     }

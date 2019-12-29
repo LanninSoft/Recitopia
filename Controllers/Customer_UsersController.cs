@@ -162,8 +162,11 @@ namespace Recitopia.Controllers
                 {
                     var addedUser = await _recitopiaDbContext.AppUsers.SingleAsync(m => m.Id == customer_Users.User_Id);
                     var addedCustomer = await _recitopiaDbContext.Customers.SingleAsync(m => m.Customer_Id == customer_Users.Customer_Id);
+                    //get customer_guid
+
 
                     customer_Users.Customer_Name = addedCustomer.Customer_Name;
+                    customer_Users.Customer_Guid = addedCustomer.Customer_Guid;
                     customer_Users.User_Name = addedUser.FullName;
 
                     _recitopiaDbContext.Add(customer_Users);
@@ -200,7 +203,8 @@ namespace Recitopia.Controllers
                             Customer_Id = cu.Customer_Id,
                             Notes = cu.Notes,
                             Customer_Name = c.Customer_Name,
-                            User_Name = au.FullName
+                            User_Name = au.FullName,
+                            Customer_Guid = c.Customer_Guid,
                         })
                 .SingleAsync();            
 
@@ -239,6 +243,7 @@ namespace Recitopia.Controllers
                     var customerName = await _recitopiaDbContext.Customers.Where(m => m.Customer_Id == customer_Users.Customer_Id).SingleAsync();
 
                     customer_Users.Customer_Name = customerName.Customer_Name;
+                    customer_Users.Customer_Guid = customerName.Customer_Guid;
 
                     _recitopiaDbContext.Update(customer_Users);
 

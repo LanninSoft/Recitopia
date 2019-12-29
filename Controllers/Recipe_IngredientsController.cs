@@ -24,9 +24,9 @@ namespace Recitopia.Controllers
         [Authorize]
         public async Task<ActionResult> Index(int recipeId)
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerId == 0)
+            if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -39,7 +39,7 @@ namespace Recitopia.Controllers
 
             var recipeIngredients = await _recitopiaDbContext.Recipe_Ingredients
                 .Include(ri => ri.Ingredient)
-                .Where(ri => ri.Customer_Id == customerId && ri.Recipe_Id == recipeId)
+                .Where(ri => ri.Customer_Guid == customerGuid && ri.Recipe_Id == recipeId)
                 .OrderBy(ri => ri.Ingredient.Ingred_name)
                 .ToListAsync();
 
@@ -53,16 +53,16 @@ namespace Recitopia.Controllers
         [HttpGet]
         public async Task<JsonResult> GetData(int recipeId)
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
             var recipeIngredientDetails = await _recitopiaDbContext.Recipe_Ingredients
                 .Include(ri => ri.Ingredient)
                 .Include(ri => ri.Recipe)
-                .Where(ri => ri.Customer_Id == customerId && ri.Recipe_Id == recipeId)
+                .Where(ri => ri.Customer_Guid == customerGuid && ri.Recipe_Id == recipeId)
                 .Select(ri => new View_Angular_Recipe_Ingredients_Details()
                 {
                     Id = ri.Id,
-                    Customer_Id = ri.Customer_Id,
+                    Customer_Guid = ri.Customer_Guid,
                     Ingredient_Id = ri.Ingredient_Id,
                     Ingred_name =  ri.Ingredient.Ingred_name,
                     Recipe_Id = ri.Recipe_Id,
@@ -126,8 +126,9 @@ namespace Recitopia.Controllers
             //get recipe name from db and pass in viewbag
             Recipe recipe = await _recitopiaDbContext.Recipe.FindAsync(recipeID);
 
-            int customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-            if (customerId == 0)
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+
+            if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -136,19 +137,19 @@ namespace Recitopia.Controllers
             ViewBag.RecipeName = recipe.Recipe_Name;
             ViewBag.Rec_Id = recipeID;
 
-            ViewBag.Ingredient_Id = new SelectList(await _recitopiaDbContext.Ingredient.Where(m => m.Customer_Id == customerId).OrderBy(m => m.Ingred_name).ToListAsync(), "Ingredient_Id", "Ingred_name");
-            ViewBag.Recipe_Id = new SelectList(await _recitopiaDbContext.Recipe.Where(m => m.Customer_Id == customerId).OrderBy(m => m.Recipe_Name).ToListAsync(), "Recipe_Id", "Recipe_Name");
+            ViewBag.Ingredient_Id = new SelectList(await _recitopiaDbContext.Ingredient.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Ingred_name).ToListAsync(), "Ingredient_Id", "Ingred_name");
+            ViewBag.Recipe_Id = new SelectList(await _recitopiaDbContext.Recipe.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Recipe_Name).ToListAsync(), "Recipe_Id", "Recipe_Name");
 
             //CREATE LIST OF PREVIOUS ADDED INGREDIENTS
             var recipeIngredients = await _recitopiaDbContext.Recipe_Ingredients
                             .Include(ri => ri.Recipe)
                             .Include(ri => ri.Ingredient)
-                            .Where(ri => ri.Customer_Id == customerId && ri.Recipe_Id == recipeID)
+                            .Where(ri => ri.Customer_Guid == customerGuid && ri.Recipe_Id == recipeID)
                             .OrderBy(ri => ri.Ingredient.Ingred_name)
                             .Select(ri => new View_All_Recipe_Ingredients()
                             {
                                 Id = ri.Id,
-                                Customer_Id = ri.Customer_Id,
+                                Customer_Guid = ri.Customer_Guid,
                                 Recipe_Id = ri.Recipe_Id,
                                 Ingredient_Id = ri.Ingredient_Id,
                                 Amount_g = ri.Amount_g,
@@ -189,8 +190,8 @@ namespace Recitopia.Controllers
        public async Task<ActionResult> Create([FromForm] Recipe_Ingredients recipe_Ingredients, int RID)
         {
 
-            int customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-            if (customerId == 0)
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+            if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -198,7 +199,7 @@ namespace Recitopia.Controllers
             {
 
                 recipe_Ingredients.Recipe_Id = RID;
-                recipe_Ingredients.Customer_Id = customerId;
+                recipe_Ingredients.Customer_Guid = customerGuid;
                 await _recitopiaDbContext.Recipe_Ingredients.AddAsync(recipe_Ingredients);
                 await _recitopiaDbContext.SaveChangesAsync();
 
@@ -213,12 +214,12 @@ namespace Recitopia.Controllers
                 var recipeIngredients = await _recitopiaDbContext.Recipe_Ingredients
                             .Include(ri => ri.Recipe)
                             .Include(ri => ri.Ingredient)
-                            .Where(ri => ri.Customer_Id == customerId && ri.Recipe_Id == RID)
+                            .Where(ri => ri.Customer_Guid == customerGuid && ri.Recipe_Id == RID)
                             .OrderBy(ri => ri.Ingredient.Ingred_name)
                             .Select(ri => new View_All_Recipe_Ingredients()
                             {
                                 Id = ri.Id,
-                                Customer_Id = ri.Customer_Id,
+                                Customer_Guid = ri.Customer_Guid,
                                 Recipe_Id = ri.Recipe_Id,
                                 Ingredient_Id = ri.Ingredient_Id,
                                 Amount_g = ri.Amount_g,
@@ -255,8 +256,8 @@ namespace Recitopia.Controllers
                 return RedirectToAction("Index", new { recipeID = recipe_Ingredients.Recipe_Id });
             }
 
-            ViewBag.Ingredient_Id = new SelectList(await _recitopiaDbContext.Ingredient.Where(m => m.Customer_Id == customerId).OrderBy(m => m.Ingred_name).ToListAsync(), "Ingredient_Id", "Ingred_name", recipe_Ingredients.Ingredient_Id);
-            ViewBag.Recipe_Id = new SelectList(await _recitopiaDbContext.Recipe.Where(m => m.Customer_Id == customerId).OrderBy(m => m.Recipe_Name).ToListAsync(), "Recipe_Id", "Recipe_Name", recipe_Ingredients.Recipe_Id);
+            ViewBag.Ingredient_Id = new SelectList(await _recitopiaDbContext.Ingredient.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Ingred_name).ToListAsync(), "Ingredient_Id", "Ingred_name", recipe_Ingredients.Ingredient_Id);
+            ViewBag.Recipe_Id = new SelectList(await _recitopiaDbContext.Recipe.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Recipe_Name).ToListAsync(), "Recipe_Id", "Recipe_Name", recipe_Ingredients.Recipe_Id);
 
 
 
@@ -272,8 +273,8 @@ namespace Recitopia.Controllers
                 return new StatusCodeResult(0);
             }
 
-            int customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-            if (customerId == 0)
+             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+            if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -292,8 +293,8 @@ namespace Recitopia.Controllers
             ViewBag.Rec_Id = recipe_Ingredients.Recipe_Id;
 
 
-            ViewBag.Ingredient_Id = new SelectList(await _recitopiaDbContext.Ingredient.Where(m => m.Customer_Id == customerId).OrderBy(m => m.Ingred_name).ToListAsync(), "Ingredient_Id", "Ingred_name", recipe_Ingredients.Ingredient_Id);
-            ViewBag.Recipe_Id = new SelectList(await _recitopiaDbContext.Recipe.Where(m => m.Customer_Id == customerId).OrderBy(m => m.Recipe_Name).ToListAsync(), "Recipe_Id", "Recipe_Name", recipe_Ingredients.Recipe_Id);
+            ViewBag.Ingredient_Id = new SelectList(await _recitopiaDbContext.Ingredient.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Ingred_name).ToListAsync(), "Ingredient_Id", "Ingred_name", recipe_Ingredients.Ingredient_Id);
+            ViewBag.Recipe_Id = new SelectList(await _recitopiaDbContext.Recipe.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Recipe_Name).ToListAsync(), "Recipe_Id", "Recipe_Name", recipe_Ingredients.Recipe_Id);
             return View(recipe_Ingredients);
         }
 
@@ -305,11 +306,13 @@ namespace Recitopia.Controllers
        public async Task<ActionResult> Edit([FromForm] Recipe_Ingredients recipe_Ingredients)
         {
 
-            int customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
             if (ModelState.IsValid)
             {
-                recipe_Ingredients.Customer_Id = customerId;
+                recipe_Ingredients.Customer_Guid = customerGuid;
+
                 _recitopiaDbContext.Entry(recipe_Ingredients).State = EntityState.Modified;
+
                 await _recitopiaDbContext.SaveChangesAsync();
 
                 //DIRECT LINQ TO DB REPLACING STORED PROCEDURE
@@ -322,8 +325,8 @@ namespace Recitopia.Controllers
 
                 return RedirectToAction("Index", new { recipeID = recipe_Ingredients.Recipe_Id });
             }
-            ViewBag.Ingredient_Id = new SelectList(await _recitopiaDbContext.Ingredient.Where(m => m.Customer_Id == customerId).OrderBy(m => m.Ingred_name).ToListAsync(), "Ingredient_Id", "Ingred_name", recipe_Ingredients.Ingredient_Id);
-            ViewBag.Recipe_Id = new SelectList(await _recitopiaDbContext.Recipe.Where(m => m.Customer_Id == customerId).OrderBy(m => m.Recipe_Name).ToListAsync(), "Recipe_Id", "Recipe_Name", recipe_Ingredients.Recipe_Id);
+            ViewBag.Ingredient_Id = new SelectList(await _recitopiaDbContext.Ingredient.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Ingred_name).ToListAsync(), "Ingredient_Id", "Ingred_name", recipe_Ingredients.Ingredient_Id);
+            ViewBag.Recipe_Id = new SelectList(await _recitopiaDbContext.Recipe.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Recipe_Name).ToListAsync(), "Recipe_Id", "Recipe_Name", recipe_Ingredients.Recipe_Id);
             return View(recipe_Ingredients);
         }
 
@@ -334,8 +337,10 @@ namespace Recitopia.Controllers
             {
                 return new StatusCodeResult(0);
             }
-            int customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-            if (customerId == 0)
+
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+
+            if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -364,7 +369,7 @@ namespace Recitopia.Controllers
                 rIngreds.Ingredient = tIngred;
                 rIngreds.Recipe_Id = recipeIngredient.Recipe_Id;
                 rIngreds.Recipe = tRec;
-                rIngreds.Customer_Id = recipeIngredient.Customer_Id;
+                rIngreds.Customer_Guid = recipeIngredient.Customer_Guid;
             }
 
             return View(rIngreds);

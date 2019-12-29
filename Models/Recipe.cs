@@ -30,13 +30,13 @@ namespace Recitopia.Models
         public string Notes { get; set; }
 
         [Display(Name = "Labor Cost")]
-        [RegularExpression(@"^\$?\d+(\.(\d{3}))?$", ErrorMessage = "Incorrect format.  Numbers only up to 3 decimal.")]
+        [DataType(DataType.Currency)]
         public decimal? LaborCost { get; set; }
         [Display(Name = "Serving Size")]
         public int SS_Id { get; set; }
         public DateTime? LastModified { get; set; }
-        public int Customer_Id { get; set; }
-
+       // public int Customer_Id { get; set; }
+        public string Customer_Guid { get; set; }
         public virtual Meal_Category Meal_Category { get; set; }
         public virtual Serving_Sizes Serving_Sizes { get; set; }
         public virtual ICollection<Recipe_Ingredients> Recipe_Ingredients { get; set; }

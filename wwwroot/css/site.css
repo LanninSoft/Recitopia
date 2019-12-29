@@ -68,7 +68,16 @@ textarea {
     border: none;
     /*background-color: none;*/
 }
-
+.AngularTrueResults {
+    background-color: #e6ffe6;
+}
+.AngularNAResults {
+    background-color: inherit;
+}
+.AngularFalseResults {
+   
+    background-color: #ffe6e6;
+}
 .pageBanner {
     background-color: blanchedalmond;
     font-size: 25px;

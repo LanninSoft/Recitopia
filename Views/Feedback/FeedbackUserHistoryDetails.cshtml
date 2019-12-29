@@ -1,0 +1,110 @@
+﻿@model Recitopia.Models.Feedback
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div>
+    <table style="width:100%" class="table-borderless">
+        <tr>
+            <th style="font-size:20px">
+                Feedback Details
+            </th>
+        </tr>
+        <tr>
+            <th style="font-size:30px;background-color:blanchedalmond">
+                @Model.Subject
+            </th>
+        </tr>
+
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.Comment)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </th>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.PhoneNumber)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.EmailAddress)
+            </th>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.EmailAddress)
+            </td>
+        </tr>
+        @if (Model.Actions != null)
+        {
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Actions)
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => model.Actions)
+                </td>
+            </tr>
+        }
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Resolved)
+            </th>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.Resolved)
+            </td>
+        </tr>
+
+        @if (Model.ResolvedDate != DateTime.MinValue)
+        {
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ResolvedDate)
+                </th>
+            </tr>
+
+            <tr>
+                <td>
+                    <div class="posted-date">
+                        @Html.DisplayFor(model => model.ResolvedDate)
+                    </div>
+                </td>
+            </tr>
+         }
+        <tr>
+            <th>
+                Date Submitted
+            </th>
+        </tr>
+        <tr>
+            <td>
+
+                <div class="posted-date">
+                    @Html.DisplayFor(model => model.TimeStamp)
+                </div>
+            </td>
+        </tr>
+
+        </table>
+
+</div>
+<br />
+<div>
+    <a asp-action="FeedBackUserHistory">Back to List</a>
+</div>

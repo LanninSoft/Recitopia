@@ -22,15 +22,16 @@ namespace Recitopia.Controllers
         [Authorize]
         public async Task<ActionResult> Index()
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerId == 0)
+            if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
 
             var nutritionList = await _recitopiaDbContext.Nutrition
-                .Where(m => m.Customer_Id == customerId)
+                .Where(m => m.Customer_Guid == customerGuid)
                 .OrderBy(o => o.Nutrition_Item)
                 .ToListAsync();
 
@@ -40,10 +41,11 @@ namespace Recitopia.Controllers
         [HttpGet]
         public async Task<JsonResult> GetData()
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
             var nutritions = await _recitopiaDbContext.Nutrition
-                .Where(m => m.Customer_Id == customerId)
+                .Where(m => m.Customer_Guid == customerGuid)
                 .OrderBy(m => m.Nutrition_Item)
                 .ToListAsync();
 
@@ -74,16 +76,17 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([FromForm] Nutrition nutrition)
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerId == 0)
+            if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
 
             if (ModelState.IsValid)
             {
-                nutrition.Customer_Id = customerId;
+                nutrition.Customer_Guid = customerGuid;
                 _recitopiaDbContext.Nutrition.Add(nutrition);
                 await _recitopiaDbContext.SaveChangesAsync();
 
@@ -109,11 +112,12 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([FromForm] Nutrition nutrition)
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
             if (ModelState.IsValid)
             {
-                nutrition.Customer_Id = customerId;
+                nutrition.Customer_Guid = customerGuid;
                 _recitopiaDbContext.Entry(nutrition).State = EntityState.Modified;
                 await _recitopiaDbContext.SaveChangesAsync();
 

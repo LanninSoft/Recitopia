@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Recitopia.Data;
 using Recitopia.Models;
 
+
 namespace Recitopia.wwwroot
 {
     public class FeedbackController : AuthorizeController
@@ -24,9 +25,10 @@ namespace Recitopia.wwwroot
         // GET: Feedbacks
         public async Task<IActionResult> Index()
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerId == 0)
+            if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -74,9 +76,10 @@ namespace Recitopia.wwwroot
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([FromForm] Feedback feedback)
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerId == 0)
+            if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -85,7 +88,7 @@ namespace Recitopia.wwwroot
             {
 
                 //TIMESTAMP, USER NAME and CUSTOMER NAME need to get input
-                var customerName = await _recitopiaDbContext.Customers.SingleAsync(m => m.Customer_Id == customerId);
+                var customerName = await _recitopiaDbContext.Customers.SingleAsync(m => m.Customer_Guid == customerGuid);
                 var userName = await _recitopiaDbContext.AppUsers.SingleAsync(m => m.UserName == User.Identity.Name);
                 
                 feedback.Customer_Name = customerName.Customer_Name;
@@ -102,13 +105,15 @@ namespace Recitopia.wwwroot
         {
             return View();
         }
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> FeedBackUser([FromForm] Feedback feedback)
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerId == 0)
+            if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -117,9 +122,10 @@ namespace Recitopia.wwwroot
             {
 
                 //TIMESTAMP, USER NAME and CUSTOMER NAME need to get input
-                var customerName = await _recitopiaDbContext.Customers.SingleAsync(m => m.Customer_Id == customerId);
+                var customerName = await _recitopiaDbContext.Customers.SingleAsync(m => m.Customer_Guid == customerGuid);
                 var userName = await _recitopiaDbContext.AppUsers.SingleAsync(m => m.UserName == User.Identity.Name);
 
+                feedback.User_Id = userName.Id;
                 feedback.Customer_Name = customerName.Customer_Name;
                 feedback.User_Name = userName.FullName;
                 feedback.TimeStamp = DateTime.UtcNow;
@@ -135,6 +141,47 @@ namespace Recitopia.wwwroot
             ViewBag.ErrorMessage = ("There was an issue submitting your feedback, please review your information and try again.");
             return View(feedback);
         }
+        
+        public async Task<IActionResult> FeedBackUserHistory()
+        {
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+
+            if (customerGuid == null)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
+            var currentUserId = await _recitopiaDbContext.AppUsers.SingleAsync(m => m.Email == User.Identity.Name);
+
+            var userFeedbackResults = await _recitopiaDbContext.Feedback.Where(m => m.User_Id == currentUserId.Id).OrderBy(m => m.Resolved).OrderByDescending(m => m.TimeStamp).ToListAsync();
+
+            return View(userFeedbackResults);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetDataHistory()
+        {
+            //BUILD VIEW FOR ANGULARJS RENDERING
+            var currentUserId = await _recitopiaDbContext.AppUsers.SingleAsync(m => m.Email == User.Identity.Name);
+
+            var userFeedbackResults = await _recitopiaDbContext.Feedback.Where(m => m.User_Id == currentUserId.Id).OrderBy(m => m.Resolved).OrderByDescending(m => m.TimeStamp).ToListAsync();
+
+            return userFeedbackResults != null
+                ? Json(userFeedbackResults)
+                : Json(new { Status = "Failure" });
+        }
+        public async Task<IActionResult> FeedBackUserHistoryDetails(int? id)
+        {
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+
+            if (customerGuid == null)
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
+
+            var feedBackItem = await _recitopiaDbContext.Feedback.FindAsync(id);            
+
+            return View(feedBackItem);
+        }
         // GET: Feedbacks/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -144,13 +191,15 @@ namespace Recitopia.wwwroot
             }
 
             var feedback = await _recitopiaDbContext.Feedback.FindAsync(id);
+
+            HttpContext.Session.SetString("WasResolved", feedback.Resolved.ToString());
+
             if (feedback == null)
             {
                 return NotFound();
             }
             return View(feedback);
         }
-
         // POST: Feedbacks/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -167,6 +216,25 @@ namespace Recitopia.wwwroot
             {
                 try
                 {
+                    var previouslyResolved = HttpContext.Session.GetString("WasResolved");
+
+                    if (feedback.Resolved == true && previouslyResolved == "False")
+                    {
+                        feedback.ResolvedDate = DateTime.UtcNow;
+                    }
+                    else if (feedback.Resolved == false && previouslyResolved == "True")                    
+                    {
+                        feedback.ResolvedDate = DateTime.MinValue;
+                    }
+
+                    var currentUserId = await _recitopiaDbContext.AppUsers.SingleAsync(m => m.Email == User.Identity.Name);
+                   
+
+                    feedback.UpdatedBy = currentUserId.FullName;
+                    feedback.UpdatedDate = DateTime.UtcNow;
+
+
+
                     _recitopiaDbContext.Update(feedback);
                     await _recitopiaDbContext.SaveChangesAsync();
                 }

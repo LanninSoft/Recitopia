@@ -19,7 +19,8 @@ namespace Recitopia.Models
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
         public string Comp_Sort { get; set; }
-        public int Customer_Id { get; set; }
+       
+        public string Customer_Guid { get; set; }
 
         public virtual ICollection<Ingredient_Components> Ingredient_Components { get; set; }
     }

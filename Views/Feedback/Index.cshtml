@@ -34,9 +34,9 @@
                     <a href="" ng-click="changeSorting('resolved')"><font style="color:black">Resolved</font></a>
                     <i class="fa fa-caret-left" ng-class="getIcon('resolved')"></i>
                 </th>
-                <th class="AngularTableHeaderColor" style="vertical-align:bottom">
+                <th class="AngularTableHeaderColor  d-none d-lg-table-cell" style="vertical-align:bottom">
                     <a href="" ng-click="changeSorting('timeStamp')"><font style="color:black">TimeStamp</font></a>
-                    <i class="fa fa-caret-left" ng-class="getIcon('resolved')"></i>
+                    <i class="fa fa-caret-left" ng-class="getIcon('timeStamp')"></i>
                 </th>
                 <th style="text-align:right" class="AngularTableHeaderColor"><a href="@Url.Action("Create", "Feedback")" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> New Comment</a></th>
 
@@ -61,10 +61,15 @@
             <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{feedback.customer_Name}}</td>
             <td style="height:15px;padding:1px">{{feedback.user_Name}}</td>
             <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{feedback.subject}}</td>
-            <td style="height:15px;padding:1px;width:95px">{{feedback.resolved ? "T":"F"}}</td>
+            <td style="height:15px;padding:1px;width:95px">
+                <div class="{{feedback.resolved == true ? 'AngularTrueResults' : 'AngularFalseResults' }}">
+                    {{feedback.resolved ? "T":"F"}}
+
+                </div>
+            </td>
             <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{feedback.timeStamp | utcToLocal:"MMM dd yyyy hh:mm:ss"}}</td>
 
-            <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:175px">
+            <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:155px">
                 <button ng-click="RedirectToEdit(feedback)" class="btn btn-outline-success AngularButtons">
                     <i class="fa fa-pen"></i>
                 </button> |

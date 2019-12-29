@@ -12,6 +12,10 @@
     <Compile Remove="Data\Migrations\20191219143205_UpdateModel2.Designer.cs" />
     <Compile Remove="Data\Migrations\20191219165330_differencesPart1.cs" />
     <Compile Remove="Data\Migrations\20191219165330_differencesPart1.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191227105410_AddCustomerGUID.cs" />
+    <Compile Remove="Data\Migrations\20191227105410_AddCustomerGUID.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191227220609_cleanupcustIdRemoval.cs" />
+    <Compile Remove="Data\Migrations\20191227220609_cleanupcustIdRemoval.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,5 +37,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
+    <PackageReference Include="Moment.js" Version="2.24.0" />
   </ItemGroup>
 </Project>

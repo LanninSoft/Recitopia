@@ -1124,4 +1124,63 @@
         }
 
     });
+    //FEEDBACK HISTORY CONTROLLER
+    app.controller('FeedbackHistory', function ($scope, $http) {
+
+        $http.get("/Feedback/GetDataHistory")
+            .then(function (response) {
+                // First function handles success
+                $scope.Feedback = response.data;
+
+            }, function (response) {
+                // Second function handles error
+                $scope.Feedback = "Something went wrong";
+
+            });
+
+
+
+        //Redrect index form to details form with parameter
+        $scope.RedirectToDetails = function (feedback) {
+
+            window.location.href = '/Feedback/FeedBackUserHistoryDetails/' + feedback.id;
+        };
+        app.filter('YesNo', function () {
+            return function (text) {
+                return text ? "T" : "F";
+            }
+        })
+        //SORTING ICON CONTROL
+        $scope.sort = {
+            active: '',
+            descending: undefined
+        }
+
+        $scope.changeSorting = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                sort.descending = !sort.descending;
+
+            } else {
+                sort.active = column;
+                sort.descending = false;
+            }
+        };
+
+        $scope.getIcon = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                return sort.descending
+                    ? 'fa fa-caret-up'
+                    : 'fa fa-caret-down';
+            }
+
+            return 'fa fa-caret-left';
+        }
+
+    });
 })();

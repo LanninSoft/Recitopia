@@ -7,11 +7,9 @@ namespace Recitopia.Models
 
     public class AppUser : IdentityUser<string>
     {
-        [Display(Name = "First Name")]
-        [Required]
+        [Display(Name = "First Name")]        
         public string FirstName { get; set; }
-        [Display(Name = "Last Name")]
-        [Required]
+        [Display(Name = "Last Name")]       
         public string LastName { get; set; }
         [Display(Name = "Address 1")]
         public string Address1 { get; set; }
@@ -34,7 +32,8 @@ namespace Recitopia.Models
         public string Notes { get; set; }
         [Display(Name = "Role")]
         public string Site_Role_Id { get; set; }
-        public int Customer_Id { get; set; }
+       
+        public string Customer_Guid { get; set; }
         public string Customer_Name { get; set; }
 
         public IEnumerable<Customers> Customers { get; set; }

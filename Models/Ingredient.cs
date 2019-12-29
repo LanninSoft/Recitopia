@@ -23,12 +23,12 @@ namespace Recitopia.Models
        
         public decimal? Cost_per_oz { get; set; }
         [Display(Name = "Cost/g")]
-        [RegularExpression(@"^\$?\d+(\.(\d{3}))?$", ErrorMessage = "Incorrect format.  Numbers only up to 3 decimal.")]
+        [DataType(DataType.Currency)]
         public decimal? Cost_per_gram { get; set; }
         public decimal? Cost_per_cup { get; set; }
         [Display(Name = "Cost/lb")]
-        [RegularExpression(@"^\$?\d+(\.(\d{3}))?$", ErrorMessage = "Incorrect format.  Numbers only up to 3 decimal.")]
-        
+        [DataType(DataType.Currency)]
+
         public decimal? Cost_per_lb { get; set; }
         public decimal? Cost_per_tsp { get; set; }
         public decimal? Cost_per_tbsp { get; set; }
@@ -53,10 +53,10 @@ namespace Recitopia.Models
         public DateTime? LastModified { get; set; }
         public bool Package { get; set; }
         [Display(Name = "Cost")]
-        [RegularExpression(@"^\$?\d+(\.(\d{3}))?$", ErrorMessage = "Incorrect format.  Numbers only up to 3 decimal.")]
+        [DataType(DataType.Currency)]
         public decimal? Cost { get; set; }
-        public int Customer_Id { get; set; }
-
+        //public int Customer_Id { get; set; }
+        public string Customer_Guid { get; set; }
         public virtual Vendor Vendor { get; set; }
         public virtual ICollection<Ingredient_Components> Ingredient_Components { get; set; }
         public virtual ICollection<Ingredient_Nutrients> Ingredient_Nutrients { get; set; }

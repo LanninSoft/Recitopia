@@ -21,15 +21,16 @@ namespace Recitopia.Controllers
         [Authorize]
         public async Task<ActionResult> Index()
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerId == 0)
+            if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
 
             var servingSizes = await _recitopiaDbContext.Serving_Sizes
-                .Where(m => m.Customer_Id == customerId)
+                .Where(m => m.Customer_Guid == customerGuid)
                 .ToListAsync();
 
             return View(servingSizes);
@@ -38,10 +39,11 @@ namespace Recitopia.Controllers
         [HttpGet]
         public async Task<JsonResult> GetData()
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
             var servingSizes = await _recitopiaDbContext.Serving_Sizes
-                .Where(m => m.Customer_Id == customerId)
+                .Where(m => m.Customer_Guid == customerGuid)
                 .OrderBy(m => m.Serving_Size)
                 .ToListAsync();
 
@@ -74,15 +76,16 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([FromForm] Serving_Sizes serving_Sizes)
         {
-            int customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-            if (customerId == 0)
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+            if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
 
             if (ModelState.IsValid)
             {
-                serving_Sizes.Customer_Id = customerId;
+                serving_Sizes.Customer_Guid = customerGuid;
                 await _recitopiaDbContext.Serving_Sizes.AddAsync(serving_Sizes);
                 await _recitopiaDbContext.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -94,8 +97,9 @@ namespace Recitopia.Controllers
         // GET: Serving_Sizes/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
-            int customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-            if (customerId == 0)
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+            if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -118,10 +122,10 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([FromForm] Serving_Sizes serving_Sizes)
         {
-            int customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
             if (ModelState.IsValid)
             {
-                serving_Sizes.Customer_Id = customerId;
+                serving_Sizes.Customer_Guid = customerGuid;
                 _recitopiaDbContext.Entry(serving_Sizes).State = EntityState.Modified;
                 await _recitopiaDbContext.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -133,8 +137,9 @@ namespace Recitopia.Controllers
         public async Task<ActionResult> Delete(int? id)
         {
 
-            int customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
-            if (customerId == 0)
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+            if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
