@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -33,13 +34,13 @@ namespace Recitopia.wwwroot
                 return RedirectToAction("CustomerLogin", "Customers");
             }
 
-            return View(await _recitopiaDbContext.Feedback.OrderBy(m => m.Resolved).OrderByDescending(m => m.TimeStamp).ToListAsync());
+            return View(await _recitopiaDbContext.Feedback.Include(m => m.FeedbackFiles).OrderBy(m => m.Resolved).OrderByDescending(m => m.TimeStamp).ToListAsync());
         }
         [HttpGet]
         public async Task<JsonResult> GetData()
         {
             //BUILD VIEW FOR ANGULARJS RENDERING
-            var feedbacks = await _recitopiaDbContext.Feedback.OrderBy(m => m.Resolved).OrderByDescending(m => m.TimeStamp).ToListAsync();
+            var feedbacks = await _recitopiaDbContext.Feedback.Include(m => m.FeedbackFiles).OrderBy(m => m.Resolved).OrderByDescending(m => m.TimeStamp).ToListAsync();
 
             return feedbacks != null
                 ? Json(feedbacks)
@@ -53,7 +54,7 @@ namespace Recitopia.wwwroot
                 return NotFound();
             }
 
-            var feedback = await _recitopiaDbContext.Feedback
+            var feedback = await _recitopiaDbContext.Feedback.Include(m => m.FeedbackFiles)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (feedback == null)
             {
@@ -100,6 +101,48 @@ namespace Recitopia.wwwroot
                 return RedirectToAction(nameof(Index));
             }
             return View(feedback);
+        }
+        public async Task<IActionResult> uploadFeedbackFile(int? id)
+        {
+            var feedbackRecord = await _recitopiaDbContext.Feedback.FindAsync(id);
+
+            var feedbackFile = new FeedbackFiles()
+            { 
+                FeedbackSubject = feedbackRecord.Subject,
+                FeedbackId = feedbackRecord.Id
+            };
+            
+            return View(feedbackFile);
+        }
+        [HttpPost]
+        public async Task<IActionResult> uploadFeedbackFile([FromForm] FeedbackFiles feedbackFile, IFormFile file)
+        {
+
+            if (ModelState.IsValid)
+            {
+                if (file.Length > 0 && file.ContentType.Contains("image") && (file.Length < (4000 * 1024)))
+
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        file.CopyTo(ms);
+                        feedbackFile.Image = ms.ToArray();
+                    }
+
+                    _recitopiaDbContext.Add(feedbackFile);
+                    await _recitopiaDbContext.SaveChangesAsync();
+                }
+                else
+                {
+                    
+                    
+                    ViewBag.ErrorMessage = "The file is missing, is larger than 4mb, or is not an image type.  Please re-select the screenshot you wish to upload and try again.";
+                    return View(feedbackFile);
+                }
+            
+            }
+
+            return RedirectToAction("FeedBackUserHistoryDetails", new { id = feedbackFile .FeedbackId});
         }
         public IActionResult FeedBackUser()
         {
@@ -152,7 +195,12 @@ namespace Recitopia.wwwroot
             }
             var currentUserId = await _recitopiaDbContext.AppUsers.SingleAsync(m => m.Email == User.Identity.Name);
 
-            var userFeedbackResults = await _recitopiaDbContext.Feedback.Where(m => m.User_Id == currentUserId.Id).OrderBy(m => m.Resolved).OrderByDescending(m => m.TimeStamp).ToListAsync();
+            var userFeedbackResults = await _recitopiaDbContext.Feedback
+                .Include(m => m.FeedbackFiles)
+                .Where(m => m.User_Id == currentUserId.Id)
+                .OrderBy(m => m.Resolved)
+                .OrderByDescending(m => m.TimeStamp)
+                .ToListAsync();
 
             return View(userFeedbackResults);
         }
@@ -163,7 +211,12 @@ namespace Recitopia.wwwroot
             //BUILD VIEW FOR ANGULARJS RENDERING
             var currentUserId = await _recitopiaDbContext.AppUsers.SingleAsync(m => m.Email == User.Identity.Name);
 
-            var userFeedbackResults = await _recitopiaDbContext.Feedback.Where(m => m.User_Id == currentUserId.Id).OrderBy(m => m.Resolved).OrderByDescending(m => m.TimeStamp).ToListAsync();
+            var userFeedbackResults = await _recitopiaDbContext.Feedback
+                .Include(m => m.FeedbackFiles)
+                .Where(m => m.User_Id == currentUserId.Id)
+                .OrderBy(m => m.Resolved)
+                .OrderByDescending(m => m.TimeStamp)
+                .ToListAsync();
 
             return userFeedbackResults != null
                 ? Json(userFeedbackResults)
@@ -178,9 +231,16 @@ namespace Recitopia.wwwroot
                 return RedirectToAction("CustomerLogin", "Customers");
             }
 
-            var feedBackItem = await _recitopiaDbContext.Feedback.FindAsync(id);            
+            var feedBackItem = await _recitopiaDbContext.Feedback
+                .Include(m => m.FeedbackFiles)
+                .Where(m => m.Id == id)
+                .SingleAsync();            
 
             return View(feedBackItem);
+        }
+        public PartialViewResult FeedbackFile()
+        {
+            return PartialView("_FeedbackFiles");
         }
         // GET: Feedbacks/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -190,7 +250,10 @@ namespace Recitopia.wwwroot
                 return NotFound();
             }
 
-            var feedback = await _recitopiaDbContext.Feedback.FindAsync(id);
+            var feedback = await _recitopiaDbContext.Feedback
+                .Include(m => m.FeedbackFiles)
+                .Where(m => m.Id == id)
+                .SingleAsync();
 
             HttpContext.Session.SetString("WasResolved", feedback.Resolved.ToString());
 
@@ -286,5 +349,34 @@ namespace Recitopia.wwwroot
         {
             return _recitopiaDbContext.Feedback.Any(e => e.Id == id);
         }
+
+        public async Task<IActionResult> DeleteFile(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var feedbackFile = await _recitopiaDbContext.FeedbackFiles
+                .FirstOrDefaultAsync(m => m.ImageId == id);
+            if (feedbackFile == null)
+            {
+                return NotFound();
+            }
+
+            return View(feedbackFile);
+        }
+        [HttpPost, ActionName("DeleteFile")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteFileConfirmed(int id)
+        {
+            var feedbackFile = await _recitopiaDbContext.FeedbackFiles.FindAsync(id);
+            
+            _recitopiaDbContext.FeedbackFiles.Remove(feedbackFile);
+            await _recitopiaDbContext.SaveChangesAsync();
+            return RedirectToAction("Edit", new { id = feedbackFile.FeedbackId });
+            
+        }
+
     }
 }

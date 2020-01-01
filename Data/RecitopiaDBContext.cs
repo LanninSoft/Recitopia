@@ -420,7 +420,10 @@ namespace Recitopia.Data
 
         public virtual DbSet<Customers> Customers { get; set; }
         public virtual DbSet<Feedback> Feedback { get; set; }
+        public virtual DbSet<FeedbackFiles> FeedbackFiles { get; set; }
         public virtual DbSet<Customer_Users> Customer_Users { get; set; }
+
+        public virtual DbSet<AuditLog> Audit_Log { get; set; }
 
         //public virtual DbSet<AppUser> AppUser { get; set; }
 

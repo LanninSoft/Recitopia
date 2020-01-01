@@ -47,15 +47,15 @@
 
 
         </tr>
-        @*</table>
-            <table width="100%" class="table table-condensed table-hover table-striped ">*@
+      
 
         <tr ng-repeat="feedback in Feedback | filter:f | orderBy:sort.active:sort.descending">
             @* Fetch All the Recipe record using ng-repeat *@
 
             <td style="height:15px;padding:1px">
-                <a href="#" ng-click="RedirectToDetails(feedback)">{{feedback.subject}}</a>
-
+                <a href="#" ng-click="RedirectToDetails(feedback)">{{feedback.subject}}</a><br />
+               
+                <span ng-if="feedback.feedbackFiles.length > 0">{{feedback.feedbackFiles.length}} <i class="fa fa-images"></i></span>
             </td>
 
 

@@ -1,0 +1,33 @@
+﻿@model Recitopia.Models.FeedbackFiles
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <font style="color:red">@ViewBag.ErrorMessage</font>
+}
+<font class="alert-danger">Are you sure you want to delete '@Model.FeedbackSubject'?</font>
+<div>
+    
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FeedbackSubject)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FeedbackSubject)
+        </dd>
+       
+    </dl>
+
+    <form asp-action="DeleteFile">
+        <input type="hidden" asp-for="ImageId" />
+        <input type="hidden" asp-for="FileName" />
+        
+        <input type="submit" value="Delete" class="btn alert-danger" /> |
+        <a asp-action="Edit" asp-route-id="@Model.FeedbackId">Back to List</a>
+    </form>
+</div>

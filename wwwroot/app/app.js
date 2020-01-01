@@ -1138,7 +1138,7 @@
 
             });
 
-
+        
 
         //Redrect index form to details form with parameter
         $scope.RedirectToDetails = function (feedback) {

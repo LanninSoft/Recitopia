@@ -6,7 +6,11 @@ namespace Recitopia.Models
 {
     public partial class Feedback
     {
-       
+        public Feedback()
+        {
+            FeedbackFiles = new HashSet<FeedbackFiles>();
+        }
+        public virtual ICollection<FeedbackFiles> FeedbackFiles { get; set; }
 
         public int Id { get; set; }
 
@@ -19,10 +23,10 @@ namespace Recitopia.Models
         [DataType(DataType.MultilineText)]
         [Required(ErrorMessage = "Comment(s) Required.")]
         public string Comment { get; set; }
-        [Display(Name = "Phone Number(optional)")]
+        [Display(Name = "Phone Number (optional)")]
         [Phone]
         public string PhoneNumber { get; set; }
-        [Display(Name = "Email Address(optional)")]
+        [Display(Name = "Email Address (optional)")]
         [EmailAddress(ErrorMessage = "Improper Email format.")]
         public string EmailAddress { get; set; }
 

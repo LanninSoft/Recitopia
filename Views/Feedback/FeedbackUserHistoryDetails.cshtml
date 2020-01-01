@@ -86,7 +86,7 @@
                     </div>
                 </td>
             </tr>
-         }
+        }
         <tr>
             <th>
                 Date Submitted
@@ -101,9 +101,11 @@
             </td>
         </tr>
 
-        </table>
+    </table>
 
 </div>
+<br />
+@{ await Html.RenderPartialAsync("_FeedbackFiles", Model); }
 <br />
 <div>
     <a asp-action="FeedBackUserHistory">Back to List</a>

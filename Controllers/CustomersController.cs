@@ -67,6 +67,18 @@ namespace Recitopia.Controllers
                          var customerGuid = await _recitopiaDbContext.Customers.SingleAsync(m => m.Customer_Guid == checkLastLoginCompanyInfo.Customer_Guid);
 
                         HttpContext.Session.SetString("CurrentUserCustomerGuid", customerGuid.Customer_Guid);
+                        
+                        //INSERT LOGIN RECORD
+                        var auditEntry = new AuditLog()
+                        {
+                            UserId = currentUser.Id,
+                            EventDate = DateTime.UtcNow,
+                            Event = "Login",
+                            WhatChanged = "Logged in",
+                            CustomerGuid = checkLastLoginCompanyInfo.Customer_Guid
+                        };
+                        _recitopiaDbContext.Add(auditEntry);
+                        await _recitopiaDbContext.SaveChangesAsync();
 
                         return LocalRedirect("~/Home/Index");
                     }
@@ -117,16 +129,11 @@ namespace Recitopia.Controllers
                     return View();
                 }
 
-                }
-                else
-                {
-                    ViewBag.UserCustomers = null;
-
-                    return LocalRedirect("~/Home/Index");
-                }
-
-    
             }
+
+            return View();
+
+        }
 
         public async Task<IActionResult> CustomerLoginGo(string id)
         {
@@ -141,7 +148,19 @@ namespace Recitopia.Controllers
  
             HttpContext.Session.SetString("CurrentUserCustomerGuid", id);
 
-            _recitopiaDbContext.SaveChanges();
+            await _recitopiaDbContext.SaveChangesAsync();
+
+            //INSERT LOGIN RECORD
+            var auditEntry = new AuditLog()
+            {
+                UserId = currentUser.Id,
+                EventDate = DateTime.UtcNow,
+                Event = "Login",
+                WhatChanged = "Logged in",
+                CustomerGuid = id
+            };
+            _recitopiaDbContext.Add(auditEntry);
+            await _recitopiaDbContext.SaveChangesAsync();
 
             return LocalRedirect("~/Home/Index");
         }

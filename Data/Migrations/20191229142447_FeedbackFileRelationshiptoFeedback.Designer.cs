@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Recitopia.Data;
 
 namespace Recitopia.Data.Migrations
 {
     [DbContext(typeof(RecitopiaDBContext))]
-    partial class RecitopiaDBContextModelSnapshot : ModelSnapshot
+    [Migration("20191229142447_FeedbackFileRelationshiptoFeedback")]
+    partial class FeedbackFileRelationshiptoFeedback
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -251,35 +253,6 @@ namespace Recitopia.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("Recitopia.Models.AuditLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CustomerGuid")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Event")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("EventDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("WhatChanged")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Audit_Log");
-                });
-
             modelBuilder.Entity("Recitopia.Models.Components", b =>
                 {
                     b.Property<int>("Comp_Id")
@@ -456,17 +429,8 @@ namespace Recitopia.Data.Migrations
                     b.Property<int>("FeedbackId")
                         .HasColumnType("int");
 
-                    b.Property<string>("FeedbackSubject")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FileContentType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<byte[]>("Image")
+                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.HasKey("ImageId");

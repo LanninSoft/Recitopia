@@ -36,6 +36,18 @@ namespace Recitopia.Controllers
                 {
                    
                     HttpContext.Session.SetString("CurrentUserCustomerGuid", checkLastLoginCompanyInfo.Customer_Guid);
+                    //INSERT LOGIN RECORD
+                    var auditEntry = new AuditLog()
+                    {
+                        UserId = currentUser.Id,
+                        EventDate = DateTime.UtcNow,
+                        Event = "Login",
+                        WhatChanged = "Logged in",
+                        CustomerGuid = checkLastLoginCompanyInfo.Customer_Guid
+                    };
+                    _recitopiaDbContext.Add(auditEntry);
+                    await _recitopiaDbContext.SaveChangesAsync();
+
                 }
                 return View();
             }
