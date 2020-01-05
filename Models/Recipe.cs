@@ -19,6 +19,7 @@ namespace Recitopia.Models
 
         [Display(Name = "Meal Category")]
         public int Category_Id { get; set; }
+        public string Category_Name { get; set; }
 
         [Display(Name = "Gluten Free")]
         public bool Gluten_Free { get; set; }
@@ -34,6 +35,7 @@ namespace Recitopia.Models
         public decimal? LaborCost { get; set; }
         [Display(Name = "Serving Size")]
         public int SS_Id { get; set; }
+        public string SS_Name { get; set; }
         public DateTime? LastModified { get; set; }
        // public int Customer_Id { get; set; }
         public string Customer_Guid { get; set; }

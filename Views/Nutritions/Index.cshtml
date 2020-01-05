@@ -82,7 +82,9 @@
     </table>
 </div>
 <div>
-    <a href="@Url.Action("Create", "Nutritions")" class="btn alert-success" role="button"><i class="fa fa-plus"></i> New Nutrient</a>
+    @*<a href="@Url.Action("Create", "Nutritions")" class="btn alert-success" role="button"><i class="fa fa-plus"></i> New Nutrient</a>*@
+    <a asp-action="uploadNutritionFile" class="btn alert-success" role="button"><i class="fa fa-upload"></i> Import Nutritions (CSV)</a>
+    <a asp-action="DownloadNutritions" class="btn alert-success" role="button"><i class="fa fa-download"></i> Export Nutritions (CSV)</a>
 </div>
 
 

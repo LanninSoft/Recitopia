@@ -1,12 +1,16 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using CsvHelper;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic.FileIO;
 using Recitopia.Data;
 using Recitopia.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -557,7 +561,174 @@ namespace Recitopia.Controllers
             ViewBag.SS_ID = new SelectList(await _recitopiaDbContext.Serving_Sizes.Where(m => m.Customer_Guid == customerGuid).OrderByDescending(m => m.Serving_Size).ToListAsync(), "SS_Id", "Serving_Size", recipe.SS_Id);
             return View(recipe);
         }
+        [HttpGet]
+        public async Task<IActionResult> DownLoadRecipes()
+        {
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
+            var customerInfo = await _recitopiaDbContext.Customers.Where(m => m.Customer_Guid == customerGuid).SingleAsync();
+
+            var recipeList = await _recitopiaDbContext.Recipe
+                .Include(p => p.Meal_Category)
+                .Include(p => p.Serving_Sizes)
+                .Where(p => p.Customer_Guid == customerGuid)
+                .OrderByDescending(p => p.Recipe_Name)                
+                .Select(recipes =>
+                    new RecipeExport()
+                    {
+                        Recipe_Name = recipes.Recipe_Name,
+                        Category_Name = recipes.Meal_Category.Category_Name,
+                        Gluten_Free = recipes.Gluten_Free,
+                        SS_Name = recipes.Serving_Sizes.Serving_Size.ToString(),
+                        SKU = recipes.SKU,
+                        UPC = recipes.UPC,
+                        LaborCost = (recipes.LaborCost > 0 ? recipes.LaborCost : 0),
+                        
+                    }
+                
+                ).ToListAsync();
+
+            List<RecipeExport> recipeCSVModels = recipeList;
+
+            var stream = new MemoryStream();
+            var writeFile = new StreamWriter(stream);
+            var csv = new CsvWriter(writeFile);
+            //csv.Configuration.RegisterClassMap<GroupReportCSVMap>();
+
+            csv.WriteRecords(recipeCSVModels);
+            writeFile.Flush();
+
+            stream.Position = 0; //reset stream
+            return File(stream, "application/octet-stream", customerInfo.Customer_Name + "_Recipies.csv");
+        }
+        public IActionResult uploadRecipeFile(int? id)
+        {
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+
+            var uploadFiles = new UploadFiles()
+            {
+                customerId = customerGuid,
+                
+            };
+
+            return View(uploadFiles);
+        }
+        [HttpPost]
+        public async Task<IActionResult> uploadRecipeFile([FromForm] UploadFiles uploadFiles, IFormFile file)
+        {
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+
+            if (file != null && file.Length > 0 && file.FileName.Contains(".csv"))
+            {
+                using (var ms = new MemoryStream())
+                {
+                    file.CopyTo(ms);
+                    var fileBytes = ms.ToArray();
+                    string s = Convert.ToBase64String(fileBytes);
+                    // act on the Base64 data
+
+                    //Convert string into a MemoryStream
+                    Stream stream = new MemoryStream(fileBytes);
+
+                    //Parse the stream
+                    using (TextFieldParser parser = new TextFieldParser(stream))
+                    {
+                        parser.TextFieldType = FieldType.Delimited;
+                        //parser.TextFieldType = FieldType.Delimited;
+                        parser.SetDelimiters(",");
+                        int rowCount = 1, colCount = 1;
+                        string Field1 = "", Field2 = "", Field3 = "", Field4 = "", Field5 = "", Field6 = "", Field7 = "";
+                        while (!parser.EndOfData)
+                        {
+                            //Processing row
+                            string[] row = parser.ReadFields();
+                            if (rowCount > 1) //Skip header row
+                            {
+                                foreach (string field in row)
+                                {
+                                    if (colCount == 1)
+                                    {
+                                        Field1 = field;
+                                    }
+                                    else if (colCount == 2)
+                                    {
+                                        Field2 = field;
+                                    }
+                                    else if (colCount == 3)
+                                    {
+                                        Field3 = field;
+                                    }
+                                    else if (colCount == 4)
+                                    {
+                                        Field4 = field;
+                                    }
+                                    else if (colCount == 5)
+                                    {
+                                        Field5 = field;
+                                    }
+                                    else if (colCount == 6)
+                                    {
+                                        Field6 = field;
+                                    }
+                                    else if (colCount == 7)
+                                    {
+                                        Field7 = field;
+                                    }
+                                    colCount++;
+                                }
+                                colCount = 1;
+                                //SEE IF VALID DATA AND TRY TO INSERT
+                                try
+                                {
+                                    //Get Category ID and Serving size id for current customer uploading
+                                    var servingSizeId = await _recitopiaDbContext.Serving_Sizes.Where(m => m.Customer_Guid == customerGuid && m.Serving_Size == int.Parse(Field4)).SingleAsync();
+                                    var categoryId = await _recitopiaDbContext.Meal_Category.Where(m => m.Customer_Guid == customerGuid && m.Category_Name == Field2).SingleAsync();
+
+                                    var recipe = new Recipe()
+                                    {
+                                        Recipe_Name = Field1,
+                                        Category_Id = categoryId.Category_Id,
+                                        Gluten_Free = Convert.ToBoolean(Field3),
+                                        SS_Id = servingSizeId.SS_Id,
+                                        Customer_Guid = customerGuid,
+                                        LastModified = DateTime.UtcNow,
+                                        SKU = Field5,
+                                        UPC = Field6,
+                                        LaborCost = (Field7 != null ? Decimal.Parse(Field7) : 0),
+
+                                    };
+                                
+                                    await _recitopiaDbContext.Recipe.AddAsync(recipe);
+                                    await _recitopiaDbContext.SaveChangesAsync();
+                                }
+                                catch (Exception)
+                                {
+                                    ViewBag.ErrorMessage = "There is an issue with the data in row - " + rowCount + ".  Rows prior to this error were imported.  Fix the data issue, adjust your import file rows to import and try again." +
+                                        "<br/>Review:  Serving Size and Meal Category Exists that matches upload value.";
+                                    return View(uploadFiles);
+                                }
+
+
+                            }
+
+                            rowCount++;
+                        }
+                    }
+
+
+
+                }
+            }
+            else
+            {
+                ViewBag.ErrorMessage = "The file is missing, is larger than 4mb, or is not of type CSV.  Please re-select the CSV file you wish to upload and try again.";
+                return View(uploadFiles);
+            }   
+
+                
+            
+            return RedirectToAction("Index");
+        }
         // GET: Recipes/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {            

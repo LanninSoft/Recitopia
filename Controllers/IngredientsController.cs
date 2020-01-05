@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using CsvHelper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic.FileIO;
 using Recitopia.Data;
 using Recitopia.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -396,6 +399,194 @@ namespace Recitopia.Controllers
             }
 
 
+        }
+        [HttpGet]
+        public async Task<IActionResult> DownLoadIngredients()
+        {
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+
+            var customerInfo = await _recitopiaDbContext.Customers.Where(m => m.Customer_Guid == customerGuid).SingleAsync();
+
+            var ingredientList = await _recitopiaDbContext.Ingredient
+                .Include(p => p.Vendor)
+                .Where(p => p.Customer_Guid == customerGuid)
+                .OrderBy(p => p.Ingred_name)
+                .Select(ingredients =>
+                    new IngredientExport()
+                    {
+                        Ingred_name = ingredients.Ingred_name,
+                        Ingred_Comp_name = ingredients.Ingred_Comp_name,
+                        Cost_per_gram = ingredients.Cost_per_gram,
+                        Cost_per_lb = ingredients.Cost_per_lb,
+                        Vendor_name = ingredients.Vendor.Vendor_Name,
+                        Website = ingredients.Website,
+                        Notes = ingredients.Notes,
+                        Packaging = ingredients.Packaging,
+                        Brand = ingredients.Brand,
+                        Package = ingredients.Package,
+                        Cost = ingredients.Cost
+
+                    }
+
+                ).ToListAsync();
+
+            List<IngredientExport> CSVModels = ingredientList;
+
+            var stream = new MemoryStream();
+            var writeFile = new StreamWriter(stream);
+            var csv = new CsvWriter(writeFile);
+            //csv.Configuration.RegisterClassMap<GroupReportCSVMap>();
+
+            csv.WriteRecords(CSVModels);
+            writeFile.Flush();
+
+            stream.Position = 0; //reset stream
+            return File(stream, "application/octet-stream", customerInfo.Customer_Name + "_Ingredients.csv");
+        }
+        public IActionResult uploadIngredientFile(int? id)
+        {
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+
+            var uploadFiles = new UploadFiles()
+            {
+                customerId = customerGuid,
+
+            };
+
+            return View(uploadFiles);
+        }
+        [HttpPost]
+        public async Task<IActionResult> uploadIngredientFile([FromForm] UploadFiles uploadFiles, IFormFile file)
+        {
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+
+            if (file != null && file.Length > 0 && file.FileName.Contains(".csv"))
+            {
+                using (var ms = new MemoryStream())
+                {
+                    file.CopyTo(ms);
+                    var fileBytes = ms.ToArray();
+                    string s = Convert.ToBase64String(fileBytes);
+                    // act on the Base64 data
+
+                    //Convert string into a MemoryStream
+                    Stream stream = new MemoryStream(fileBytes);
+
+                    //Parse the stream
+                    using (TextFieldParser parser = new TextFieldParser(stream))
+                    {
+                        parser.TextFieldType = FieldType.Delimited;
+                        //parser.TextFieldType = FieldType.Delimited;
+                        parser.SetDelimiters(",");
+                        int rowCount = 1, colCount = 1;
+                        string Field1 = "", Field2 = "", Field3 = "", Field4 = "", Field5 = "", Field6 = "", Field7 = "", Field8 = "", Field9 = "", Field10 = "", Field11 = "";
+                        while (!parser.EndOfData)
+                        {
+                            //Processing row
+                            string[] row = parser.ReadFields();
+                            if (rowCount > 1) //Skip header row
+                            {
+                                foreach (string field in row)
+                                {
+                                    if (colCount == 1)
+                                    {
+                                        Field1 = field;
+                                    }
+                                    else if (colCount == 2)
+                                    {
+                                        Field2 = field;
+                                    }
+                                    else if (colCount == 3)
+                                    {
+                                        Field3 = field;
+                                    }
+                                    else if (colCount == 4)
+                                    {
+                                        Field4 = field;
+                                    }
+                                    else if (colCount == 5)
+                                    {
+                                        Field5 = field;
+                                    }
+                                    else if (colCount == 6)
+                                    {
+                                        Field6 = field;
+                                    }
+                                    else if (colCount == 7)
+                                    {
+                                        Field7 = field;
+                                    }
+                                    else if (colCount == 8)
+                                    {
+                                        Field8 = field;
+                                    }
+                                    else if (colCount == 9)
+                                    {
+                                        Field9 = field;
+                                    }
+                                    else if (colCount == 10)
+                                    {
+                                        Field10 = field;
+                                    }
+                                    else if (colCount == 11)
+                                    {
+                                        Field11 = field;
+                                    }
+                                    colCount++;
+                                }
+                                colCount = 1;
+                                //SEE IF VALID DATA AND TRY TO INSERT
+                                try
+                                {
+                                    //Get Vendor ID for current customer uploading
+                                    var vendorId = await _recitopiaDbContext.Vendor.Where(m => m.Customer_Guid == customerGuid && m.Vendor_Name == Field5).SingleAsync();
+                                   
+                                    var ingredient = new Ingredient()
+                                    {
+                                        Ingred_name = Field1,
+                                        Ingred_Comp_name = Field2,
+                                        Cost_per_gram = (Field3 != null && Field3.Trim() != "" ? Decimal.Parse(Field3) : 0),
+                                        Cost_per_lb = (Field4 != null && Field4.Trim() != "" ? Decimal.Parse(Field4) : 0),
+                                        Vendor_Id = vendorId.Vendor_Id,
+                                        Website = Field6,
+                                        Notes = Field7,
+                                        Packaging = Field8,
+                                        Brand = Field9,
+                                        Package = Convert.ToBoolean(Field10),
+                                        Cost = (Field11 != null && Field11.Trim() != "" ? Decimal.Parse(Field11) : 0),
+                                        Customer_Guid = customerGuid
+                                    };
+
+                                    await _recitopiaDbContext.Ingredient.AddAsync(ingredient);
+                                    await _recitopiaDbContext.SaveChangesAsync();
+                                }
+                                catch (Exception e)
+                                {
+                                    ViewBag.ErrorMessage = "There is an issue with the data in row - " + rowCount + ".  Rows prior to this error were imported.  Fix the data issue, adjust your import file rows to import and try again." +
+                                        "<br/>Review:  That the Vendor Name exists under Vendors so that it is there to match upload value.";
+                                    return View(uploadFiles);
+                                }
+
+
+                            }
+
+                            rowCount++;
+                        }
+                    }
+
+
+
+                }
+            }
+            else
+            {
+                ViewBag.ErrorMessage = "The file is missing, is larger than 4mb, or is not of type CSV.  Please re-select the CSV file you wish to upload and try again.";
+                return View(uploadFiles);
+            }
+
+
+
+            return RedirectToAction("Index");
         }
 
     }

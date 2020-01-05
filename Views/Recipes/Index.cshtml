@@ -91,6 +91,9 @@
     </table>
 </div>
 <div>
-    <a href="@Url.Action("Create", "Recipes")" class="btn alert-success" role="button"><i class="fa fa-plus"></i> New Recipe</a>
+    @*<a href="@Url.Action("Create", "Recipes")" class="btn alert-success" role="button"><i class="fa fa-plus"></i> New Recipe</a>*@
+    <a asp-action="uploadRecipeFile" class="btn alert-success" role="button"><i class="fa fa-upload"></i> Import Recipes (CSV)</a>
+    <a asp-action="DownLoadRecipes" class="btn alert-success" role="button"><i class="fa fa-download"></i> Export Recipes (CSV)</a>
+
 </div>
 

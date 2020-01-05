@@ -1,0 +1,54 @@
+﻿@model Recitopia.Models.UploadFiles
+@{
+    ViewData["Title"] = "Upload File";
+    
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <font style="color:red">@ViewBag.ErrorMessage</font>
+}
+
+<table width="100%" class="table-borderless">
+    <tr>
+        <th  style="font-size:30px;background-color:blanchedalmond">
+            Nutrition File Upload
+        </th>
+    </tr>
+    
+
+</table>
+<div class="row">
+    <div class="col-md-4">
+        <form name="form1" method="post" enctype="multipart/form-data" asp-action="uploadNutritionFile">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+             <input type="hidden" asp-for="customerId" />
+                     
+            <div class="custom-file form-control">
+                <input type="file" accept=".csv" required asp-for="File" name="File" id="customFile" class="custom-file-input form-control" >
+                <label class="custom-file-label" for="customFile">Choose file</label>
+                <span asp-validation-for="File" class="text-danger"></span>
+            </div>
+            <div>
+                &nbsp;
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Upload" class="btn alert-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script>
+    // Add the following code if you want the name of the file appear on select
+    $(".custom-file-input").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+</script>
+
