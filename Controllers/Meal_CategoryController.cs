@@ -21,15 +21,16 @@ namespace Recitopia.Controllers
         [Authorize]
         public async Task<ActionResult> Index()
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerId == 0)
+            if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
 
             var mealCategories = await _recitopiaDbContext.Meal_Category
-                .Where(m => m.Customer_Id == customerId)
+                .Where(m => m.Customer_Guid == customerGuid)
                 .ToListAsync();
 
             return View(mealCategories);
@@ -38,10 +39,11 @@ namespace Recitopia.Controllers
         [HttpGet]
         public async Task<JsonResult> GetData()
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
             var mealCategories = await _recitopiaDbContext.Meal_Category
-                .Where(m => m.Customer_Id == customerId)
+                .Where(m => m.Customer_Guid == customerGuid)
                 .OrderBy(m => m.Category_Name)
                 .ToListAsync();
 
@@ -77,9 +79,10 @@ namespace Recitopia.Controllers
         public async Task<ActionResult> Create([FromForm] Meal_Category mealCategory)
         {
 
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerId == 0)
+            if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -87,7 +90,7 @@ namespace Recitopia.Controllers
             if (ModelState.IsValid)
             {
 
-                mealCategory.Customer_Id = customerId;
+                mealCategory.Customer_Guid = customerGuid;
 
                 _recitopiaDbContext.Meal_Category.Add(mealCategory);
                 await _recitopiaDbContext.SaveChangesAsync();
@@ -114,11 +117,12 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([FromForm] Meal_Category mealCategory)
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
             if (ModelState.IsValid)
             {
-                mealCategory.Customer_Id = customerId;
+                mealCategory.Customer_Guid = customerGuid;
 
                 _recitopiaDbContext.Entry(mealCategory).State = EntityState.Modified;
                 await _recitopiaDbContext.SaveChangesAsync();
@@ -128,9 +132,9 @@ namespace Recitopia.Controllers
             return View(mealCategory);
         }
 
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var mealCategory = _recitopiaDbContext.Meal_Category.Find(id);
+            var mealCategory = await _recitopiaDbContext.Meal_Category.FindAsync(id);
 
             if (mealCategory == null)
             {

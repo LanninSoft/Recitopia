@@ -171,8 +171,8 @@ namespace Recitopia.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Customer_Id")
-                        .HasColumnType("int");
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Customer_Name")
                         .HasColumnType("nvarchar(max)");
@@ -251,6 +251,35 @@ namespace Recitopia.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Recitopia.Models.AuditLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CustomerGuid")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Event")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EventDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WhatChanged")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Audit_Log");
+                });
+
             modelBuilder.Entity("Recitopia.Models.Components", b =>
                 {
                     b.Property<int>("Comp_Id")
@@ -267,8 +296,8 @@ namespace Recitopia.Data.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
-                    b.Property<int>("Customer_Id")
-                        .HasColumnType("int");
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Notes")
                         .HasColumnType("text");
@@ -281,10 +310,13 @@ namespace Recitopia.Data.Migrations
 
             modelBuilder.Entity("Recitopia.Models.Customer_Users", b =>
                 {
-                    b.Property<int>("CU_Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Customer_Id")
                         .HasColumnType("int");
@@ -295,16 +327,16 @@ namespace Recitopia.Data.Migrations
                     b.Property<int?>("CustomersCustomer_Id")
                         .HasColumnType("int");
 
-                    b.Property<string>("Id")
+                    b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Notes")
+                    b.Property<string>("User_Id")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("User_Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CU_Id");
+                    b.HasKey("Id");
 
                     b.HasIndex("CustomersCustomer_Id");
 
@@ -328,6 +360,9 @@ namespace Recitopia.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Customer_Guid")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Customer_Name")
@@ -356,6 +391,89 @@ namespace Recitopia.Data.Migrations
                     b.HasIndex("AppUserId");
 
                     b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("Recitopia.Models.Feedback", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Actions")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Customer_Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmailAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Resolved")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("ResolvedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("User_Id")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("User_Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Feedback");
+                });
+
+            modelBuilder.Entity("Recitopia.Models.FeedbackFiles", b =>
+                {
+                    b.Property<int>("ImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("FeedbackId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FeedbackSubject")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileContentType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.HasKey("ImageId");
+
+                    b.HasIndex("FeedbackId");
+
+                    b.ToTable("FeedbackFiles");
                 });
 
             modelBuilder.Entity("Recitopia.Models.Ingredient", b =>
@@ -399,10 +517,8 @@ namespace Recitopia.Data.Migrations
                     b.Property<decimal?>("Cost_per_tsp")
                         .HasColumnType("decimal(18, 3)");
 
-                    b.Property<int>("Customer_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("((1))");
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ingred_Comp_name")
                         .HasColumnType("text");
@@ -462,10 +578,8 @@ namespace Recitopia.Data.Migrations
                     b.Property<int>("Comp_Id")
                         .HasColumnType("int");
 
-                    b.Property<int>("Customer_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("((1))");
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Ingred_Id")
                         .HasColumnType("int");
@@ -486,10 +600,8 @@ namespace Recitopia.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Customer_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("((1))");
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Ingred_Id")
                         .HasColumnType("int");
@@ -521,10 +633,8 @@ namespace Recitopia.Data.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
-                    b.Property<int>("Customer_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("((1))");
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Notes")
                         .HasColumnType("text");
@@ -542,10 +652,8 @@ namespace Recitopia.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Customer_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("((1))");
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("DV")
                         .HasColumnType("int");
@@ -583,10 +691,11 @@ namespace Recitopia.Data.Migrations
                     b.Property<int>("Category_Id")
                         .HasColumnType("int");
 
-                    b.Property<int>("Customer_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("((1))");
+                    b.Property<string>("Category_Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Gluten_Free")
                         .HasColumnType("bit");
@@ -612,6 +721,9 @@ namespace Recitopia.Data.Migrations
                     b.Property<int>("SS_Id")
                         .HasColumnType("int");
 
+                    b.Property<string>("SS_Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("UPC")
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
@@ -636,10 +748,8 @@ namespace Recitopia.Data.Migrations
                     b.Property<decimal>("Amount_g")
                         .HasColumnType("decimal(18, 3)");
 
-                    b.Property<int>("Customer_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("((1))");
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Ingredient_Id")
                         .HasColumnType("int");
@@ -663,10 +773,8 @@ namespace Recitopia.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Customer_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("((1))");
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Notes")
                         .HasColumnType("text");
@@ -699,10 +807,8 @@ namespace Recitopia.Data.Migrations
                         .HasColumnType("nvarchar(25)")
                         .HasMaxLength(25);
 
-                    b.Property<int>("Customer_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("((1))");
+                    b.Property<string>("Customer_Guid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(50)")
@@ -790,7 +896,7 @@ namespace Recitopia.Data.Migrations
 
             modelBuilder.Entity("Recitopia.Models.Customer_Users", b =>
                 {
-                    b.HasOne("Recitopia.Models.Customers", null)
+                    b.HasOne("Recitopia.Models.Customers", "Customers")
                         .WithMany("Customer_Users")
                         .HasForeignKey("CustomersCustomer_Id");
                 });
@@ -800,6 +906,15 @@ namespace Recitopia.Data.Migrations
                     b.HasOne("Recitopia.Models.AppUser", null)
                         .WithMany("Customers")
                         .HasForeignKey("AppUserId");
+                });
+
+            modelBuilder.Entity("Recitopia.Models.FeedbackFiles", b =>
+                {
+                    b.HasOne("Recitopia.Models.Feedback", null)
+                        .WithMany("FeedbackFiles")
+                        .HasForeignKey("FeedbackId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Recitopia.Models.Ingredient", b =>

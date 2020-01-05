@@ -38,69 +38,129 @@ namespace Recitopia.Controllers
                 : Json(new { Status = "Failure" });
         }
 
-        public async Task<IActionResult> CustomerLogin()
+        public async Task<IActionResult> CustomerLogin(bool? clickLinktoChange)
         {
+            var customerCount = 0;
             //RETURN LIST OF CUSTOMERS THAT A MEMBER OF
             //IF ONLY ONE, TAKE THEM HOME.  IF MULTIPLE, PROVIDE LIST AND USER SELECTS WHICH CUSTOMER TO LOGIN TO
-            var currentUser = await _recitopiaDbContext.AppUsers
+            if (User.Identity.Name != null)
+            {
+
+                var currentUser = await _recitopiaDbContext.AppUsers
                 .SingleAsync(m => m.UserName == User.Identity.Name);
 
-            var customerIds = await _recitopiaDbContext.Customer_Users
-                .Where(cu => cu.Id == currentUser.Id)
-                .Select(cu => cu.Customer_Id)
-                .ToListAsync();
+                var customerIds = await _recitopiaDbContext.Customer_Users
+                    .Where(cu => cu.User_Id == currentUser.Id)
+                    .Select(cu => cu.Customer_Guid)
+                    .ToListAsync();
+            
+                customerCount = customerIds.Count();
 
-            if (customerIds.Count() > 1)
-            {
-                //Provide selection view
-
-                //create list and populate with Customer name and Id
-                var custList = new List<List<string>>();
-
-                foreach (var customerId in customerIds)
+                if (customerCount > 1 && clickLinktoChange != true)
                 {
-                    var customer = await _recitopiaDbContext.Customers
-                        .SingleAsync(m => m.Customer_Id == customerId);
 
-                    // Dave: I'm not sure how this is used yet, but it seems like you need a keyvalue pair. A dictionary would 
-                    // work better.
-                    custList.Add(new List<string> { customer.Customer_Name, customer.Customer_Id.ToString() });
+                    //Look to see if company id and name saved prior.  If so, bypass selection page and take to home
+                    var checkLastLoginCompanyInfo = await _recitopiaDbContext.AppUsers.SingleAsync(m => m.Id == currentUser.Id);
+
+                    if (checkLastLoginCompanyInfo.Customer_Guid != null && checkLastLoginCompanyInfo.Customer_Name != null)
+                    {
+                         var customerGuid = await _recitopiaDbContext.Customers.SingleAsync(m => m.Customer_Guid == checkLastLoginCompanyInfo.Customer_Guid);
+
+                        HttpContext.Session.SetString("CurrentUserCustomerGuid", customerGuid.Customer_Guid);
+                        
+                        //INSERT LOGIN RECORD
+                        var auditEntry = new AuditLog()
+                        {
+                            UserId = currentUser.Id,
+                            EventDate = DateTime.UtcNow,
+                            Event = "Login",
+                            WhatChanged = "Logged in",
+                            CustomerGuid = checkLastLoginCompanyInfo.Customer_Guid
+                        };
+                        _recitopiaDbContext.Add(auditEntry);
+                        await _recitopiaDbContext.SaveChangesAsync();
+
+                        return LocalRedirect("~/Home/Index");
+                    }
+                    else
+                    {
+                        //Provide selection view
+                        //create list and populate with Customer name and Id
+                        List<IList<string>> custList = new List<IList<string>>();
+
+                        foreach (var customerId in customerIds)
+                        {
+                            var tempResults = await _recitopiaDbContext.Customers.SingleAsync(m => m.Customer_Guid == customerId);
+
+                            custList.Add(new List<string> { tempResults.Customer_Name, tempResults.Customer_Guid });
+                        }
+                        ViewBag.UserCustomers = custList;
+
+                        return View();
+                    }
+                }
+                else if (customerCount > 1 && clickLinktoChange == true)
+                {
+                    //Provide selection view
+                    //create list and populate with Customer name and Id
+                    List<IList<string>> custList = new List<IList<string>>();
+
+                    foreach (var customerId in customerIds)
+                    {
+                        var tempResults = await _recitopiaDbContext.Customers.SingleAsync(m => m.Customer_Guid == customerId);
+
+                        custList.Add(new List<string> { tempResults.Customer_Name, tempResults.Customer_Guid });
+                    }
+                    ViewBag.UserCustomers = custList;
+
+                    return View();
+                }
+                else if (customerCount == 1)
+                {
+                    //take them to home page
+                    var customerCId = await _recitopiaDbContext.Customer_Users.SingleAsync(m => m.User_Id == currentUser.Id);
+
+                    return RedirectToAction("CustomerLoginGo", new { id = customerCId.Customer_Guid });
+                }
+                else
+                {
+                    ViewBag.UserCustomers = null;
+
+                    return View();
                 }
 
-                ViewBag.UserCustomers = custList;
-
-                return View();
             }
-
-            if (customerIds.Count() == 1)
-            {
-                //take them to home page
-                var customerCId = await _recitopiaDbContext.Customer_Users.SingleAsync(m => m.Id == currentUser.Id);
-
-                return RedirectToAction("CustomerLoginGo", new { id = customerCId.Customer_Id });
-            }
-
-            ViewBag.UserCustomers = null;
 
             return View();
+
         }
 
-        public async Task<IActionResult> CustomerLoginGo(int id)
+        public async Task<IActionResult> CustomerLoginGo(string id)
         {
-            //save customerid to appuser field to carry
-
-
+            //save customerguid to appuser field to carry
             var currentUser = await _recitopiaDbContext.AppUsers.Where(m => m.UserName ==  User.Identity.Name).FirstAsync();
 
+            var getCustomerName = await _recitopiaDbContext.Customers.Where(m => m.Customer_Guid == id).FirstAsync();
 
-            var getCustomerName = await _recitopiaDbContext.Customers.Where(m => m.Customer_Id == id).FirstAsync();
-
-            currentUser.Customer_Id = id;
+            currentUser.Customer_Guid = id;
+            
             currentUser.Customer_Name = getCustomerName.Customer_Name;
+ 
+            HttpContext.Session.SetString("CurrentUserCustomerGuid", id);
 
-            HttpContext.Session.SetString("CurrentUserCustomerId", id.ToString());
+            await _recitopiaDbContext.SaveChangesAsync();
 
-            _recitopiaDbContext.SaveChanges();
+            //INSERT LOGIN RECORD
+            var auditEntry = new AuditLog()
+            {
+                UserId = currentUser.Id,
+                EventDate = DateTime.UtcNow,
+                Event = "Login",
+                WhatChanged = "Logged in",
+                CustomerGuid = id
+            };
+            _recitopiaDbContext.Add(auditEntry);
+            await _recitopiaDbContext.SaveChangesAsync();
 
             return LocalRedirect("~/Home/Index");
         }
@@ -139,6 +199,7 @@ namespace Recitopia.Controllers
         {
             if (ModelState.IsValid)
             {
+                customers.Customer_Guid = Guid.NewGuid().ToString();
                 _recitopiaDbContext.Add(customers);
                 await _recitopiaDbContext.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -222,6 +283,11 @@ namespace Recitopia.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var customers = await _recitopiaDbContext.Customers.FindAsync(id);
+            
+            
+            //NEED TO WRITE MULTIPLE CASCADING DELETES TO MAKE SURE THERE ARE NO ORPHANS
+
+
             _recitopiaDbContext.Customers.Remove(customers);
             await _recitopiaDbContext.SaveChangesAsync();
 
@@ -232,5 +298,65 @@ namespace Recitopia.Controllers
         {
             return await _recitopiaDbContext.Customers.AnyAsync(e => e.Customer_Id == id);
         }
+        
+        public async Task<IActionResult> CopyCustomer(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var customers = await _recitopiaDbContext.Customers
+                .FirstOrDefaultAsync(m => m.Customer_Id == id);
+
+            if (customers == null)
+            {
+                return NotFound();
+            }
+
+            return View(customers);
+        }
+        [HttpPost, ActionName("CopyCustomer")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CopyCustomerConfirmed(int id)
+        {
+            //
+
+            var customers = await _recitopiaDbContext.Customers.FindAsync(id);
+            try
+            {    
+                Customers customerNew = new Customers()
+                {
+                    Customer_Name = "Copy of - " + customers.Customer_Name,
+                    Phone = customers.Phone,
+                    Email = customers.Email,
+                    Address1 = customers.Address1,
+                    Address2 = customers.Address2,
+                    City = customers.City,
+                    State = customers.State,
+                    Zip = customers.Zip,
+                    Web_URL = customers.Web_URL,
+                    Notes = customers.Notes
+                };
+                await _recitopiaDbContext.Customers.AddAsync(customerNew);
+                await _recitopiaDbContext.SaveChangesAsync();
+                
+               
+
+            }
+            catch
+            {
+
+            }
+
+
+
+                return RedirectToAction(nameof(Index));
+        }
+
+
+
+
+
     }
 }

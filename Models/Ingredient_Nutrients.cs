@@ -9,8 +9,8 @@ namespace Recitopia.Models
         public int Ingred_Id { get; set; }
         public int Nutrition_Item_Id { get; set; }
         public decimal Nut_per_100_grams { get; set; }
-        public int Customer_Id { get; set; }
-
+        //public int Customer_Id { get; set; }
+        public string Customer_Guid { get; set; }
         public virtual Ingredient Ingredients { get; set; }
         public virtual Nutrition Nutrition { get; set; }
     }

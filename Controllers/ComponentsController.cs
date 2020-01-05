@@ -23,15 +23,16 @@ namespace Recitopia.Controllers
         // GET: Components
         public async Task<ActionResult> Index()
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerId == 0)
+            if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
 
             var components = await _recitopiaDbContext.Components
-                .Where(c => c.Customer_Id == customerId)
+                .Where(c => c.Customer_Guid == customerGuid)
                 .OrderBy(c => c.Comp_Sort)
                 .ToListAsync();
 
@@ -41,12 +42,11 @@ namespace Recitopia.Controllers
         [HttpGet]
         public async Task<JsonResult> GetData()
         {
-            //doesn't allow the model to get dependent table information
-            //db.Configuration.ProxyCreationEnabled = false;
-            int customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
             var allergen = await _recitopiaDbContext.Components
-                .Where(c => c.Customer_Id == customerId)
+                .Where(c => c.Customer_Guid == customerGuid)
                 .OrderBy(c => c.Component_Name)
                 .ToListAsync();
 
@@ -88,9 +88,10 @@ namespace Recitopia.Controllers
         {
             if (ModelState.IsValid)
             {
-                var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+                
+                var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-                if (customerId == 0)
+                if (customerGuid == null)
                 {
                     return RedirectToAction("CustomerLogin", "Customers");
                 }
@@ -109,7 +110,7 @@ namespace Recitopia.Controllers
                 component.Comp_Sort = compFN.Substring(0, intStrLen > 48 ? 48 : intStrLen);
 
                 //---------------------------------------
-                component.Customer_Id = customerId;
+                component.Customer_Guid = customerGuid;
 
                 _recitopiaDbContext.Components.Add(component);
 
@@ -146,7 +147,8 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([FromForm] Components component)
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
             if (ModelState.IsValid)
             {
@@ -165,7 +167,7 @@ namespace Recitopia.Controllers
                 component.Comp_Sort = compFN.Substring(0, intStrLen > 48 ? 48 : intStrLen);
 
                 //---------------------------------------
-                component.Customer_Id = customerId;
+                component.Customer_Guid = customerGuid;
                 _recitopiaDbContext.Entry(component).State = EntityState.Modified;
                 await _recitopiaDbContext.SaveChangesAsync();
 

@@ -1,0 +1,79 @@
+﻿@model IEnumerable<Recitopia.Models.Feedback>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<table style="width:100%" class="table table-bordered table-hover">
+    <tr class="pageBanner">
+        <th style="font-size:30px">
+            Feedback History
+        </th>
+    </tr>
+ 
+</table>
+<div ng-app="myApp" ng-controller="FeedbackHistory" class="container-fluid" style="font-size:13px">
+    @* Use ng-controller *@
+
+
+    <table style="width:100%" class="table table-condensed table-hover table-striped table-bordered table-responsive-lg">
+        <tr>
+
+            <th class="AngularTableHeaderColor " style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('subject')"><font style="color:black">Subject</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('subject')"></i>
+            </th>
+            <th class="AngularTableHeaderColor" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('resolved')"><font style="color:black">Resolved</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('resolved')"></i>
+            </th>
+            <th class="AngularTableHeaderColor  d-none d-lg-table-cell" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('timeStamp')"><font style="color:black">Submitted</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('timeStamp')"></i>
+            </th>
+           
+            
+
+
+        </tr>
+        <tr>
+            <td style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.subject"></td>
+            <td style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.resolved"></td>
+            <td class=" d-none d-lg-table-cell" style="padding:1px;height:20px;font-size:13px"></td>
+            
+           
+
+
+        </tr>
+      
+
+        <tr ng-repeat="feedback in Feedback | filter:f | orderBy:sort.active:sort.descending">
+            @* Fetch All the Recipe record using ng-repeat *@
+
+            <td style="height:15px;padding:1px">
+                <a href="#" ng-click="RedirectToDetails(feedback)">{{feedback.subject}}</a><br />
+               
+                <span ng-if="feedback.feedbackFiles.length > 0">{{feedback.feedbackFiles.length}} <i class="fa fa-images"></i></span>
+            </td>
+
+
+            <td style="height:15px;padding:1px;width:95px">
+                <div class="{{feedback.resolved == true ? 'AngularTrueResults' : 'AngularFalseResults' }}">
+                    {{feedback.resolved ? "T":"F"}}
+
+                </div>
+            </td>
+            <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px;width:100px">{{feedback.timeStamp | utcToLocal:"MMM dd yyyy hh:mm:ss"}}</td>
+
+            @*<td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:60px">
+                
+                <button ng-click="RedirectToDetails(feedback)" class="btn btn-outline-info AngularButtons">
+                    <i class="fa fa-clipboard"></i>
+                </button> 
+            </td>*@
+        </tr>
+
+    </table>
+</div>

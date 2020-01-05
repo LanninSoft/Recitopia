@@ -60,12 +60,13 @@
 
 
             <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:200px">
+                <button ng-click="RedirectToCopy(customer)" class="btn btn-outline-info AngularButtons">
+                    <i class="fa fa-copy"></i>
+                </button> |
                 <button ng-click="RedirectToEdit(customer)" class="btn btn-outline-success AngularButtons">
                     <i class="fa fa-pen"></i>
                 </button> |
-                @*<button ng-click="RedirectToDetails(customer)" class="btn btn-outline-info AngularButtons">
-                    <i class="fa fa-clipboard"></i>
-                </button> |*@
+
 
                 <button ng-click="DelCustomer(customer)" class="btn btn-outline-danger AngularButtons">
                     <i class="fa fa-trash"></i>
@@ -75,9 +76,7 @@
 
     </table>
 </div>
-<div>
-    <a href="@Url.Action("Create", "Nutritions")" class="btn alert-success" role="button"><i class="fa fa-plus"></i> New Nutrient</a>
-</div>
+
 
 
 

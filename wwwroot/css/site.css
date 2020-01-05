@@ -68,7 +68,16 @@ textarea {
     border: none;
     /*background-color: none;*/
 }
-
+.AngularTrueResults {
+    background-color: #e6ffe6;
+}
+.AngularNAResults {
+    background-color: inherit;
+}
+.AngularFalseResults {
+   
+    background-color: #ffe6e6;
+}
 .pageBanner {
     background-color: blanchedalmond;
     font-size: 25px;
@@ -77,6 +86,7 @@ textarea {
     background-color:lightcoral;
     font-size: 25px;
 }
+/*Background CSS*/
 body {
     /* Location of the image */
     background-image: url(/images/spices3.jpg);
@@ -95,14 +105,7 @@ body {
     background-color: #f2f2f2;
 }
 
-.filled-circle {
-    padding: 5px 5px 5px 5px;
-    /*border-radius: 100%;*/
-    background-color: lavender;
-    width: 50px;
-    height: 50px;
-    border-radius: 25px;
-}
+
 /*==================================================
  * Effect 8
  * ===============================================*/
@@ -149,4 +152,18 @@ body {
     /*height: 200px;*/
     background: #FFF;
     margin: 40px auto;
+}
+/*Image upload CSS */
+.btn:focus, .btn:active, button:focus, button:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+#image-gallery .modal-footer {
+    display: block;
+}
+
+.thumb {
+    margin-top: 15px;
+    margin-bottom: 15px;
 }

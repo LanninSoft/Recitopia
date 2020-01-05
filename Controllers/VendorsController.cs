@@ -22,15 +22,16 @@ namespace Recitopia.Controllers
         [Authorize]
         public async Task<ActionResult> Index()
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerId == 0)
+            if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
 
             var vendors = await _recitopiaDbContext.Vendor
-                .Where(m => m.Customer_Id == customerId)
+                .Where(m => m.Customer_Guid == customerGuid)
                 .OrderBy(m => m.Vendor_Name)
                 .ToListAsync();
 
@@ -40,10 +41,11 @@ namespace Recitopia.Controllers
         [HttpGet]
         public async Task<JsonResult> GetData()
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
             var vendors = await _recitopiaDbContext.Vendor
-                .Where(m => m.Customer_Id == customerId)
+                .Where(m => m.Customer_Guid == customerGuid)
                 .OrderBy(m => m.Vendor_Name)
                 .ToListAsync();
 
@@ -52,9 +54,10 @@ namespace Recitopia.Controllers
 
         public async Task<ActionResult> Details(int id)
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerId == 0)
+            if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -71,9 +74,10 @@ namespace Recitopia.Controllers
 
         public ActionResult Create()
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerId == 0)
+            if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -85,16 +89,17 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([FromForm] Vendor vendor)
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerId == 0)
+            if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
 
             if (ModelState.IsValid)
             {
-                vendor.Customer_Id = customerId;
+                vendor.Customer_Guid = customerGuid;
                 _recitopiaDbContext.Vendor.Add(vendor);
 
                 await _recitopiaDbContext.SaveChangesAsync();
@@ -107,9 +112,10 @@ namespace Recitopia.Controllers
 
         public async Task<ActionResult> Edit(int id)
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerId == 0)
+            if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -128,11 +134,12 @@ namespace Recitopia.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([FromForm] Vendor vendor)
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
             if (ModelState.IsValid)
             {
-                vendor.Customer_Id = customerId;
+                vendor.Customer_Guid = customerGuid;
                 _recitopiaDbContext.Entry(vendor).State = EntityState.Modified;
 
                 await _recitopiaDbContext.SaveChangesAsync();
@@ -145,9 +152,10 @@ namespace Recitopia.Controllers
 
         public async Task<ActionResult> Delete(int? id)
         {
-            var customerId = GetUserCustomerId(HttpContext.Session.GetString("CurrentUserCustomerId"));
+            
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerId == 0)
+            if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }

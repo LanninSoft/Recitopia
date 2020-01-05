@@ -46,7 +46,7 @@
         <tr>
             <td style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.recipe_Name"></td>
             <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input style="padding:1px;height:20px;width:100%"  ng-model="f.category_Name"></td>
-            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"></td>
+            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input style="padding:1px;height:20px;width:100%" ng-model="f.gluten_Free"></td>
             <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input style="padding:1px;height:20px;width:100%"  ng-model="f.serving_Size"></td>
             <td> </td>
             
@@ -59,12 +59,21 @@
 
         <td style="height:15px;padding:1px">{{recipe.recipe_Name}}</td>
         <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{recipe.category_Name}}</td>
-        <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{recipe.gluten_Free ? "Yes":""}}</td>
+        <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;width:125px">
+            <div class="{{recipe.gluten_Free == true ? 'AngularTrueResults' : 'AngularNAResults' }} ">
+                {{recipe.gluten_Free ? "T":"F"}}
+
+            </div>
+        </td>
         <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{recipe.serving_Size}}</td>
-     
+
 
         <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:175px">
             <input type="button" style="background-color:lavender" class="btn btn-sm AngularButtons" value="Ingredients" ng-click="RedirectToRecipeIngredients(recipe)" /> |
+            <button ng-click="RedirectToCopy(recipe)" class="btn btn-outline-info AngularButtons">
+                <i class="fa fa-copy"></i>
+            </button> |
+
 
             <button ng-click="RedirectToEdit(recipe)" class="btn btn-outline-success AngularButtons">
                 <i class="fa fa-pen"></i>
@@ -82,6 +91,9 @@
     </table>
 </div>
 <div>
-    <a href="@Url.Action("Create", "Recipes")" class="btn alert-success" role="button"><i class="fa fa-plus"></i> New Recipe</a>
+    @*<a href="@Url.Action("Create", "Recipes")" class="btn alert-success" role="button"><i class="fa fa-plus"></i> New Recipe</a>*@
+    <a asp-action="uploadRecipeFile" class="btn alert-success" role="button"><i class="fa fa-upload"></i> Import Recipes (CSV)</a>
+    <a asp-action="DownLoadRecipes" class="btn alert-success" role="button"><i class="fa fa-download"></i> Export Recipes (CSV)</a>
+
 </div>
 

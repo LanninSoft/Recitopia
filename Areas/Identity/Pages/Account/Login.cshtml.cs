@@ -88,9 +88,9 @@ namespace Recitopia.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    //GO TO CUSTOMER SELECTION PAGE TO SET CUSTOMERID
-
-                    HttpContext.Session.SetString("CurrentUserCustomerId", 0.ToString());
+                    //GO TO CUSTOMER SELECTION PAGE TO SET CUSTOMERGUID
+                    
+                    HttpContext.Session.SetString("CurrentUserCustomerGuid", "");
 
                     return LocalRedirect("~/Customers/CustomerLogin");
                     //return LocalRedirect(returnUrl);

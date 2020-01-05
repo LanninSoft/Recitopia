@@ -39,9 +39,11 @@ namespace Recitopia.Areas.Identity.Pages.Account.Manage
             public string PhoneNumber { get; set; }
 
             [Display(Name = "First Name")]
+            [Required]
             public string FirstName { get; set; }
 
             [Display(Name = "Last Name")]
+            [Required]
             public string LastName { get; set; }
 
             [Display(Name = "Address 1")]
@@ -83,8 +85,7 @@ namespace Recitopia.Areas.Identity.Pages.Account.Manage
                 City = userInfo.City,
                 State = userInfo.State,
                 ZipCode = userInfo.ZipCode,
-                WebUrl = userInfo.WebUrl,
-                Customer_Id = userInfo.Customer_Id
+                WebUrl = userInfo.WebUrl
             };
         }
 
@@ -127,7 +128,7 @@ namespace Recitopia.Areas.Identity.Pages.Account.Manage
                 appuser.State = Input.State;
                 appuser.ZipCode = Input.ZipCode;
                 appuser.WebUrl = Input.WebUrl;
-                appuser.Customer_Id = Input.Customer_Id;
+                
 
                 await _recitopiaDbContext.SaveChangesAsync();
             }

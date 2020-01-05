@@ -4,84 +4,125 @@
     ViewBag.Title = "Edit";
 }
 
-    <table width="100%" class="table-borderless">
-        <tr>
-            <th>
-                Edit
-            </th>
-        </tr>
-        <tr>
-            <th style="font-size:30px;background-color:blanchedalmond">
-                @Model.Nutrition_Item
-            </th>
-        </tr>
+<table width="100%" class="table-borderless">
+    <tr>
+        <th>
+            Edit
+        </th>
+    </tr>
+    <tr>
+        <th style="font-size:30px;background-color:blanchedalmond">
+            @Model.Nutrition_Item
+        </th>
+    </tr>
 
-    </table>
+</table>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Nutrition_Item_Id" />
+            <div class="form-group">
+                <label asp-for="Nutrition_Item" class="control-label"></label>
+                <input asp-for="Nutrition_Item" class="form-control" />
+                <span asp-validation-for="Nutrition_Item" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="ShowOnNutrientPanel" /> @Html.DisplayNameFor(model => model.ShowOnNutrientPanel)
+                </label>
+            </div>
 
+            <div class="form-group">
+                <label asp-for="OrderOnNutrientPanel" class="control-label"></label>
+                <input asp-for="OrderOnNutrientPanel" class="form-control" />
+                <span asp-validation-for="OrderOnNutrientPanel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DV" class="control-label"></label>
+                <input asp-for="DV" class="form-control" />
+                <span asp-validation-for="DV" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Measurement" class="control-label"></label>
+                <input asp-for="Measurement" class="form-control" />
+                <span asp-validation-for="Measurement" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn alert-success" />
+            </div>
+        </form>
+    </div>
+</div>
 
-@using (Html.BeginForm())
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@*@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
-<div class="form-horizontal">
+
+    <div class="form-horizontal">
 
 
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @Html.HiddenFor(model => model.Nutrition_Item_Id)
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Nutrition_Item_Id)
 
-    <div class="form-group">
+        <div class="form-group">
 
-        <font style="font-size:13px;font-weight:bolder">Nutrition Item</font>
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Nutrition_Item, new { htmlAttributes = new { @class = "form-control", style = "font-size:15px;height:30px" } })
-            @Html.ValidationMessageFor(model => model.Nutrition_Item, "", new { @class = "text-danger" })
+            <font style="font-size:13px;font-weight:bolder">Nutrition Item</font>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Nutrition_Item, new { htmlAttributes = new { @class = "form-control", style = "font-size:15px;height:30px" } })
+                @Html.ValidationMessageFor(model => model.Nutrition_Item, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
-    <div class="form-group">
+        <div class="form-group">
 
-        <font style="font-size:13px;font-weight:bolder">On Nutrition List</font>
-        <div class="col-md-10">
-            <div class="checkbox">
-                @Html.EditorFor(model => model.ShowOnNutrientPanel)
-                @Html.ValidationMessageFor(model => model.ShowOnNutrientPanel, "", new { @class = "text-danger" })
+            <font style="font-size:13px;font-weight:bolder">On Nutrition List</font>
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.ShowOnNutrientPanel)
+                    @Html.ValidationMessageFor(model => model.ShowOnNutrientPanel, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+
+            <font style="font-size:13px;font-weight:bolder">Order on Panel</font>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.OrderOnNutrientPanel, new { htmlAttributes = new { @class = "form-control", style = "font-size:13px;height:25px;width:100px" } })
+                @Html.ValidationMessageFor(model => model.OrderOnNutrientPanel, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+
+            <font style="font-size:13px;font-weight:bolder">DV</font>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DV, new { htmlAttributes = new { @class = "form-control", style = "font-size:15px;height:30px" } })
+                @Html.ValidationMessageFor(model => model.DV, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            <font style="font-size:13px;font-weight:bolder">Measurement</font>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Measurement, new { htmlAttributes = new { @class = "form-control", style = "font-size:15px;height:30px" } })
+                @Html.ValidationMessageFor(model => model.Measurement, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn alert-warning" />
             </div>
         </div>
     </div>
-    <div class="form-group">
-
-        <font style="font-size:13px;font-weight:bolder">Order on Panel</font>
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.OrderOnNutrientPanel, new { htmlAttributes = new { @class = "form-control", style = "font-size:13px;height:25px;width:100px" } })
-            @Html.ValidationMessageFor(model => model.OrderOnNutrientPanel, "", new { @class = "text-danger" })
-        </div>
-    </div>
-    <div class="form-group">
-
-        <font style="font-size:13px;font-weight:bolder">DV</font>
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.DV, new { htmlAttributes = new { @class = "form-control", style = "font-size:15px;height:30px" } })
-            @Html.ValidationMessageFor(model => model.DV, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-
-        <font style="font-size:13px;font-weight:bolder">Measurement</font>
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Measurement, new { htmlAttributes = new { @class = "form-control", style = "font-size:15px;height:30px" } })
-            @Html.ValidationMessageFor(model => model.Measurement, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Save" class="btn alert-warning" />
-        </div>
-    </div>
-</div>
 }
 
 <div>
     @Html.ActionLink("Back to List", "Index")
-</div>
+</div>*@
 

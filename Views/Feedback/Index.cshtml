@@ -1,0 +1,100 @@
+﻿@model IEnumerable<Recitopia.Models.Feedback>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <table width="100%" class="table table-borderless">
+        <tr class="pageBannerAdmin">
+            <th>
+                Feedback Management
+            </th>
+        </tr>
+    </table>
+    <div ng-app="myApp" ng-controller="Feedback" class="container-fluid" style="font-size:13px">
+        @* Use ng-controller *@
+
+
+        <table width="100%" class="table table-condensed table-hover table-striped table-bordered table-responsive-lg">
+            <tr>
+                <th class="AngularTableHeaderColor" style="vertical-align:bottom">
+                    <a href="" ng-click="changeSorting('subject')"><font style="color:black">Subject</font></a>
+                    <i class="fa fa-caret-left" ng-class="getIcon('subject')"></i>
+                </th>
+                <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                    <a href="" ng-click="changeSorting('customer_Name')"><font style="color:black">Customer Name</font></a>
+                    <i class="fa fa-caret-left" ng-class="getIcon('customer_Name')"></i>
+                </th>
+                <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                    <a href="" ng-click="changeSorting('user_Name')"><font style="color:black">User Name</font></a>
+                    <i class="fa fa-caret-left" ng-class="getIcon('user_Name')"></i>
+                </th>
+                
+                <th class="AngularTableHeaderColor" style="vertical-align:bottom">
+                    <a href="" ng-click="changeSorting('resolved')"><font style="color:black">Resolved</font></a>
+                    <i class="fa fa-caret-left" ng-class="getIcon('resolved')"></i>
+                </th>
+                <th class="AngularTableHeaderColor  d-none d-lg-table-cell" style="vertical-align:bottom">
+                    <a href="" ng-click="changeSorting('timeStamp')"><font style="color:black">TimeStamp</font></a>
+                    <i class="fa fa-caret-left" ng-class="getIcon('timeStamp')"></i>
+                </th>
+                <th style="text-align:right" class="AngularTableHeaderColor">
+                    @*<a href="@Url.Action("Create", "Feedback")" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> New Comment</a>*@
+                </th>
+
+
+            </tr>
+            <tr>
+                <td  style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.subject"></td>
+                <td class=" d-none d-lg-table-cell" style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.customer_Name"></td>
+                <td class=" d-none d-lg-table-cell" style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.user_Name"></td>
+
+                <td style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.resolved"></td>
+                <td class=" d-none d-lg-table-cell" style="padding:1px;height:20px;font-size:13px"></td>
+                <td></td>
+
+
+            </tr>
+            @*</table>
+            <table width="100%" class="table table-condensed table-hover table-striped ">*@
+
+        <tr ng-repeat="feedback in Feedback | filter:f | orderBy:sort.active:sort.descending">
+            @* Fetch All the Recipe record using ng-repeat *@
+
+            <td  style="height:15px;padding:1px;text-align:left">
+
+                <button style="padding:0px;text-align:left" ng-click="RedirectToEdit(feedback)" class="btn btn-link btn-sm">
+                    {{feedback.subject}}
+                    
+                </button><br />
+                <span ng-if="feedback.feedbackFiles.length > 0">{{feedback.feedbackFiles.length}} <i class="fa fa-images"></i></span>
+            </td>
+            <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{feedback.customer_Name}}</td>
+            <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{feedback.user_Name}}</td>
+            
+            <td style="height:15px;padding:1px;width:95px">
+                <div class="{{feedback.resolved == true ? 'AngularTrueResults' : 'AngularFalseResults' }}">
+                    {{feedback.resolved ? "T":"F"}}
+
+                </div>
+            </td>
+            <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{feedback.timeStamp | utcToLocal:"MMM dd yyyy hh:mm:ss"}}</td>
+
+            <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:75px">
+                @*<button ng-click="RedirectToEdit(feedback)" class="btn btn-outline-success AngularButtons">
+                    <i class="fa fa-pen"></i>
+                </button> |*@
+                <button ng-click="RedirectToDetails(feedback)" class="btn btn-outline-info AngularButtons">
+                    <i class="fa fa-clipboard"></i>
+                </button> |
+
+                <button ng-click="DelFeedback(feedback)" class="btn btn-outline-danger AngularButtons">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+
+        </table>
+    </div>
+

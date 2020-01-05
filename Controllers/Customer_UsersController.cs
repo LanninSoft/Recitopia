@@ -25,47 +25,50 @@ namespace Recitopia.Controllers
         // GET: Customer_Users
         public async Task<IActionResult> Index()
         {
-            //BUILD VIEW FOR ANGULARJS RENDERING
-            var query =
-               from t1 in _recitopiaDbContext.Customer_Users.AsQueryable()
-               join t2 in _recitopiaDbContext.AppUsers.AsQueryable() on t1.Id equals t2.Id into t2g
-               from t2 in t2g.DefaultIfEmpty()
-               join t3 in _recitopiaDbContext.Customers.AsQueryable() on t1.Customer_Id equals t3.Customer_Id into t3g
-               from t3 in t3g.DefaultIfEmpty()
-               select new Customer_Users()
-               {
-                   CU_Id = t1.CU_Id,
-                   Id = t1.Id,
-                   Customer_Id = t1.Customer_Id,
-                   Notes = t1.Notes,
-                   Customer_Name = t3.Customer_Name,
-                   User_Name = t2.FirstName + ' ' + t2.LastName
-               };
+          
+            var customerUsers =
+                await (from cu in _recitopiaDbContext.Customer_Users
+                join c in _recitopiaDbContext.Customers
+                on cu.Customer_Id equals c.Customer_Id
+                join au in _recitopiaDbContext.AppUsers
+                on cu.User_Id equals au.Id
+                orderby c.Customer_Name
+                select new Customer_Users
+                {
+                    Id = cu.Id,
+                    User_Id = cu.User_Id,
+                    Customer_Id = cu.Customer_Id,
+                    Notes = cu.Notes,
+                    Customer_Name = c.Customer_Name,
+                    User_Name = au.FullName
+                })
+                .ToListAsync();
 
-            return View(await query.ToListAsync());
+            return View(customerUsers);
         }
 
         [HttpGet]
-        public JsonResult GetData()
+        public async Task<JsonResult> GetData()
         {
-            //BUILD VIEW FOR ANGULARJS RENDERING
-            var query =
-               from t1 in _recitopiaDbContext.Customer_Users.AsQueryable()
-               join t2 in _recitopiaDbContext.AppUsers.AsQueryable() on t1.Id equals t2.Id into t2g
-               from t2 in t2g.DefaultIfEmpty()
-               join t3 in _recitopiaDbContext.Customers.AsQueryable() on t1.Customer_Id equals t3.Customer_Id into t3g
-               from t3 in t3g.DefaultIfEmpty()
-               select new Customer_Users()
-               {
-                   CU_Id = t1.CU_Id,
-                   Id = t1.Id,
-                   Customer_Id = t1.Customer_Id,
-                   Notes = t1.Notes,
-                   Customer_Name = t3.Customer_Name,
-                   User_Name = t2.FirstName + ' ' + t2.LastName
-               };
+            var customerUsers =
+                 await (from cu in _recitopiaDbContext.Customer_Users
+                 join c in _recitopiaDbContext.Customers
+                 on cu.Customer_Id equals c.Customer_Id
+                 join au in _recitopiaDbContext.AppUsers
+                 on cu.User_Id equals au.Id
+                 orderby c.Customer_Name
+                 select new Customer_Users
+                 {
+                     Id = cu.Id,
+                     User_Id = cu.User_Id,
+                     Customer_Id = cu.Customer_Id,
+                     Notes = cu.Notes,
+                     Customer_Name = c.Customer_Name,
+                     User_Name = au.FullName
+                 })
+                .ToListAsync();
 
-            List<Customer_Users> customerusers = query.ToList();
+            List<Customer_Users> customerusers = customerUsers;
 
             if (customerusers != null)
             {
@@ -83,28 +86,9 @@ namespace Recitopia.Controllers
             }
 
             var customer_Users = await _recitopiaDbContext.Customer_Users
-               .FirstOrDefaultAsync(m => m.CU_Id == id);
+               .FirstOrDefaultAsync(m => m.Id == id);
 
-            //BUILD VIEW FOR ANGULARJS RENDERING
-            //var customer_Users =
-            //   from t1 in db.Customer_Users.AsQueryable()
-            //   join t2 in db.AppUsers.AsQueryable() on t1.Id equals t2.Id into t2g
-            //   from t2 in t2g.Take(1).DefaultIfEmpty()
-            //   join t3 in db.Customers.AsQueryable() on t1.Customer_Id equals t3.Customer_Id into t3g
-            //   from t3 in t3g.Take(1).DefaultIfEmpty()
-            //   where t1.CU_Id == id
-            //   select new Customer_Users()
-            //   {
-            //       CU_Id = t1.CU_Id,
-            //       Id = t1.Id,
-            //       Customer_Id = t1.Customer_Id,
-            //       Notes = t1.Notes,
-            //       Customer_Name = t3.Customer_Name,
-            //       User_Name = t2.FirstName + ' ' + t2.LastName
-            //   };
-
-
-            if (customer_Users == null)
+           if (customer_Users == null)
             {
                 return NotFound();
             }
@@ -113,27 +97,25 @@ namespace Recitopia.Controllers
         }
 
         // GET: Customer_Users/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
 
-            var Customers = _recitopiaDbContext.Customers;
-
-            IEnumerable<SelectListItem> appUserCustomers = _recitopiaDbContext.Customers.Select(c => new SelectListItem
+           
+            IEnumerable<SelectListItem> appUserCustomers = await _recitopiaDbContext.Customers.OrderBy(c => c.Customer_Name).Select(c => new SelectListItem
             {
                 Value = c.Customer_Id.ToString(),
                 Text = c.Customer_Name
 
-            });
+            }).ToListAsync();
+
             ViewBag.Customers = appUserCustomers;
 
-            var appUsers = _recitopiaDbContext.AppUsers;
-
-            IEnumerable<SelectListItem> appUserList = _recitopiaDbContext.AppUsers.Select(c => new SelectListItem
+            IEnumerable<SelectListItem> appUserList = await _recitopiaDbContext.AppUsers.OrderBy(c => c.LastName).Select(c => new SelectListItem
             {
                 Value = c.Id.ToString(),
-                Text = c.FirstName + ' ' + c.LastName
+                Text = (c.LastName + ", " + c.FirstName).ToString()
 
-            });
+            }).ToListAsync();
             ViewBag.AppUsers = appUserList;
 
 
@@ -149,9 +131,52 @@ namespace Recitopia.Controllers
         {
             if (ModelState.IsValid)
             {
-                _recitopiaDbContext.Add(customer_Users);
-                await _recitopiaDbContext.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                //Check if user customer relationship exists already.  if so, let user know they cannot add
+                var checkExistence = await _recitopiaDbContext.Customer_Users.Where(m => m.Customer_Id == customer_Users.Customer_Id && m.User_Id == customer_Users.User_Id).SingleOrDefaultAsync();
+
+                if (checkExistence != null)
+                {
+                    ViewBag.ErrorMessage = "This User is already assigned to this Customer. (" + checkExistence.User_Name +"/" + checkExistence.Customer_Name + ")";
+
+                    IEnumerable<SelectListItem> appUserCustomers = await _recitopiaDbContext.Customers.OrderBy(c => c.Customer_Name).Select(c => new SelectListItem
+                    {
+                        Value = c.Customer_Id.ToString(),
+                        Text = c.Customer_Name
+
+                    }).ToListAsync();
+
+                    ViewBag.Customers = appUserCustomers;
+
+                    IEnumerable<SelectListItem> appUserList = await _recitopiaDbContext.AppUsers.OrderBy(c => c.LastName).Select(c => new SelectListItem
+                    {
+                        Value = c.Id.ToString(),
+                        Text = (c.LastName + ", " + c.FirstName).ToString()
+
+                    }).ToListAsync();
+                    ViewBag.AppUsers = appUserList;
+
+                    return View(customer_Users);
+                }
+                else
+                {
+                    var addedUser = await _recitopiaDbContext.AppUsers.SingleAsync(m => m.Id == customer_Users.User_Id);
+                    var addedCustomer = await _recitopiaDbContext.Customers.SingleAsync(m => m.Customer_Id == customer_Users.Customer_Id);
+                    //get customer_guid
+
+
+                    customer_Users.Customer_Name = addedCustomer.Customer_Name;
+                    customer_Users.Customer_Guid = addedCustomer.Customer_Guid;
+                    customer_Users.User_Name = addedUser.FullName;
+
+                    _recitopiaDbContext.Add(customer_Users);
+
+                    await _recitopiaDbContext.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
+                }
+                
+                
             }
             return View(customer_Users);
         }
@@ -164,32 +189,40 @@ namespace Recitopia.Controllers
                 return NotFound();
             }
 
-            var customer_Users = await _recitopiaDbContext.Customer_Users.FindAsync(id);
+            var customerUsers =
+                 await (from cu in _recitopiaDbContext.Customer_Users
+                        join c in _recitopiaDbContext.Customers
+                        on cu.Customer_Id equals c.Customer_Id
+                        join au in _recitopiaDbContext.AppUsers
+                        on cu.User_Id equals au.Id
+                        where cu.Id == id
+                        select new Customer_Users
+                        {
+                            Id = cu.Id,
+                            User_Id = cu.User_Id,
+                            Customer_Id = cu.Customer_Id,
+                            Notes = cu.Notes,
+                            Customer_Name = c.Customer_Name,
+                            User_Name = au.FullName,
+                            Customer_Guid = c.Customer_Guid,
+                        })
+                .SingleAsync();            
+
+            ViewBag.AppUsers = customerUsers;
+
+            var customer_Users = await _recitopiaDbContext.Customer_Users
+                .SingleAsync(m => m.Id == id);
 
             if (customer_Users == null)
             {
                 return NotFound();
             }
 
-            var Customers = _recitopiaDbContext.Customers;
+            ViewBag.Customers = new SelectList(await _recitopiaDbContext.Customers
+                .OrderBy(m => m.Customer_Name)
+                .ToListAsync(), "Customer_Id", "Customer_Name");
 
-            IEnumerable<SelectListItem> appUserCustomers = _recitopiaDbContext.Customers.Select(c => new SelectListItem
-            {
-                Value = c.Customer_Id.ToString(),
-                Text = c.Customer_Name
-            });
-
-            ViewBag.Customers = appUserCustomers;
-
-            var appUsers = _recitopiaDbContext.AppUsers;
-
-            IEnumerable<SelectListItem> appUserList = _recitopiaDbContext.AppUsers.Select(c => new SelectListItem
-            {
-                Value = c.Id.ToString(),
-                Text = c.FirstName + ' ' + c.LastName
-            });
-
-            ViewBag.AppUsers = appUserList;
+            
 
             return View(customer_Users);
         }
@@ -202,16 +235,50 @@ namespace Recitopia.Controllers
         public async Task<IActionResult> Edit(int id, [FromForm] Customer_Users customer_Users)
         {
            
-            if (customer_Users.CU_Id != 0)
+            if (customer_Users.Id != 0)
             {
                 try
                 {
+                    //get and set customer name for new choice
+                    var customerName = await _recitopiaDbContext.Customers.Where(m => m.Customer_Id == customer_Users.Customer_Id).SingleAsync();
+
+                    customer_Users.Customer_Name = customerName.Customer_Name;
+                    customer_Users.Customer_Guid = customerName.Customer_Guid;
+
                     _recitopiaDbContext.Update(customer_Users);
+
                     await _recitopiaDbContext.SaveChangesAsync();
+
+                    //check to see if this created a duplicate entry, if so, remove the duplicate.  There might be a better way here.
+                    var checkDuplicates = await _recitopiaDbContext.Customer_Users
+                        .Where(m => m.Customer_Id == customer_Users.Customer_Id && m.User_Id == customer_Users.User_Id)
+                        .ToListAsync();
+                    if (checkDuplicates.Count() > 1)
+                    {
+                        var countIt = 1;
+                        foreach (Customer_Users customerUser in checkDuplicates)
+                        {
+                            //ignore first pass to keep first record
+                            if (countIt > 1)
+                            {
+                                var recordToDelete = await _recitopiaDbContext.Customer_Users.FindAsync(customerUser.Id);
+
+                                _recitopiaDbContext.Remove(recordToDelete);
+
+                                await _recitopiaDbContext.SaveChangesAsync();
+
+                            }
+
+                            countIt += 1;
+                        }
+
+                    }
+
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!await Customer_UsersExists(customer_Users.CU_Id))
+                    if (!await Customer_UsersExists(customer_Users.Id))
                     {
                         return NotFound();
                     }
@@ -236,9 +303,8 @@ namespace Recitopia.Controllers
             {
                 return NotFound();
             }
-
-            var customer_Users = await _recitopiaDbContext.Customer_Users
-                .FirstOrDefaultAsync(m => m.CU_Id == id);
+            
+            var customer_Users = await _recitopiaDbContext.Customer_Users.SingleAsync(m => m.Id == id);
             if (customer_Users == null)
             {
                 return NotFound();
@@ -250,17 +316,21 @@ namespace Recitopia.Controllers
         // POST: Customer_Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, [FromForm] Customer_Users customer_Users)
         {
-            var customer_Users = await _recitopiaDbContext.Customer_Users.FindAsync(id);
-            _recitopiaDbContext.Customer_Users.Remove(customer_Users);
+            //var customer_User = await _recitopiaDbContext.Customer_Users.SingleAsync(m => m.CU_Id == id);
+
+            var custUser = await _recitopiaDbContext.Customer_Users.SingleAsync(m => m.Id == customer_Users.Id);
+
+            _recitopiaDbContext.Customer_Users.Remove(custUser);
+
             await _recitopiaDbContext.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private async Task<bool> Customer_UsersExists(int id)
         {
-            return await _recitopiaDbContext.Customer_Users.AnyAsync(e => e.CU_Id == id);
+            return await _recitopiaDbContext.Customer_Users.AnyAsync(e => e.Id == id);
         }
     }
 }

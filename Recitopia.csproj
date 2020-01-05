@@ -4,14 +4,43 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>aspnet-Recitopia-1E3915D3-539E-4759-9F05-2F4C84525BC2</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20191215234800_test.cs" />
+    <Compile Remove="Data\Migrations\20191215234800_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191219143205_UpdateModel2.cs" />
+    <Compile Remove="Data\Migrations\20191219143205_UpdateModel2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191219165330_differencesPart1.cs" />
+    <Compile Remove="Data\Migrations\20191219165330_differencesPart1.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191227105410_AddCustomerGUID.cs" />
+    <Compile Remove="Data\Migrations\20191227105410_AddCustomerGUID.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191227220609_cleanupcustIdRemoval.cs" />
+    <Compile Remove="Data\Migrations\20191227220609_cleanupcustIdRemoval.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191229134148_AddImageUploadFeedbackModel.cs" />
+    <Compile Remove="Data\Migrations\20191229134148_AddImageUploadFeedbackModel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191229134432_AddImageUploadFeedbackModel.cs" />
+    <Compile Remove="Data\Migrations\20191229134432_AddImageUploadFeedbackModel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191229135509_AddImageTableDuex.cs" />
+    <Compile Remove="Data\Migrations\20191229135509_AddImageTableDuex.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191229140833_addFeedbackFiles.cs" />
+    <Compile Remove="Data\Migrations\20191229140833_addFeedbackFiles.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191229142315_test.cs" />
+    <Compile Remove="Data\Migrations\20191229142315_test.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Controllers\FeedbackController.cs" />
+  </ItemGroup>
   
   <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="12.2.3" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.0">
       <PrivateAssets>all</PrivateAssets>
@@ -19,5 +48,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
+    <PackageReference Include="Moment.js" Version="2.24.0" />
   </ItemGroup>
 </Project>

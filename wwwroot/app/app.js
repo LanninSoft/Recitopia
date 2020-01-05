@@ -1,7 +1,23 @@
 ﻿(function () {
     'use strict';
-    var app = angular.module('myApp', []);
-   
+    var app = angular.module('myApp', [])
+    .filter('utcToLocal', utcToLocal);
+    //CONVERTS UTC TIME TO LOCAL
+    function utcToLocal($filter) {
+        return function (utcDateString, format) {
+            if (!utcDateString) {
+                return;
+            }
+
+            // append 'Z' to the date string to indicate UTC time if the timezone isn't already specified
+            if (utcDateString.indexOf('Z') === -1 && utcDateString.indexOf('+') === -1) {
+                utcDateString += 'Z';
+            }
+
+            return $filter('date')(utcDateString, format);
+        };
+    }
+
     //RECIPE CONTROLLER
     app.controller('Recipes', function ($scope, $http) {
 
@@ -17,6 +33,11 @@
             });
 
         //Redrect index form to edit form with parameter
+        //Redrect index form to details form with parameter
+        $scope.RedirectToCopy = function (recipes) {
+
+            window.location.href = '/Recipes/CreateCopy/' + recipes.recipe_Id;
+        };
         $scope.RedirectToEdit = function (recipes) {
 
             window.location.href = '/Recipes/Edit/' + recipes.recipe_Id;
@@ -83,7 +104,7 @@
        
         $scope.$watch('Recipe_Id', function () {
 
-            $http.get("/Recipe_Ingredients/GetData?recipe_Id=" + $scope.Recipe_Id)
+            $http.get("/Recipe_Ingredients/GetData?recipeId=" + $scope.Recipe_Id)
                 .then(function (response) {
                     // First function handles success
 
@@ -337,7 +358,7 @@
         };
 
         //Redrect index form to delete form with parameter
-        $scope.DelIngredientNutrient = function (IngredientNutrition) {
+        $scope.DelNutrient = function (IngredientNutrition) {
 
             window.location.href = '/Ingredient_Nutrients/Delete/?id=' + IngredientNutrition.id;
         };
@@ -847,9 +868,9 @@
         };
 
         //Redrect index form to details form with parameter
-        $scope.RedirectToDetails = function (customers) {
+        $scope.RedirectToCopy = function (customers) {
 
-            window.location.href = '/Customers/Details/' + customers.customer_Id;
+            window.location.href = '/Customers/CopyCustomer/' + customers.customer_Id;
         };
         app.filter('YesNo', function () {
             return function (text) {
@@ -1010,20 +1031,20 @@
         //Redrect index form to edit form with parameter
         $scope.RedirectToEdit = function (customerusers) {
 
-            window.location.href = '/Customer_Users/Edit/?id=' + customerusers.cU_Id;
+            window.location.href = '/Customer_Users/Edit/?id=' + customerusers.id;
         };
 
         //Redrect index form to delete form with parameter
         $scope.DelCustomerUser = function (customerusers) {
 
-            window.location.href = '/Customer_Users/Delete/?id=' + customerusers.cU_Id;
+            window.location.href = '/Customer_Users/Delete/?id=' + customerusers.id;
         };
 
         //Redrect index form to details form with parameter
         $scope.RedirectToDetails = function (customerusers) {
 
 
-            window.location.href = '/Customer_Users/Details/?id=' + customerusers.cU_Id;
+            window.location.href = '/Customer_Users/Details/?id=' + customerusers.id;
         };
         
         app.filter('YesNo', function () {
@@ -1032,6 +1053,134 @@
             }
         })
 
+
+    });
+    //FEEDBACK CONTROLLER
+    app.controller('Feedback', function ($scope, $http) {
+
+        $http.get("/Feedback/GetData")
+            .then(function (response) {
+                // First function handles success
+                $scope.Feedback = response.data;
+
+            }, function (response) {
+                // Second function handles error
+                    $scope.Feedback = "Something went wrong";
+
+            });
+
+        //Redrect index form to edit form with parameter
+        $scope.RedirectToEdit = function (feedback) {
+
+            window.location.href = '/Feedback/Edit/' + feedback.id;
+        };
+
+        //Redrect index form to delete form with parameter
+        $scope.DelFeedback = function (feedback) {
+
+            window.location.href = '/Feedback/Delete/' + feedback.id;
+        };
+
+        //Redrect index form to details form with parameter
+        $scope.RedirectToDetails = function (feedback) {
+
+            window.location.href = '/Feedback/Details/' + feedback.id;
+        };
+        app.filter('YesNo', function () {
+            return function (text) {
+                return text ? "T" : "F";
+            }
+        })
+        //SORTING ICON CONTROL
+        $scope.sort = {
+            active: '',
+            descending: undefined
+        }
+
+        $scope.changeSorting = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                sort.descending = !sort.descending;
+
+            } else {
+                sort.active = column;
+                sort.descending = false;
+            }
+        };
+      
+        $scope.getIcon = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                return sort.descending
+                    ? 'fa fa-caret-up'
+                    : 'fa fa-caret-down';
+            }
+
+            return 'fa fa-caret-left';
+        }
+
+    });
+    //FEEDBACK HISTORY CONTROLLER
+    app.controller('FeedbackHistory', function ($scope, $http) {
+
+        $http.get("/Feedback/GetDataHistory")
+            .then(function (response) {
+                // First function handles success
+                $scope.Feedback = response.data;
+
+            }, function (response) {
+                // Second function handles error
+                $scope.Feedback = "Something went wrong";
+
+            });
+
+        
+
+        //Redrect index form to details form with parameter
+        $scope.RedirectToDetails = function (feedback) {
+
+            window.location.href = '/Feedback/FeedBackUserHistoryDetails/' + feedback.id;
+        };
+        app.filter('YesNo', function () {
+            return function (text) {
+                return text ? "T" : "F";
+            }
+        })
+        //SORTING ICON CONTROL
+        $scope.sort = {
+            active: '',
+            descending: undefined
+        }
+
+        $scope.changeSorting = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                sort.descending = !sort.descending;
+
+            } else {
+                sort.active = column;
+                sort.descending = false;
+            }
+        };
+
+        $scope.getIcon = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                return sort.descending
+                    ? 'fa fa-caret-up'
+                    : 'fa fa-caret-down';
+            }
+
+            return 'fa fa-caret-left';
+        }
 
     });
 })();

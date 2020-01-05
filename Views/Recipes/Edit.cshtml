@@ -2,14 +2,7 @@
 
 @{
     ViewBag.Title = "Edit";
- }
-
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @Html.HiddenFor(model => model.Recipe_Id)
+}
     <table width="100%">
         <tr>
             <th>
@@ -21,101 +14,65 @@
                 @ViewBag.Recipe_Name
             </th>
         </tr>
-        <tr>
-            <td style="font-weight:bold">
-                Recipe Name
-            </td>
-        </tr>
-        <tr>
-            <td>
-                @Html.EditorFor(model => model.Recipe_Name, new { htmlAttributes = new { @class = "form-control", style = "font-size:13px;height:25px"  } })
-                @Html.ValidationMessageFor(model => model.Recipe_Name, "", new { @class = "text-danger" })
-            </td>
-        </tr>
-        <tr>
-            <td style="font-weight:bold">
-                Category
-            </td>
-        </tr>
-        <tr>
-            <td>
-                @Html.DropDownList("Category_Id", null, htmlAttributes: new { @class = "form-control", style = "font-size:13px;height:35px" })
-                @Html.ValidationMessageFor(model => model.Category_Id, "", new { @class = "text-danger" })
-            </td>
-        </tr>
-        <tr>
-            <td style="font-weight:bold">
-                Serving Size
-            </td>
-        </tr>
-        <tr>
-            <td>
-                @Html.DropDownList("SS_Id", null, htmlAttributes: new { @class = "form-control", style = "font-size:13px;height:35px" })
-                @Html.ValidationMessageFor(model => model.SS_Id, "", new { @class = "text-danger" })
-            </td>
-        </tr>
-        <tr>
-            <td style="font-weight:bold">
-                Labor Cost
-            </td>
-        </tr>
-        <tr>
-            <td>
-                @Html.EditorFor(model => model.LaborCost, new { htmlAttributes = new { @class = "form-control", style = "font-size:13px;height:25px" } })
-                @Html.ValidationMessageFor(model => model.LaborCost, "", new { @class = "text-danger" })
-            </td>
-        </tr>
-        <tr>
-            <td style="font-weight:bold">
-                Gluten Free
-            </td>
-        </tr>
-        <tr>
-            <td>
-                @Html.EditorFor(model => model.Gluten_Free)
-                @Html.ValidationMessageFor(model => model.Gluten_Free, "", new { @class = "text-danger" })
-            </td>
-        </tr>
-        <tr>
-            <td style="font-weight:bold">
-                SKU
-            </td>
-        </tr>
-        <tr>
-            <td>
-                @Html.EditorFor(model => model.SKU, new { htmlAttributes = new { @class = "form-control", style = "font-size:13px;height:25px" } })
-                @Html.ValidationMessageFor(model => model.SKU, "", new { @class = "text-danger" })
-            </td>
-        </tr>
-        <tr>
-            <td style="font-weight:bold">
-                UPC
-            </td>
-        </tr>
-        <tr>
-            <td>
-                @Html.EditorFor(model => model.UPC, new { htmlAttributes = new { @class = "form-control", style = "font-size:13px;height:25px" } })
-                @Html.ValidationMessageFor(model => model.UPC, "", new { @class = "text-danger" })
-            </td>
-        </tr>
-        <tr>
-            <td style="font-weight:bold">
-                Notes
-            </td>
-        </tr>
-        <tr>
-            <td>
-                @Html.TextAreaFor(model => model.Notes,   new { @class = "form-control", @cols = "100", @rows = "4", @style="width:100%;font-size:13px"})
-                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input type="submit" value="Save" class="btn alert-success" />                
-            </td>
-        </tr>        
-    </table>
-}
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+        </table>
+        <div class="row" >
+            <div class="col-md-4" >
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Recipe_Id" />
+                    <div class="form-group">
+                        <label asp-for="Recipe_Name" class="control-label"></label>
+                        <input asp-for="Recipe_Name" class="form-control" />
+                        <span asp-validation-for="Recipe_Name" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Category_Id" class="control-label"></label>
+                        <select asp-for="Category_Id"
+                                asp-items="ViewBag.Category_Id">
+                        </select>
+                        <span asp-validation-for="Category_Id" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="SS_Id" class="control-label"></label>
+                        <select asp-for="SS_Id"
+                                asp-items="ViewBag.SS_Id">
+                        </select>
+                        <span asp-validation-for="SS_Id" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="LaborCost" class="control-label"></label>
+                        <input asp-for="LaborCost" class="form-control" />
+                        <span asp-validation-for="LaborCost" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="Gluten_Free" /> @Html.DisplayNameFor(model => model.Gluten_Free)
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="SKU" class="control-label"></label>
+                        <input asp-for="SKU" class="form-control" />
+                        <span asp-validation-for="SKU" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="UPC" class="control-label"></label>
+                        <input asp-for="UPC" class="form-control" />
+                        <span asp-validation-for="UPC" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Notes" class="control-label"></label>
+                        <textarea asp-for="Notes" class="form-control"></textarea>
+                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn alert-success" />
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>

@@ -5,9 +5,9 @@ namespace Recitopia.Models
 {
     public partial class View_Nutrition_Panel
     {
-        public long? NID { get; set; }
+        
         public int Recipe_Id { get; set; }
-        public int Customer_Id { get; set; }
+        public string Customer_Guid { get; set; }
         public string Recipe_Name { get; set; }
         public int? Serving_Size { get; set; }
         public int? Ingred_Id { get; set; }

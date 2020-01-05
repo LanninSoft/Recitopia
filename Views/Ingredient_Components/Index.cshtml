@@ -24,7 +24,7 @@
                             <i class="fa fa-caret-left" ng-class="getIcon('component_Name')"></i>
                         </th>
                         
-                        <th style="text-align:right"  class="AngularTableHeaderColor"> <a href="@Url.Action("Create", "Ingredient_Components", new { IngredID = ViewBag.IngredNameID })" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> Add Allergen</a></th>
+                        <th style="text-align:right"  class="AngularTableHeaderColor"> <a href="@Url.Action("Create", "Ingredient_Components", new { ingredID = ViewBag.IngredNameID })" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> Add Allergen</a></th>
 
                     </tr>
                     <tr>
@@ -62,7 +62,7 @@
     </table>
 
     <div ng-if="(IngredientComponents|filter:query).length > 0">
-        <a href="@Url.Action("Create", "Ingredient_Components", new { IngredID = ViewBag.IngredNameID })" class="btn alert-success" role="button"><i class="fa fa-plus"></i> Add Allergen</a>
+        <a href="@Url.Action("Create", "Ingredient_Components", new { ingredID = ViewBag.IngredNameID })" class="btn alert-success" role="button"><i class="fa fa-plus"></i> Add Allergen</a>
     </div>
 </div>
     

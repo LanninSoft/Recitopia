@@ -32,7 +32,7 @@
             </th>
 
             <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
-                <a href="" ng-click="changeSorting('package')"><font style="color:black">Panel</font></a>
+                <a href="" ng-click="changeSorting('package')"><font style="color:black">Packaging</font></a>
                 <i class="fa fa-caret-left" ng-class="getIcon('package')"></i>
             </th>
             <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
@@ -60,7 +60,7 @@
         <td style="height:15px;padding:1px;">{{ingredient.ingred_name}}</td>
         <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;width:80px">{{ingredient.cost_per_lb}}</td>
         <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;width:75px">{{ingredient.cost}}</td>
-        <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;width:75px">{{ingredient.package ? "Y":""}}</td>
+        <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;width:100px">{{ingredient.package ? "Y":""}}</td>
         <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;width:150px">{{ingredient.vendor_Name}}</td>
 
 
@@ -85,7 +85,9 @@
     </table>
 </div>
 <div>
-    <a href="@Url.Action("Create", "Ingredients")" class="btn alert-success" role="button"><i class="fa fa-plus"></i> New Ingredient</a>
+    @*<a href="@Url.Action("Create", "Ingredients")" class="btn alert-success" role="button"><i class="fa fa-plus"></i> New Ingredient</a>*@
+    <a asp-action="uploadIngredientFile" class="btn alert-success" role="button"><i class="fa fa-upload"></i> Import Ingredients (CSV)</a>
+    <a asp-action="DownloadIngredients" class="btn alert-success" role="button"><i class="fa fa-download"></i> Export Ingredients (CSV)</a>
 </div>
 
 

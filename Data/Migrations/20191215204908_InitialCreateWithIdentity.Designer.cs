@@ -326,8 +326,7 @@ namespace Recitopia.Data.Migrations
                     b.Property<string>("Address2")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("nvarchar(450)");
+                    
 
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
@@ -355,7 +354,7 @@ namespace Recitopia.Data.Migrations
 
                     b.HasKey("Customer_Id");
 
-                    b.HasIndex("AppUserId");
+                   
 
                     b.ToTable("Customers");
                 });
@@ -797,12 +796,7 @@ namespace Recitopia.Data.Migrations
                         .HasForeignKey("CustomersCustomer_Id");
                 });
 
-            modelBuilder.Entity("Recitopia.Models.Customers", b =>
-                {
-                    b.HasOne("Recitopia.Models.AppUser", null)
-                        .WithMany("Customers")
-                        .HasForeignKey("AppUserId");
-                });
+         
 
             modelBuilder.Entity("Recitopia.Models.Ingredient", b =>
                 {

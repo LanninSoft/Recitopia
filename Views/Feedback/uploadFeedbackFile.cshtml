@@ -1,0 +1,70 @@
+﻿@model Recitopia.Models.FeedbackFiles
+
+@{
+    ViewData["Title"] = "uploadFeedbackFile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <font style="color:red">@ViewBag.ErrorMessage</font>
+}
+
+<table width="100%" class="table-borderless">
+    <tr>
+        <th>
+            File Upload
+        </th>
+    </tr>
+    <tr>
+        <td style="font-size:30px;background-color:blanchedalmond">
+            @Model.FeedbackSubject
+        </td>
+    </tr>
+
+</table>
+<div class="row">
+    <div class="col-md-4">
+        <form name="form1" method="post" enctype="multipart/form-data" asp-action="uploadFeedbackFile">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="FeedbackId" />
+            <input type="hidden" asp-for="FeedbackSubject" />
+            <div class="form-group">
+                <font style="font-weight:bold"><label asp-for="FileName" class="control-label"></label></font>
+                <input asp-for="FileName" required class="form-control" />
+                <span asp-validation-for="FileName" class="text-danger"></span>
+            </div>
+            @*<div class="form-group">
+                <font style="font-weight:bold">
+                    <label asp-for="Image" class="control-label"></label>
+                </font>
+                <input type="file" accept="image/*" required asp-for="Image" name="File" id="Fileinput" class="form-control btn btn-default" />
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>*@
+            <div class="custom-file form-control">
+                <input type="file" accept="image/*" required asp-for="Image" name="File"  class="custom-file-input form-control" id="customFile">
+                <label class="custom-file-label" for="customFile">Choose file</label>
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
+           <div>
+               &nbsp;
+           </div>
+
+            <div class="form-group">
+                <input type="submit" value="Upload" class="btn alert-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script>
+// Add the following code if you want the name of the file appear on select
+$(".custom-file-input").on("change", function() {
+  var fileName = $(this).val().split("\\").pop();
+  $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+});
+</script>
