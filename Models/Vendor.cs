@@ -51,5 +51,6 @@ namespace Recitopia.Models
         //public int Customer_Id { get; set; }
         public string Customer_Guid { get; set; }
         public virtual ICollection<Ingredient> Ingredient { get; set; }
+        public virtual ICollection<Packaging> Packaging { get; set; }
     }
 }

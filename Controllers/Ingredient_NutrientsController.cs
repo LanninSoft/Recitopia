@@ -27,19 +27,21 @@ namespace Recitopia.Controllers
         {
             
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+
             if (customerGuid == null)
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
 
-            var ingredient_Nutrients = await _recitopiaDbContext.Ingredient_Nutrients.Include(i => i.Ingredients).Include(n => n.Nutrition).Where(i=> i.Customer_Guid == customerGuid).ToListAsync();
+            var ingredient_Nutrients = await _recitopiaDbContext.Ingredient_Nutrients
+                .Include(i => i.Ingredients)
+                .Include(n => n.Nutrition)
+                .Where(i => i.Ingred_Id == IngredID && i.Customer_Guid == customerGuid)
+                .OrderBy(i => i.Nutrition.OrderOnNutrientPanel)
+                .ThenBy(i => i.Nutrition.Nutrition_Item)
+                .ToListAsync();
 
-            //Filter down to id looking for
-            var Ingred_nut = ingredient_Nutrients.Where(i => i.Ingred_Id == IngredID && i.Customer_Guid == customerGuid);
-
-            //Sort
-            var Ingred_nut2 = Ingred_nut.OrderBy(i => i.Nutrition.OrderOnNutrientPanel);
-
+            
             //get Ingred name from db and pass in viewbag
             Ingredient ingredient = await _recitopiaDbContext.Ingredient.FindAsync(IngredID);
 
@@ -48,9 +50,36 @@ namespace Recitopia.Controllers
 
             ViewBag.IngredNameID = IngredID;
 
-            return View(Ingred_nut2.ToList());
+            return View(ingredient_Nutrients.ToList());
         }
+        [HttpGet]
+        public async Task<JsonResult> GetData(int ingredId)
+        {
 
+            //BUILD VIEW FOR ANGULARJS RENDERING
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+            var ingredientNutrients = await _recitopiaDbContext.Ingredient_Nutrients
+              .Include(ri => ri.Ingredients)
+              .Include(ri => ri.Nutrition)
+              .Where(ri => ri.Customer_Guid == customerGuid && ri.Ingred_Id == ingredId)
+              .OrderBy(ri => ri.Nutrition.OrderOnNutrientPanel)
+              .ThenBy(i => i.Nutrition.Nutrition_Item)
+              .Select(ri => new View_Angular_Ingredient_Nutrients_Details()
+              {
+                  Id = ri.Id,
+                  Customer_Guid = ri.Customer_Guid,
+                  Ingred_Id = ri.Ingred_Id,
+                  Ingred_name = ri.Ingredients.Ingred_name,
+                  Nutrition_Item_Id = ri.Nutrition_Item_Id,
+                  Nutrition_Item = ri.Nutrition.Nutrition_Item,
+                  Nut_per_100_grams = ri.Nut_per_100_grams
+              })
+              .ToListAsync();
+
+            return ingredientNutrients != null
+                ? Json(ingredientNutrients)
+                : Json(new { Status = "Failure" });
+        }
         // GET: Ingredient_Nutrients/Details/5
         public async Task<ActionResult> Details(int? id)
         {
@@ -207,33 +236,7 @@ namespace Recitopia.Controllers
             ViewBag.Nutrition_Item_Id = new SelectList(await _recitopiaDbContext.Nutrition.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Nutrition_Item).ToListAsync(), "Nutrition_Item_Id", "Nutrition_Item", ingredient_Nutrients.Nutrition_Item_Id);
             return View(ingredient_Nutrients);
         }
-        [HttpGet]
-        public async Task<JsonResult> GetData(int ingredId)
-        {
-
-            //BUILD VIEW FOR ANGULARJS RENDERING
-            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
-            var ingredientNutrients = await _recitopiaDbContext.Ingredient_Nutrients
-              .Include(ri => ri.Ingredients)
-              .Include(ri => ri.Nutrition)
-              .Where(ri => ri.Customer_Guid == customerGuid && ri.Ingred_Id == ingredId)
-              .OrderBy(ri => ri.Nutrition.Nutrition_Item)
-              .Select(ri => new View_Angular_Ingredient_Nutrients_Details()
-              {
-                  Id = ri.Id,
-                  Customer_Guid = ri.Customer_Guid,
-                  Ingred_Id = ri.Ingred_Id,
-                  Ingred_name = ri.Ingredients.Ingred_name,
-                  Nutrition_Item_Id = ri.Nutrition_Item_Id,
-                  Nutrition_Item = ri.Nutrition.Nutrition_Item,
-                  Nut_per_100_grams = ri.Nut_per_100_grams
-              })
-              .ToListAsync();
-            
-            return ingredientNutrients != null
-                ? Json(ingredientNutrients)
-                : Json(new { Status = "Failure" });
-        }
+       
 
         //UPDATE FROM ANGULAR
         [HttpPost]

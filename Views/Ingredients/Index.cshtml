@@ -31,10 +31,7 @@
                 <i class="fa fa-caret-left" ng-class="getIcon('cost')"></i>
             </th>
 
-            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
-                <a href="" ng-click="changeSorting('package')"><font style="color:black">Packaging</font></a>
-                <i class="fa fa-caret-left" ng-class="getIcon('package')"></i>
-            </th>
+            
             <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
                 <a href="" ng-click="changeSorting('vendor_Name')"><font style="color:black">Vendor</font></a>
                 <i class="fa fa-caret-left" ng-class="getIcon('vendor_Name')"></i>
@@ -48,7 +45,7 @@
             <td style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.ingred_name"></td>
             <td class="d-none d-lg-table-cell" style="padding:1px;height:20px;font-size:13px"></td>
             <td class="d-none d-lg-table-cell" style="padding:1px;height:20px;font-size:13px"></td>
-            <td class="d-none d-lg-table-cell" style="padding:1px;height:20px;font-size:13px"></td>
+            
             <td class="d-none d-lg-table-cell" style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.vendor_Name"></td>
             <td > </td>
 
@@ -60,7 +57,7 @@
         <td style="height:15px;padding:1px;">{{ingredient.ingred_name}}</td>
         <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;width:80px">{{ingredient.cost_per_lb}}</td>
         <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;width:75px">{{ingredient.cost}}</td>
-        <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;width:100px">{{ingredient.package ? "Y":""}}</td>
+      
         <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;width:150px">{{ingredient.vendor_Name}}</td>
 
 

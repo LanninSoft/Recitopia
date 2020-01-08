@@ -1,0 +1,52 @@
+﻿@model Recitopia.Models.Recipe_Packaging
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>Recipe_Packaging</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Recipe_Id" class="control-label"></label>
+                <input asp-for="Recipe_Id" class="form-control" />
+                <span asp-validation-for="Recipe_Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Package_Id" class="control-label"></label>
+                <input asp-for="Package_Id" class="form-control" />
+                <span asp-validation-for="Package_Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Weight_g" class="control-label"></label>
+                <input asp-for="Weight_g" class="form-control" />
+                <span asp-validation-for="Weight_g" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Amount" class="control-label"></label>
+                <input asp-for="Amount" class="form-control" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Customer_Guid" class="control-label"></label>
+                <input asp-for="Customer_Guid" class="form-control" />
+                <span asp-validation-for="Customer_Guid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

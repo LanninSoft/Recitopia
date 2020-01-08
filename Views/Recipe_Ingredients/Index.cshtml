@@ -15,7 +15,7 @@
 <div ng-app="myApp" ng-controller="RecipeIngredients" ng-init="Recipe_Id=(@ViewBag.RecipeNameID)" class="container-fluid" style="font-size:13px">
     @* Use ng-controller *@
       
-    <table style="width:75%">
+    <table >
         <tr>
             <td>
                 <div ng-if="(Ingredients|filter:query).length > 0">

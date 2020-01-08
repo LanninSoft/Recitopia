@@ -26,6 +26,12 @@
     <Compile Remove="Data\Migrations\20191229140833_addFeedbackFiles.Designer.cs" />
     <Compile Remove="Data\Migrations\20191229142315_test.cs" />
     <Compile Remove="Data\Migrations\20191229142315_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200107191146_PackagingTables.cs" />
+    <Compile Remove="Data\Migrations\20200107191146_PackagingTables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200107192136_PackagingTables.cs" />
+    <Compile Remove="Data\Migrations\20200107192136_PackagingTables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200108001427_PackagingTablesDUEX.cs" />
+    <Compile Remove="Data\Migrations\20200108001427_PackagingTablesDUEX.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

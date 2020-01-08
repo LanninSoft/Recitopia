@@ -99,7 +99,7 @@ body {
     background-attachment: fixed;
     /* This is what makes the background image rescale based
              on the container's size */
-    background-size: cover;
+    background-size:cover;
     /* Set a background color that will be displayed
              while the background image is loading */
     background-color: #f2f2f2;
@@ -107,7 +107,7 @@ body {
 
 
 /*==================================================
- * Effect 8
+ * Effect 8 - MAIN BODY DIV
  * ===============================================*/
 .effect8 {
     position: relative;
