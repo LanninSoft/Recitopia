@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/tech0486/Recitopia/_apis/build/status/LanninSoft.Recitopia?branchName=master)](https://dev.azure.com/tech0486/Recitopia/_build/latest?definitionId=2&branchName=master)
+
 # Recitopia
 
 Recitopia allows Customers to Create/Manage recipes, associate Ingredients, Nutrients and Allergens to get a complete Recipe Nutrition Panel and Cost Breakdown.
