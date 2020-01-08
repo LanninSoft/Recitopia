@@ -129,11 +129,9 @@ namespace Recitopia.Controllers
                             })
                             .ToListAsync();
 
-
           
-            List<View_All_Recipe_Ingredients> recipe_ing2 = recipeIngredients;
-
-            recipe_ing2 = recipe_ing2.OrderBy(m => m.Ingred_name).ToList();
+            List<View_All_Recipe_Ingredients> recipe_ing2 = recipeIngredients.OrderBy(m => m.Ingred_name).ToList();
+            
 
             decimal netTotal = 0;
             decimal netGramTotal = 0;
@@ -199,44 +197,66 @@ namespace Recitopia.Controllers
             grandTotalG += Math.Round(netGramTotal, 3);
             grandTotalC += Math.Round(netTotal, 3);
 
-            //PACKAGING
+            //PACKAGING-----------------------------------------------------------------------------------------------------
             //RESET
             netTotal = 0;
 
+            //BUILD OUT RECIPE PACKAGING ITEMS
+            var recipePackaging =
+                 await (from rp in _recitopiaDbContext.Recipe_Packaging
+                        join r in _recitopiaDbContext.Recipe
+                        on rp.Recipe_Id equals r.Recipe_Id
+                        join p in _recitopiaDbContext.Packaging
+                        on rp.Package_Id equals p.Package_Id
+                        where r.Recipe_Id == id && r.Customer_Guid == customerGuid
+                        orderby p.Package_Name
+                        select new Recipe_Packaging()
+                        {
+                            Id = rp.Id,
+                            Customer_Guid = rp.Customer_Guid,
+                            Recipe_Id = rp.Recipe_Id,
+                            Package_Id = rp.Package_Id,
+                            Amount = rp.Amount,
+                            Packaging = p,
+                            Recipe = r
+                        })
+                .ToListAsync();
+
+
+
             List<IList<string>> cols3 = new List<IList<string>>();
 
-            foreach (View_All_Recipe_Ingredients comp3 in recipe_ing2)
+            foreach (Recipe_Packaging comp3 in recipePackaging)
             {
 
-                if (comp3.Package == true)
-                {
+                
                     //CALCULATE INGREDIENT COST
-                    if (!comp3.Amount_g.Equals(null))
+                    if (!comp3.Amount.Equals(null))
                     {
-                        amountG = (decimal)comp3.Amount_g;
+                        amountG = comp3.Amount;
                     }
                     else
                     {
                         amountG = 0;
                     }
-                    netGramTotalP += amountG;
+                    netGramTotalP += (amountG * comp3.Packaging.Weight);
 
-                    if (!comp3.Cost.Equals(null))
+                    if (!comp3.Packaging.Cost.Equals(null))
                     {
-                        costLb = (decimal)comp3.Cost;
+                        costLb = (comp3.Packaging.Cost * comp3.Amount);
                     }
                     else
                     {
                         costLb = 0;
                     }
 
-                    //ingCost = (amountG / gToLbConversion) * costLb;
+                   
 
                     //ADD TO INGREDIENT SUBTOTAL
                     netTotal += costLb;
 
-                    cols3.Add(new List<string> { comp3.Ingred_name, amountG.ToString(), Math.Round(costLb, 3).ToString() });
-                }
+                    cols3.Add(new List<string> { comp3.Packaging.Package_Name, Math.Round(amountG, 1).ToString(), Math.Round(costLb, 3).ToString() });
+               
 
             }
 

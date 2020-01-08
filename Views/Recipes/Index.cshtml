@@ -68,11 +68,12 @@
         <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{recipe.serving_Size}}</td>
 
 
-        <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:175px">
+        <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:225px">
             <input type="button" style="background-color:lavender" class="btn btn-sm AngularButtons" value="Ingredients" ng-click="RedirectToRecipeIngredients(recipe)" /> |
-            <button ng-click="RedirectToCopy(recipe)" class="btn btn-outline-info AngularButtons">
+            <input type="button" style="background-color:wheat" class="btn btn-sm AngularButtons" value="Packaging" ng-click="RedirectToRecipePackaging(recipe)" /> |
+            @*<button ng-click="RedirectToCopy(recipe)" class="btn btn-outline-info AngularButtons">
                 <i class="fa fa-copy"></i>
-            </button> |
+            </button> |*@
 
 
             <button ng-click="RedirectToEdit(recipe)" class="btn btn-outline-success AngularButtons">

@@ -9,6 +9,7 @@ namespace Recitopia.Models
         public Recipe()
         {
             Recipe_Ingredients = new HashSet<Recipe_Ingredients>();
+            Recipe_Packaging = new HashSet<Recipe_Packaging>();
         }
 
         public int Recipe_Id { get; set; }
@@ -42,5 +43,6 @@ namespace Recitopia.Models
         public virtual Meal_Category Meal_Category { get; set; }
         public virtual Serving_Sizes Serving_Sizes { get; set; }
         public virtual ICollection<Recipe_Ingredients> Recipe_Ingredients { get; set; }
+        public virtual ICollection<Recipe_Packaging> Recipe_Packaging { get; set; }
     }
 }

@@ -560,7 +560,7 @@ namespace Recitopia.Controllers
                                     await _recitopiaDbContext.Ingredient.AddAsync(ingredient);
                                     await _recitopiaDbContext.SaveChangesAsync();
                                 }
-                                catch (Exception e)
+                                catch (Exception)
                                 {
                                     ViewBag.ErrorMessage = "There is an issue with the data in row - " + rowCount + ".  Rows prior to this error were imported.  Fix the data issue, adjust your import file rows to import and try again." +
                                         "<br/>Review:  That the Vendor Name exists under Vendors so that it is there to match upload value.";

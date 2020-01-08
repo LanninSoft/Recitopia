@@ -1,7 +1,11 @@
 ﻿(function () {
     'use strict';
     var app = angular.module('myApp', [])
-    .filter('utcToLocal', utcToLocal);
+        .filter('utcToLocal', utcToLocal);
+//------------------------------------------------------------------------------------------------------
+//-----------------------SHARED CODE--------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
+
     //CONVERTS UTC TIME TO LOCAL
     function utcToLocal($filter) {
         return function (utcDateString, format) {
@@ -17,8 +21,14 @@
             return $filter('date')(utcDateString, format);
         };
     }
+//------------------------------------------------------------------------------------------------------
+//-----------------------CONTROLLERS--------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
 
-    //RECIPE CONTROLLER
+//------------------------------------------------------------------------------------------------------
+//-----------------------RECIPE CONTROLLER--------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
+
     app.controller('Recipes', function ($scope, $http) {
 
         $http.get("/Recipes/GetData")
@@ -53,6 +63,12 @@
             
             window.location.href = '/Recipe_Ingredients/Index/?recipeID=' + recipes.recipe_Id;
             
+        };
+        //Redirect recipe packaging form 
+        $scope.RedirectToRecipePackaging = function (recipes) {
+
+            window.location.href = '/Recipe_Packaging/Index/?recipeID=' + recipes.recipe_Id;
+
         };
         //Redrect index form to details form with parameter
         $scope.RedirectToDetails = function (recipes) {
@@ -98,8 +114,10 @@
 
     });
 
+//------------------------------------------------------------------------------------------------------
+//-----------------------RECIPE_INGREDIENTS CONTROLLER--------------------------------------------------
+//------------------------------------------------------------------------------------------------------
 
-    //RECIPE_INGREDIENTS CONTROLLER
     app.controller('RecipeIngredients', function ($scope, $http) {
        
         $scope.$watch('Recipe_Id', function () {
@@ -185,6 +203,7 @@
         
             window.location.href = '/Recipe_Ingredients/Details/?id=' + Ingredients.id;
         };
+
         //Redrect recipe ingredients form 
         $scope.RedirectToIngredientNutrition = function (Ingredients) {
             
@@ -200,7 +219,184 @@
 
     });
 
-    //INGREDIENTS CONTROLLER
+//------------------------------------------------------------------------------------------------------
+//-----------------------PACKAGING CONTROLLER-----------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
+    app.controller('Packaging', function ($scope, $http) {
+
+        $http.get("/Packaging/GetData")
+            .then(function (response) {
+                // First function handles success
+                $scope.Packaging = response.data;
+
+            }, function (response) {
+                // Second function handles error
+                    $scope.Packaging = "Something went wrong";
+
+            });
+
+        //Redrect index form to edit form with parameter
+        //Redrect index form to details form with parameter
+        $scope.RedirectToCopy = function (packaging) {
+
+            window.location.href = '/Packaging/CreateCopy/' + packaging.package_Id;
+        };
+        $scope.RedirectToEdit = function (packaging) {
+
+            window.location.href = '/Packaging/Edit/' + packaging.package_Id;
+        };
+
+        //Redrect index form to delete form with parameter
+        $scope.DelPackaging = function (packaging) {
+
+            window.location.href = '/Packaging/Delete/' + packaging.package_Id;
+        };
+        
+        //Redrect index form to details form with parameter
+        $scope.RedirectToDetails = function (packaging) {
+
+            window.location.href = '/Packaging/Details/' + packaging.package_Id;
+        };
+        app.filter('YesNo', function () {
+            return function (text) {
+                return text ? "Yes" : "No";
+            }
+        })
+        //SORTING ICON CONTROL
+        $scope.sort = {
+            active: '',
+            descending: undefined
+        }
+
+        $scope.changeSorting = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                sort.descending = !sort.descending;
+
+            } else {
+                sort.active = column;
+                sort.descending = false;
+            }
+        };
+
+        $scope.getIcon = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                return sort.descending
+                    ? 'fa fa-caret-up'
+                    : 'fa fa-caret-down';
+            }
+
+            return 'fa fa-caret-left';
+        }
+
+    });
+
+//------------------------------------------------------------------------------------------------------
+//-----------------------RECIPE_PACKAGING CONTROLLER-----------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
+    app.controller('RecipePackaging', function ($scope, $http) {
+
+        $scope.$watch('Package_Id', function () {
+
+            $http.get("/Recipe_Packaging/GetData?recipeId=" + $scope.Recipe_Id)
+                .then(function (response) {
+                    // First function handles success
+
+                    $scope.Packaging = response.data;
+
+                }, function (response) {
+                    // Second function handles error
+                        $scope.Packaging = "Something went wrong";
+
+                });
+        });
+        //UPDATE Amount g
+        $scope.RedirectToUpdate = function (Data) {
+            $scope.resultMessage = '';
+
+            $http({
+                url: "/Recipe_Packaging/UpdateFromAngularController",
+                contentType: 'application/json',
+                method: 'POST',
+                traditional: true,
+                data: Data,
+
+            }).then(function (response) {
+
+                $scope.resultMessage = "Update Successful";
+            })
+                .catch(function (error) {
+
+                    $scope.resultMessage = "Error saving";
+                });
+        };
+        //SORTING ICON CONTROL
+        $scope.sort = {
+            active: '',
+            descending: undefined
+        }
+
+        $scope.changeSorting = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                sort.descending = !sort.descending;
+
+            } else {
+                sort.active = column;
+                sort.descending = false;
+            }
+        };
+
+        $scope.getIcon = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                return sort.descending
+                    ? 'fa fa-caret-up'
+                    : 'fa fa-caret-down';
+            }
+
+            return 'fa fa-caret-left';
+        }
+        //Redrect index form to edit form with parameter
+        $scope.RedirectToEdit = function (packaging) {
+
+            window.location.href = '/Recipe_Packaging/Edit/?id=' + packaging.id;
+        };
+
+        //Redrect index form to delete form with parameter
+        $scope.DelPackaging = function (packaging) {
+
+            window.location.href = '/Recipe_Packaging/Delete/?id=' + packaging.id;
+        };
+
+        //Redrect index form to details form with parameter
+        $scope.RedirectToDetails = function (packaging) {
+
+
+            window.location.href = '/Recipe_Packaging/Details/?id=' + packaging.id;
+        };
+
+       
+        app.filter('YesNo', function () {
+            return function (text) {
+                return text ? "Yes" : "No";
+            }
+        })
+
+
+    });
+//------------------------------------------------------------------------------------------------------
+//-----------------------INGREDIENTS CONTROLLER-----------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
     app.controller('Ingredients', function ($scope, $http) {
         $http.get("/Ingredients/GetData/")
             .then(function (response) {
@@ -280,7 +476,9 @@
 
     });
 
-    //INGREDIENT_NUTRIENT CONTROLLER
+//------------------------------------------------------------------------------------------------------
+//-----------------------INGREDIENT NUTRIENT CONTROLLER-----------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
     app.controller('IngredientNutrient', function ($scope, $http) {
         
         $scope.$watch('Ingred_Id', function () {
@@ -373,7 +571,9 @@
 
     });
 
-    //INGREDIENT_ALLERGEN(COMPONENT) CONTROLLER
+//------------------------------------------------------------------------------------------------------
+//-----------------------INGREDIENT_ALLERGEN(COMPONENT) CONTROLLER--------------------------------------
+//------------------------------------------------------------------------------------------------------
     app.controller('IngredientAllergen', function ($scope, $http) {
         
         $scope.$watch('Ingred_Id', function () {
@@ -443,7 +643,9 @@
 
     });
 
-    //NUTRITION CONTROLLER
+//------------------------------------------------------------------------------------------------------
+//-----------------------NUTRITION CONTROLLER-----------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
     app.controller('Nutrition', function ($scope, $http) {
         $http.get("/Nutritions/GetData")
             .then(function (response) {
@@ -512,7 +714,9 @@
 
     });
 
-    //MEAL_CATEGORY CONTROLLER
+//------------------------------------------------------------------------------------------------------
+//-----------------------MEAL_CATEGORY CONTROLLER-----------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
     app.controller('MealCategory', function ($scope, $http) {
         $http.get("/Meal_Category/GetData")
             .then(function (response) {
@@ -573,11 +777,11 @@
             window.location.href = '/Meal_Category/Details/?id=' + MealCategories.category_Id;
         };
 
-
-
     });
+//------------------------------------------------------------------------------------------------------
+//-----------------------ALLERGEN(COMPONENT) CONTROLLER-------------------------------------------------
+//------------------------------------------------------------------------------------------------------
 
-    //ALLERGEN(COMPONENT) CONTROLLER
     app.controller('Allergen', function ($scope, $http) {
         $http.get("/Components/GetData")
             .then(function (response) {
@@ -642,7 +846,9 @@
 
     });
 
-    //SERVING SIZE CONTROLLER
+//------------------------------------------------------------------------------------------------------
+//-----------------------SERVING SIZE CONTROLLER-----------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
     app.controller('ServingSize', function ($scope, $http) {
         $http.get("/Serving_Sizes/GetData")
             .then(function (response) {
@@ -707,7 +913,9 @@
 
     });
 
-    //VENDORS CONTROLLER
+//------------------------------------------------------------------------------------------------------
+//-----------------------VENDORS CONTROLLER-----------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
     app.controller('Vendors', function ($scope, $http) {
         $http.get("/Vendors/GetData")
             .then(function (response) {
@@ -772,7 +980,9 @@
 
     });
 
-    //AppUser CONTROLLER
+//------------------------------------------------------------------------------------------------------
+//-----------------------ASPNETUSER CONTROLLER-----------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
     app.controller('AppUsers', function ($scope, $http) {
 
         $http.get("/AppUsers/GetData")
@@ -841,7 +1051,9 @@
         }
 
     });
-    //Customers CONTROLLER
+//------------------------------------------------------------------------------------------------------
+//-----------------------CUSTOMERS CONTROLLER-----------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
     app.controller('Customers', function ($scope, $http) {
 
         $http.get("/Customers/GetData")
@@ -910,7 +1122,9 @@
         }
 
     });
-    //AppRoles CONTROLLER
+//------------------------------------------------------------------------------------------------------
+//-----------------------APPROLES CONTROLLER-----------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
     app.controller('AppRoles', function ($scope, $http) {
 
         $http.get("/AppRoles/GetData")
@@ -979,7 +1193,9 @@
         }
 
     });
-    //CUSTOMER_USERS CONTROLLER
+//------------------------------------------------------------------------------------------------------
+//-----------------------CUSTOMER_USERS CONTROLLER-----------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
     app.controller('Customer_Users', function ($scope, $http) {
 
        
@@ -1055,7 +1271,9 @@
 
 
     });
-    //FEEDBACK CONTROLLER
+//------------------------------------------------------------------------------------------------------
+//-----------------------FEEDBACK CONTROLLER-----------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
     app.controller('Feedback', function ($scope, $http) {
 
         $http.get("/Feedback/GetData")
@@ -1124,7 +1342,9 @@
         }
 
     });
-    //FEEDBACK HISTORY CONTROLLER
+//------------------------------------------------------------------------------------------------------
+//-----------------------FEEDBACK HISTORY CONTROLLER-----------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
     app.controller('FeedbackHistory', function ($scope, $http) {
 
         $http.get("/Feedback/GetDataHistory")

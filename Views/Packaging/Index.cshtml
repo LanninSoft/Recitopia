@@ -1,0 +1,87 @@
+﻿@model IEnumerable<Recitopia.Models.Packaging>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table width="100%" class="table table-borderless ">
+    <tr class="pageBanner">
+        <th>
+            Packaging
+        </th>
+    </tr>
+</table>
+<div ng-app="myApp" ng-controller="Packaging" style="font-size:13px" class="container-fluid">
+    @* Use ng-controller *@
+
+
+    <table width="100%" class="table table-condensed table-hover table-striped table-bordered table-responsive-lg">
+        <tr>
+            <th class="AngularTableHeaderColor" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('package_Name')"><font style="color:black">Packaging Name</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('package_Name')"></i>
+            </th>
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('vendor_Name')"><font style="color:black">Vendor</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('vendor_Name')"></i>
+            </th>
+
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('cost')"><font style="color:black">Cost</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('cost')"></i>
+            </th>
+
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('weigth')"><font style="color:black">Weight(g)</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('weigth')"></i>
+            </th>
+
+            <th style="text-align:right" class="AngularTableHeaderColor"><a href="@Url.Action("Create", "Packaging")" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> New Packaging</a></th>
+
+
+        </tr>
+        <tr>
+            <td style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.package_Name"></td>
+            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"></td>
+            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"></td>
+            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"></td>
+            <td> </td>
+
+        </tr>
+        @*</table>
+            <table width="100%" class="table table-condensed table-hover table-striped table-responsive-lg">*@
+
+        <tr ng-repeat="packaging in Packaging | filter:f | orderBy:sort.active:sort.descending ">
+            @* Fetch All the Recipe record using ng-repeat *@
+
+            <td style="height:15px;padding:1px">{{packaging.package_Name}}</td>
+            <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{packaging.vendor_Name}}</td>
+            <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{packaging.cost}}</td>
+            <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{packaging.weight}}</td>
+
+
+            <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:225px">
+                
+                <button ng-click="RedirectToEdit(packaging)" class="btn btn-outline-success AngularButtons">
+                    <i class="fa fa-pen"></i>
+                </button> |
+                <button ng-click="RedirectToDetails(packaging)" class="btn btn-outline-info AngularButtons">
+                    <i class="fa fa-clipboard"></i>
+                </button> |
+
+                <button ng-click="DelPackaging(packaging)" class="btn btn-outline-danger AngularButtons">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+
+    </table>
+</div>
+<div>
+    <a href="@Url.Action("Create", "Packaging")" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> New Packaging</a>
+    @*<a asp-action="uploadPackagingFile" class="btn alert-success" role="button"><i class="fa fa-upload"></i> Import Packaging (CSV)</a>
+        <a asp-action="DownLoadPackaging" class="btn alert-success" role="button"><i class="fa fa-download"></i> Export Packaging (CSV)</a>*@
+
+</div>
+
