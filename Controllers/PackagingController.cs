@@ -228,6 +228,15 @@ namespace Recitopia.Controllers
                 
                 _recitopiaDbContext.Packaging.Remove(packaging);
                 await _recitopiaDbContext.SaveChangesAsync();
+
+                //remove recipe packaging
+                //GET RECIPE PACKAGING
+                var recipePackaging = await _recitopiaDbContext.Recipe_Packaging.Where(m => m.Package_Id == id).ToListAsync();
+
+                _recitopiaDbContext.Recipe_Packaging.RemoveRange(recipePackaging);
+
+                await _recitopiaDbContext.SaveChangesAsync();
+               
                 return RedirectToAction(nameof(Index));
             }
 

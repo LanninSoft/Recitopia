@@ -844,7 +844,11 @@ namespace Recitopia.Controllers
             {
                
                 _recitopiaDbContext.Recipe.Remove(recipe);
+                await _recitopiaDbContext.SaveChangesAsync();
 
+                //remove packaging
+                var packagingRemove = await _recitopiaDbContext.Recipe_Packaging.Where(m => m.Recipe_Id == id).ToListAsync();
+                _recitopiaDbContext.Recipe_Packaging.RemoveRange(packagingRemove);
                 await _recitopiaDbContext.SaveChangesAsync();
 
                 return RedirectToAction("Index");
@@ -913,7 +917,7 @@ namespace Recitopia.Controllers
                 await _recitopiaDbContext.Recipe.AddAsync(recipe_new);
                 await _recitopiaDbContext.SaveChangesAsync();
 
-                //NEED TO ADD GROUP ID LATER
+                //GET RECIPE INGREDIENTS
                 var recipe_ingredients = await _recitopiaDbContext.Recipe_Ingredients.Where(m => m.Recipe_Id == recipe.Recipe_Id && m.Customer_Guid == customerGuid).ToListAsync();
 
                 foreach (Recipe_Ingredients recipeIngredient in recipe_ingredients)
@@ -931,7 +935,24 @@ namespace Recitopia.Controllers
                     await _recitopiaDbContext.SaveChangesAsync();
 
                 }
+                //GET RECIPE PACKAGING
+                var recipePackaging = await _recitopiaDbContext.Recipe_Packaging.Where(m => m.Recipe_Id == recipe.Recipe_Id && m.Customer_Guid == customerGuid).ToListAsync();
 
+                foreach (Recipe_Packaging recipePackage in recipePackaging)
+                {
+                    Recipe_Packaging recipe_packaging_new = new Recipe_Packaging()
+                    {
+                        Recipe_Id = recipe_new.Recipe_Id,
+                        Package_Id = recipePackage.Package_Id,
+                        Amount = recipePackage.Amount,
+                        Customer_Guid = recipePackage.Customer_Guid
+
+                    };
+                    //UPDATE DB - INSERT
+                    _recitopiaDbContext.Recipe_Packaging.Add(recipe_packaging_new);
+                    await _recitopiaDbContext.SaveChangesAsync();
+
+                }
                 return RedirectToAction("Index");
             }
             
