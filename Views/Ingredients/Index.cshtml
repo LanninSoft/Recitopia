@@ -15,7 +15,7 @@
     @* Use ng-controller *@
    
 
-    <table width="100%" class="table table-condensed table-hover table-striped table-bordered table-responsive-lg">
+    <table width="100%" class="table table-condensed table-hover table-striped  table-responsive-lg">
         <tr>
             <th  class="AngularTableHeaderColor" style="vertical-align:bottom">
                 <a href="" ng-click="changeSorting('ingred_name')"><font style="color:black">Ingredient Name</font></a>
@@ -55,10 +55,10 @@
         @* Fetch All the Recipe record using ng-repeat *@
 
         <td style="height:15px;padding:1px;">{{ingredient.ingred_name}}</td>
-        <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;width:80px">{{ingredient.cost_per_lb}}</td>
-        <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;width:75px">{{ingredient.cost}}</td>
+        <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;">{{ingredient.cost_per_lb}}</td>
+        <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;">{{ingredient.cost}}</td>
       
-        <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;width:150px">{{ingredient.vendor_Name}}</td>
+        <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;">{{ingredient.vendor_Name}}</td>
 
 
        
