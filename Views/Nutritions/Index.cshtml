@@ -15,7 +15,7 @@
     @* Use ng-controller *@
    
 
-    <table width="100%" class="table table-condensed table-hover table-striped table-bordered table-responsive-lg">
+    <table style="width:100%" class="table table-condensed table-hover table-striped table-responsive-lg">
         <tr>
             <th  class="AngularTableHeaderColor" style="vertical-align:bottom">
                 <a href="" ng-click="changeSorting('nutrition_Item')"><font style="color:black">Nutrient Name</font></a>
@@ -52,8 +52,7 @@
             
 
         </tr>
-    @*</table>
-    <table width="100%" class="table table-condensed table-hover table-striped ">*@
+  
 
     <tr ng-repeat="nutrient in Nutrients | filter:f | orderBy:sort.active:sort.descending">
         @* Fetch All the Recipe record using ng-repeat *@

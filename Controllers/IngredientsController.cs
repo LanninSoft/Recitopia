@@ -55,6 +55,7 @@ namespace Recitopia.Controllers
             var ingredients = await _recitopiaDbContext.Ingredient
                 .Include(ri => ri.Vendor)
                 .Where(ri => ri.Customer_Guid == customerGuid)
+                .OrderBy(i => i.Ingred_name)
                 .Select(ri => new View_Angular_Ingredients_Details()
                 {
                     Ingredient_Id = ri.Ingredient_Id,

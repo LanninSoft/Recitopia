@@ -118,8 +118,8 @@ namespace Recitopia.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            
-            
+            ViewBag.Vendor_Id = new SelectList(await _recitopiaDbContext.Vendor.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Vendor_Name).ToListAsync(), "Vendor_Id", "Vendor_Name");
+
             return View(packaging);
         }
 
