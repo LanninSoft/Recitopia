@@ -58,10 +58,10 @@
                         <td style="height:15px;padding:1px">
                             <div ng-show="!nutrient.edit.nut_per_100_grams"
                                  ng-click="nutrient.edit.nut_per_100_grams = !nutrient.edit.nut_per_100_grams">
-                                <i class="fa fa-pencil"></i>{{nutrient.nut_per_100_grams}}
+                                <i class="fa fa-pen"></i> {{nutrient.nut_per_100_grams}}
                             </div>
 
-                            <input type="number" min="0" step="0.001" style="width:50px" ng-show="nutrient.edit.nut_per_100_grams"
+                            <input type="number" min="0" step="0.001" style="width:75px" ng-show="nutrient.edit.nut_per_100_grams"
                                    ng-blur="nutrient.edit.nut_per_100_grams = !nutrient.edit.nut_per_100_grams | resultMessage = ''"
                                    ng-model="nutrient.nut_per_100_grams" />
 
