@@ -201,7 +201,7 @@
         $scope.RedirectToDetails = function (Ingredients) {
 
         
-            window.location.href = '/Recipe_Ingredients/Details/?id=' + Ingredients.id;
+            window.location.href = '/Ingredients/Details/?id=' + Ingredients.ingredient_Id;
         };
 
         //Redrect recipe ingredients form 
@@ -382,7 +382,7 @@
         $scope.RedirectToDetails = function (packaging) {
 
 
-            window.location.href = '/Recipe_Packaging/Details/?id=' + packaging.id;
+            window.location.href = '/Packaging/Details/?id=' + packaging.package_Id;
         };
 
        
@@ -564,7 +564,7 @@
         //Redrect index form to details form with parameter
         $scope.RedirectToDetails = function (IngredientNutrition) {
 
-            window.location.href = '/Ingredient_Nutrients/Details/?id=' + IngredientNutrition.id;
+            window.location.href = '/Nutritions/Details/?id=' + IngredientNutrition.nutrition_Item_Id;
         };
 
 
@@ -636,7 +636,7 @@
         //Redrect index form to details form with parameter
         $scope.RedirectToDetails = function (IngredientComponents) {
 
-            window.location.href = '/Ingredient_Components/Details/?id=' + IngredientComponents.id;
+            window.location.href = '/Components/Details/?id=' + IngredientComponents.comp_Id;
         };
 
 

@@ -46,10 +46,13 @@
 
                         <tr ng-repeat="ingredient in Ingredients | filter:f | orderBy:sort.active:sort.descending">
                             <td style="height:15px;padding:1px">{{ingredient.ingred_name}}</td>
+
+
+
                             <td style="height:15px;padding:1px">
                                 <div ng-show="!ingredient.edit.amount_g"
                                      ng-click="ingredient.edit.amount_g = !ingredient.edit.amount_g">
-                                    <i class="fa fa-pencil"></i>{{ingredient.amount_g}}
+                                    <i class="fa fa-pen"></i> {{ingredient.amount_g}}
                                 </div>
 
                                 <input type="number" min="0" step="0.001" style="width:75px" required ng-show="ingredient.edit.amount_g"
@@ -62,12 +65,12 @@
                         
 
                             <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:150px">
-                                <button ng-click="RedirectToEdit(ingredient)" class="btn btn-outline-success AngularButtons">
+                                @*<button ng-click="RedirectToEdit(ingredient)" class="btn btn-outline-success AngularButtons">
                                     <i class="fa fa-pen"></i>
-                                </button> |
-                                @*<button ng-click="RedirectToDetails(ingredient)" class="btn btn-outline-info AngularButtons">
-                                    <i class="fa fa-clipboard"></i>
                                 </button> |*@
+                                <button ng-click="RedirectToDetails(ingredient)" class="btn btn-outline-info AngularButtons">
+                                    <i class="fa fa-clipboard"></i>
+                                </button> |
 
                                 <button ng-click="DelIngredient(ingredient)" class="btn btn-outline-danger AngularButtons">
                                     <i class="fa fa-trash"></i>

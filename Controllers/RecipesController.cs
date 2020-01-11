@@ -130,7 +130,7 @@ namespace Recitopia.Controllers
                             .ToListAsync();
 
           
-            List<View_All_Recipe_Ingredients> recipe_ing2 = recipeIngredients.OrderBy(m => m.Ingred_name).ToList();
+            List<View_All_Recipe_Ingredients> recipe_ing2 = recipeIngredients;
             
 
             decimal netTotal = 0;
@@ -146,32 +146,32 @@ namespace Recitopia.Controllers
             decimal amountG = 0;
 
             decimal costLb = 0;
+            decimal weight = 0;
             decimal gToLbConversion = (decimal)453.592;
 
-            //REGULAR INGREDIENTS           
-            List<IList<string>> cols2 = new List<IList<string>>();
+            //----------------------------------------------------
+            //MAIN INGREDIENTS 
+            //----------------------------------------------------           
+            List<View_All_Recipe_Ingredients> ingredPanel = new List<View_All_Recipe_Ingredients>();
 
-            foreach (View_All_Recipe_Ingredients comp2 in recipe_ing2)
+            foreach (View_All_Recipe_Ingredients ri in recipe_ing2)
             {
-                if (comp2.Package == false)
+                if (ri.Package == false)
                 {
                     //CALCULATE INGREDIENT COST
-                    if (!comp2.Amount_g.Equals(null))
+                    if (!ri.Amount_g.Equals(null))
                     {
-                        amountG = (decimal)comp2.Amount_g;
-
+                        amountG = (decimal)ri.Amount_g;
                     }
                     else
                     {
                         amountG = 0;
-
                     }
                     netGramTotal += amountG;
 
-
-                    if (!comp2.Cost_per_lb.Equals(null))
+                    if (!ri.Cost_per_lb.Equals(null))
                     {
-                        costLb = (decimal)comp2.Cost_per_lb;
+                        costLb = (decimal)ri.Cost_per_lb;
                     }
                     else
                     {
@@ -182,14 +182,24 @@ namespace Recitopia.Controllers
 
                     //ADD TO INGREDIENT SUBTOTAL
                     netTotal += ingCost;
-
-                    cols2.Add(new List<string> { comp2.Ingred_name, amountG.ToString(), Math.Round(costLb, 3).ToString(), Math.Round(ingCost, 3).ToString() });
+                                      
+                    View_All_Recipe_Ingredients ingredPanelItem = new View_All_Recipe_Ingredients() 
+                    {
+                        Ingred_name = ri.Ingred_name,
+                        Amount_g = amountG,
+                        Cost_per_lb = Math.Round(costLb, 3),
+                        Cost = Math.Round(ingCost, 3)
+                    };
+                    ingredPanel.Add(ingredPanelItem);
 
                 }
 
             }
             //ADD TO VIEWBAG LISTS
-            ViewBag.MIComponents = cols2;
+            //SORT THE PANEL BY HEAVIEST WEIGHT FIRST            
+
+            ViewBag.MIComponents = ingredPanel.OrderByDescending(m => m.Amount_g).ToList();
+
             ViewBag.MIComponentsSubtotal = Math.Round(netTotal, 3);
             ViewBag.MICGramsSubtotal = Math.Round(netGramTotal, 3);
 
@@ -197,7 +207,9 @@ namespace Recitopia.Controllers
             grandTotalG += Math.Round(netGramTotal, 3);
             grandTotalC += Math.Round(netTotal, 3);
 
-            //PACKAGING-----------------------------------------------------------------------------------------------------
+            //----------------------------------------------------
+            //MAIN PACKAGING 
+            //---------------------------------------------------- 
             //RESET
             netTotal = 0;
 
@@ -221,46 +233,55 @@ namespace Recitopia.Controllers
                             Recipe = r
                         })
                 .ToListAsync();
+            
+            //PACKAGING           
+            List<View_All_Recipe_Packaging> packagePanel = new List<View_All_Recipe_Packaging>();
 
-
-
-            List<IList<string>> cols3 = new List<IList<string>>();
-
-            foreach (Recipe_Packaging comp3 in recipePackaging)
+            foreach (Recipe_Packaging rp in recipePackaging)
             {
-
-                
+                                
                     //CALCULATE INGREDIENT COST
-                    if (!comp3.Amount.Equals(null))
+                    if (!rp.Amount.Equals(null))
                     {
-                        amountG = comp3.Amount;
+                        amountG = rp.Amount;
                     }
                     else
                     {
                         amountG = 0;
                     }
-                    netGramTotalP += (amountG * comp3.Packaging.Weight);
+                    netGramTotalP += (amountG * rp.Packaging.Weight);
 
-                    if (!comp3.Packaging.Cost.Equals(null))
+                    if (!rp.Packaging.Cost.Equals(null))
                     {
-                        costLb = (comp3.Packaging.Cost * comp3.Amount);
+                        costLb = (rp.Packaging.Cost * rp.Amount);
                     }
                     else
                     {
                         costLb = 0;
                     }
-
-                   
-
-                    //ADD TO INGREDIENT SUBTOTAL
-                    netTotal += costLb;
-
-                    cols3.Add(new List<string> { comp3.Packaging.Package_Name, Math.Round(amountG, 1).ToString(), Math.Round(costLb, 3).ToString() });
-               
+                    if (!rp.Packaging.Weight.Equals(null))
+                    {
+                        weight = rp.Packaging.Weight;
+                    }
+                    else
+                    {
+                        weight = 0;
+                    }
+                //ADD TO INGREDIENT SUBTOTAL
+                netTotal += costLb;
+                    
+                    View_All_Recipe_Packaging packagePanelItem = new View_All_Recipe_Packaging()
+                    {
+                        Package_Name = rp.Packaging.Package_Name,
+                        Amount = Math.Round(amountG, 1),
+                        Cost = Math.Round(costLb, 3),
+                        Weight = Math.Round(weight, 3)
+                    };
+                    packagePanel.Add(packagePanelItem);
 
             }
 
-            ViewBag.MIPComponents = cols3;
+            ViewBag.MIPComponents = packagePanel.OrderByDescending(m => m.Package_Name).ToList();
 
             ViewBag.MIPComponentsSubtotal = Math.Round(netTotal, 3);
 
@@ -482,7 +503,7 @@ namespace Recitopia.Controllers
                             .Include(ri => ri.Recipe)
                             .Include(ri => ri.Ingredient)
                             .Where(ri => ri.Customer_Guid == customerGuid && ri.Recipe_Id == id)
-                            .OrderBy(ri => ri.Ingredient.Ingred_name)
+                            .OrderByDescending(ri => ri.Amount_g)
                             .Select(ri => new View_All_Recipe_Ingredients()
                             {
                                 Id = ri.Id,
@@ -505,27 +526,27 @@ namespace Recitopia.Controllers
             //build ingredient list to populate panel  
             string paneList = "";
 
-            List<string> cols = new List<string>();
+            List<string> recipeComponentsPanel = new List<string>();
 
             foreach (View_All_Recipe_Ingredients comp in recipeIngredient)
             {
-                if (comp.Package == false)
-                {
-                    cols.Add(comp.Ingred_Comp_name);
-                }
+                recipeComponentsPanel.Add(comp.Ingred_Comp_name);                
             }
-            cols = cols.Distinct().ToList();
 
-            for (int i = 0; i < cols.Count(); i++)
+            recipeComponentsPanel = recipeComponentsPanel.Distinct().ToList();
+
+
+
+            for (int i = 0; i < recipeComponentsPanel.Count(); i++)
             {
-                if (cols[i] != null)
+                if (recipeComponentsPanel[i] != null)
                     if (i == 0)
                     {
-                        paneList += cols[i];
+                        paneList += recipeComponentsPanel[i];
                     }
                     else
                     {
-                        paneList += ", " + cols[i];
+                        paneList += ", " + recipeComponentsPanel[i];
                     }
             }
 
