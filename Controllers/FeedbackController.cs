@@ -27,12 +27,12 @@ namespace Recitopia.wwwroot
         public async Task<IActionResult> Index()
         {
             
-            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+            //var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerGuid == null)
-            {
-                return RedirectToAction("CustomerLogin", "Customers");
-            }
+            //if  (customerGuid == null || customerGuid.Trim() == "")
+            //{
+            //    return RedirectToAction("CustomerLogin", "Customers");
+            //}
 
             return View(await _recitopiaDbContext.Feedback.Include(m => m.FeedbackFiles).OrderBy(m => m.Resolved).OrderByDescending(m => m.TimeStamp).ToListAsync());
         }
@@ -80,19 +80,27 @@ namespace Recitopia.wwwroot
             
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerGuid == null)
-            {
-                return RedirectToAction("CustomerLogin", "Customers");
-            }
+            //if  (customerGuid == null || customerGuid.Trim() == "")
+            //{
+            //    return RedirectToAction("CustomerLogin", "Customers");
+            //}
 
             if (ModelState.IsValid)
             {
 
                 //TIMESTAMP, USER NAME and CUSTOMER NAME need to get input
-                var customerName = await _recitopiaDbContext.Customers.SingleAsync(m => m.Customer_Guid == customerGuid);
+                try
+                {
+                    var customerName = await _recitopiaDbContext.Customers.SingleAsync(m => m.Customer_Guid == customerGuid);
+                    feedback.Customer_Name = customerName.Customer_Name;
+                }
+                catch (Exception)
+                {
+                    feedback.Customer_Name = "No Customer";
+                }                    
+
                 var userName = await _recitopiaDbContext.AppUsers.SingleAsync(m => m.UserName == User.Identity.Name);
-                
-                feedback.Customer_Name = customerName.Customer_Name;
+
                 feedback.User_Name = userName.FullName;
                 feedback.TimeStamp = DateTime.UtcNow;
 
@@ -156,20 +164,27 @@ namespace Recitopia.wwwroot
             
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerGuid == null)
-            {
-                return RedirectToAction("CustomerLogin", "Customers");
-            }
+            //if  (customerGuid == null || customerGuid.Trim() == "")
+            //{
+            //    return RedirectToAction("CustomerLogin", "Customers");
+            //}
 
             if (ModelState.IsValid)
             {
 
                 //TIMESTAMP, USER NAME and CUSTOMER NAME need to get input
-                var customerName = await _recitopiaDbContext.Customers.SingleAsync(m => m.Customer_Guid == customerGuid);
+                try
+                {
+                    var customerName = await _recitopiaDbContext.Customers.SingleAsync(m => m.Customer_Guid == customerGuid);
+                    feedback.Customer_Name = customerName.Customer_Name;
+                }
+                catch (Exception)
+                {
+                    feedback.Customer_Name = "No Customer";
+                }
                 var userName = await _recitopiaDbContext.AppUsers.SingleAsync(m => m.UserName == User.Identity.Name);
 
-                feedback.User_Id = userName.Id;
-                feedback.Customer_Name = customerName.Customer_Name;
+                feedback.User_Id = userName.Id;  
                 feedback.User_Name = userName.FullName;
                 feedback.TimeStamp = DateTime.UtcNow;
 
@@ -187,12 +202,12 @@ namespace Recitopia.wwwroot
         
         public async Task<IActionResult> FeedBackUserHistory()
         {
-            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+            //var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerGuid == null)
-            {
-                return RedirectToAction("CustomerLogin", "Customers");
-            }
+            //if  (customerGuid == null || customerGuid.Trim() == "")
+            //{
+            //    return RedirectToAction("CustomerLogin", "Customers");
+            //}
             var currentUserId = await _recitopiaDbContext.AppUsers.SingleAsync(m => m.Email == User.Identity.Name);
 
             var userFeedbackResults = await _recitopiaDbContext.Feedback
@@ -224,12 +239,12 @@ namespace Recitopia.wwwroot
         }
         public async Task<IActionResult> FeedBackUserHistoryDetails(int? id)
         {
-            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+            //var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerGuid == null)
-            {
-                return RedirectToAction("CustomerLogin", "Customers");
-            }
+            //if  (customerGuid == null || customerGuid.Trim() == "")
+            //{
+            //    return RedirectToAction("CustomerLogin", "Customers");
+            //}
 
             var feedBackItem = await _recitopiaDbContext.Feedback
                 .Include(m => m.FeedbackFiles)
