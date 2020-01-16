@@ -33,7 +33,7 @@ namespace Recitopia.Controllers
         {
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerGuid == null)
+            if (customerGuid == null || customerGuid.Trim() == "")
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -87,7 +87,7 @@ namespace Recitopia.Controllers
         {
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerGuid == null)
+            if  (customerGuid == null || customerGuid.Trim() == "")
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -503,7 +503,7 @@ namespace Recitopia.Controllers
                             .Include(ri => ri.Recipe)
                             .Include(ri => ri.Ingredient)
                             .Where(ri => ri.Customer_Guid == customerGuid && ri.Recipe_Id == id)
-                            .OrderByDescending(ri => ri.Amount_g)
+                            .OrderBy(ri => ri.Ingredient.Ingred_name)
                             .Select(ri => new View_All_Recipe_Ingredients()
                             {
                                 Id = ri.Id,
@@ -521,7 +521,7 @@ namespace Recitopia.Controllers
                             .ToListAsync();
 
 
-            List<View_All_Recipe_Ingredients> recipeIngredient = ingredients;
+            List<View_All_Recipe_Ingredients> recipeIngredient = ingredients.OrderByDescending(m => m.Amount_g).ToList();
 
             //build ingredient list to populate panel  
             string paneList = "";
@@ -562,7 +562,7 @@ namespace Recitopia.Controllers
         {
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerGuid == null)
+            if  (customerGuid == null || customerGuid.Trim() == "")
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -775,7 +775,7 @@ namespace Recitopia.Controllers
         {            
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerGuid == null)
+            if  (customerGuid == null || customerGuid.Trim() == "")
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -840,7 +840,7 @@ namespace Recitopia.Controllers
             }
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerGuid == null)
+            if  (customerGuid == null || customerGuid.Trim() == "")
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -897,7 +897,7 @@ namespace Recitopia.Controllers
 
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerGuid == null)
+            if  (customerGuid == null || customerGuid.Trim() == "")
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }

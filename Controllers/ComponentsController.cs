@@ -26,7 +26,7 @@ namespace Recitopia.Controllers
             
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerGuid == null)
+            if  (customerGuid == null || customerGuid.Trim() == "")
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -91,7 +91,7 @@ namespace Recitopia.Controllers
                 
                 var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-                if (customerGuid == null)
+                if  (customerGuid == null || customerGuid.Trim() == "")
                 {
                     return RedirectToAction("CustomerLogin", "Customers");
                 }

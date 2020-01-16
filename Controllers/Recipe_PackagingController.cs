@@ -29,7 +29,7 @@ namespace Recitopia.Controllers
 
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerGuid == null)
+            if  (customerGuid == null || customerGuid.Trim() == "")
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -128,7 +128,7 @@ namespace Recitopia.Controllers
 
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerGuid == null)
+            if  (customerGuid == null || customerGuid.Trim() == "")
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -192,7 +192,7 @@ namespace Recitopia.Controllers
         public async Task<IActionResult> Create([FromForm] Recipe_Packaging recipe_Packaging, int RID)
         {
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
-            if (customerGuid == null)
+            if  (customerGuid == null || customerGuid.Trim() == "")
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -323,7 +323,7 @@ namespace Recitopia.Controllers
             }
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            if (customerGuid == null)
+            if  (customerGuid == null || customerGuid.Trim() == "")
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }

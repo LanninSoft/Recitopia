@@ -48,19 +48,8 @@ namespace Recitopia
                     .AddRazorRuntimeCompilation();
             services.AddRazorPages();
 
-          
-            services.AddTransient<IEmailSender, EmailSender>(i =>
-                new EmailSender(
-                    Configuration["EmailSender:PrimaryDomain"],
-                    Configuration.GetValue<int>("EmailSender:PrimaryPort"),
-                    Configuration["EmailSender:UsernameEmail"],
-                    Configuration["EmailSender:UsernamePassword"],
-                    Configuration["EmailSender:UsernameEmail"],
-                    Configuration["EmailSender:ToEmail"],
-                    Configuration["EmailSender:CcEmail"],
-                    Configuration.GetValue<bool>("EmailSender:enableSsl")
-                )
-            );
+
+            services.AddTransient<IEmailSender, RecitopiaEmailSender>();
 
             services.AddMvc()
                .AddRazorPagesOptions(options =>

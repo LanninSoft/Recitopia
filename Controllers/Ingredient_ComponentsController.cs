@@ -27,7 +27,7 @@ namespace Recitopia.Controllers
         {
             
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
-            if (customerGuid == null)
+            if  (customerGuid == null || customerGuid.Trim() == "")
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }            
@@ -94,7 +94,7 @@ namespace Recitopia.Controllers
         {
             
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
-            if (customerGuid == null)
+            if  (customerGuid == null || customerGuid.Trim() == "")
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -148,7 +148,7 @@ namespace Recitopia.Controllers
         {
             
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
-            if (customerGuid == null)
+            if  (customerGuid == null || customerGuid.Trim() == "")
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -182,7 +182,7 @@ namespace Recitopia.Controllers
             }
             
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
-            if (customerGuid == null)
+            if  (customerGuid == null || customerGuid.Trim() == "")
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -216,7 +216,7 @@ namespace Recitopia.Controllers
                 return RedirectToAction("Index", new { IngredID = ingredient_Components.Ingred_Id });
             }
             
-            if (customerGuid == null)
+            if  (customerGuid == null || customerGuid.Trim() == "")
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
@@ -236,7 +236,7 @@ namespace Recitopia.Controllers
 
             
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
-            if (customerGuid == null)
+            if  (customerGuid == null || customerGuid.Trim() == "")
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
