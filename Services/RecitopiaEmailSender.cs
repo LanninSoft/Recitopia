@@ -19,6 +19,7 @@ namespace Recitopia.Services
     {
         private readonly RecitopiaDBContext _recitopiaDbContext;
         private readonly IConfiguration _config;
+        private string _apiKey = null;
         public RecitopiaEmailSender(IOptions<AuthMessageSenderOptions> optionsAccessor, RecitopiaDBContext recitopiaDbContext, IConfiguration config)
         {
             Options = optionsAccessor.Value;
@@ -27,7 +28,11 @@ namespace Recitopia.Services
         }
         public Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            return Execute(_config.GetValue<string>("SendGrid:APIKey"), subject, htmlMessage, email);
+
+            _apiKey = _config["SendGrid:ApiKey"];
+
+            return Execute(_apiKey, subject, htmlMessage, email);
+            
         }
         public AuthMessageSenderOptions Options { get; } //set only via Secret Manager        
 
