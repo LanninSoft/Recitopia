@@ -27,7 +27,7 @@ namespace Recitopia.Services
         }
         public Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            return Execute(_config.GetValue<string>("APIKey"), subject, htmlMessage, email);
+            return Execute(_config.GetValue<string>("SendGrid:APIKey"), subject, htmlMessage, email);
         }
         public AuthMessageSenderOptions Options { get; } //set only via Secret Manager        
 
