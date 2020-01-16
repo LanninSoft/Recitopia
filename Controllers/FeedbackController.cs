@@ -5,11 +5,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Recitopia.Data;
 using Recitopia.Models;
+using Recitopia.Services;
 
 
 namespace Recitopia.wwwroot
@@ -17,10 +19,12 @@ namespace Recitopia.wwwroot
     public class FeedbackController : AuthorizeController
     {
         private readonly RecitopiaDBContext _recitopiaDbContext;
+        private readonly IEmailSender _emailSender;
 
-        public FeedbackController(RecitopiaDBContext recitopiaDbContext)
+        public FeedbackController(RecitopiaDBContext recitopiaDbContext, IEmailSender emailSender)
         {
             _recitopiaDbContext = recitopiaDbContext ?? throw new ArgumentNullException(nameof(recitopiaDbContext));
+            _emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
         }
         [Authorize]
         // GET: Feedbacks
@@ -80,14 +84,8 @@ namespace Recitopia.wwwroot
             
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            //if  (customerGuid == null || customerGuid.Trim() == "")
-            //{
-            //    return RedirectToAction("CustomerLogin", "Customers");
-            //}
-
             if (ModelState.IsValid)
             {
-
                 //TIMESTAMP, USER NAME and CUSTOMER NAME need to get input
                 try
                 {
@@ -106,6 +104,7 @@ namespace Recitopia.wwwroot
 
                 _recitopiaDbContext.Add(feedback);
                 await _recitopiaDbContext.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             return View(feedback);
@@ -164,10 +163,7 @@ namespace Recitopia.wwwroot
             
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-            //if  (customerGuid == null || customerGuid.Trim() == "")
-            //{
-            //    return RedirectToAction("CustomerLogin", "Customers");
-            //}
+           
 
             if (ModelState.IsValid)
             {
@@ -190,6 +186,10 @@ namespace Recitopia.wwwroot
 
                 _recitopiaDbContext.Add(feedback);
                 await _recitopiaDbContext.SaveChangesAsync();
+
+                //EMAIL WEBMASTER NEW FEEDBACK
+                await _emailSender.SendEmailAsync("recitopia@gmail.com", "New Feedback Posted",
+                       $"User - " + feedback.User_Name + "<br>Subject - " + feedback.Subject);
 
                 ViewBag.SuccessMessage = ("Your Feedback has been successfully submitted. Thank you!");
 
