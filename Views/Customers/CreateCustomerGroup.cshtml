@@ -1,32 +1,32 @@
-﻿@model Recitopia.Models.Vendor
+﻿@model Recitopia.Models.Customers
 
 @{
-    ViewBag.Title = "Edit";
+    ViewData["Title"] = "Create Customer Group";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<table width="100%" class="table-borderless">
-    <tr>
-        <th style="font-size:20px">
-            Edit
-        </th>
-    </tr>
-    <tr>
-        <th style="font-size:30px;background-color:blanchedalmond">
-            @Model.Vendor_Name
-        </th>
-    </tr>
+    <table width="100%" class="table-borderless">
+        <tr>
+            <th style="font-size:30px;background-color:blanchedalmond">
+                New Customer Group
+            </th>
+        </tr>
+        <tr>
+            <td style="font-size:15px">
+                Upon Creation, you will be added to the Customer Group and be able to start work right away!
+            </td>
+        </tr>
+    </table>
+    <br />
+    <div style="width:300px">
 
-</table>
-
-<div class="row">
-    <div style="width:350px">
-        <form asp-action="Edit">
+        <form asp-action="CreateCustomerGroup">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Vendor_Id" />
             <div class="form-group">
-                <label asp-for="Vendor_Name" class="control-label"></label>
-                <input asp-for="Vendor_Name" class="form-control" />
-                <span asp-validation-for="Vendor_Name" class="text-danger"></span>
+                <font style="color:red">*</font>
+                <label asp-for="Customer_Name" style="font-weight:bold" class="control-label"></label>
+                <input asp-for="Customer_Name" class="form-control" />
+                <span asp-validation-for="Customer_Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Phone" class="control-label"></label>
@@ -35,7 +35,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
+                <input asp-for="Email" required class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -74,13 +74,10 @@
                 <span asp-validation-for="Notes" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
 

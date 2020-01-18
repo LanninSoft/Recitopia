@@ -1,0 +1,23 @@
+﻿@model Recitopia.Models.Customers
+
+@{
+    ViewData["Title"] = "Added Successfully";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table width="100%" class="table-borderless">
+
+    <tr>
+        <th style="font-size:30px;background-color:blanchedalmond">
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <font style="color:red">@ViewBag.ErrorMessage</font>
+            }
+            @if (ViewBag.SuccessMessage != null)
+            {
+                <font style="color:green">@ViewBag.SuccessMessage</font>
+            }
+        </th>
+    </tr>
+</table>
+
