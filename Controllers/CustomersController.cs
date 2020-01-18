@@ -1,12 +1,17 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Recitopia.Data;
 using Recitopia.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 namespace Recitopia.Controllers
@@ -14,10 +19,14 @@ namespace Recitopia.Controllers
     public class CustomersController : AuthorizeController
     {
         private readonly RecitopiaDBContext _recitopiaDbContext;
+        private readonly IEmailSender _emailSender;
+        private readonly UserManager<AppUser> _userManager;
 
-        public CustomersController(RecitopiaDBContext recitopiaDbContext)
+        public CustomersController(RecitopiaDBContext recitopiaDbContext, IEmailSender emailSender, UserManager<AppUser> userManager)
         {
             _recitopiaDbContext = recitopiaDbContext ?? throw new ArgumentNullException(nameof(recitopiaDbContext));
+            _emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
 
         [Authorize(Roles = "Administrator")]
@@ -26,7 +35,10 @@ namespace Recitopia.Controllers
         {
             return View(await _recitopiaDbContext.Customers.ToListAsync());
         }
-
+        public async Task<IActionResult> SearchCustomerGroup()
+        {
+            return View(await _recitopiaDbContext.Customers.ToListAsync());
+        }
         [HttpGet]
         public async Task<JsonResult> GetData()
         {
@@ -139,16 +151,22 @@ namespace Recitopia.Controllers
         {
             //save customerguid to appuser field to carry
             var currentUser = await _recitopiaDbContext.AppUsers.Where(m => m.UserName ==  User.Identity.Name).FirstAsync();
+            try
+            {
+                var getCustomerName = await _recitopiaDbContext.Customers.Where(m => m.Customer_Guid == id).FirstAsync();
 
-            var getCustomerName = await _recitopiaDbContext.Customers.Where(m => m.Customer_Guid == id).FirstAsync();
-
-            currentUser.Customer_Guid = id;
+                currentUser.Customer_Guid = id;
             
-            currentUser.Customer_Name = getCustomerName.Customer_Name;
- 
-            HttpContext.Session.SetString("CurrentUserCustomerGuid", id);
+                currentUser.Customer_Name = getCustomerName.Customer_Name;
 
-            await _recitopiaDbContext.SaveChangesAsync();
+                HttpContext.Session.SetString("CurrentUserCustomerGuid", id);
+
+                await _recitopiaDbContext.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                HttpContext.Session.SetString("CurrentUserCustomerGuid", "");
+            }     
 
             //INSERT LOGIN RECORD
             var auditEntry = new AuditLog()
@@ -160,6 +178,7 @@ namespace Recitopia.Controllers
                 CustomerGuid = id
             };
             _recitopiaDbContext.Add(auditEntry);
+
             await _recitopiaDbContext.SaveChangesAsync();
 
             return LocalRedirect("~/Home/Index");
@@ -203,6 +222,50 @@ namespace Recitopia.Controllers
                 _recitopiaDbContext.Add(customers);
                 await _recitopiaDbContext.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+            }
+            return View(customers);
+        }
+
+        public IActionResult CreateCustomerGroup()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateCustomerGroup([FromForm] Customers customers)
+        {
+            if (ModelState.IsValid)
+            {
+                customers.Customer_Guid = Guid.NewGuid().ToString();
+                _recitopiaDbContext.Add(customers);
+                await _recitopiaDbContext.SaveChangesAsync();
+
+                //ADDED THE CUSTOMER GROUP NOW ADD THE CURRENT USER TO THAT CUSTOMER GROUP AND TAKE TO HOME PAGE
+                var currentUser = await _recitopiaDbContext.AppUsers.Where(m => m.UserName == User.Identity.Name).FirstAsync();
+                var customerUser = new Customer_Users()
+                { 
+                    Customer_Name = customers.Customer_Name,
+                    User_Name = currentUser.FullName,
+                    User_Id = currentUser.Id,
+                    Customer_Guid = customers.Customer_Guid,
+                    Customer_Id = customers.Customer_Id
+                };
+
+                _recitopiaDbContext.Add(customerUser);
+                await _recitopiaDbContext.SaveChangesAsync();
+
+                //SET CUSTOMER SESSION
+                HttpContext.Session.SetString("CurrentUserCustomerGuid", customers.Customer_Guid);
+
+                //PRIME CURRENT USERS LAST CUSTOMER LOGIN TO NEW CUSTOMER GROUP
+                currentUser.Customer_Guid = customers.Customer_Guid;
+                currentUser.Customer_Name = customers.Customer_Name;
+
+                _recitopiaDbContext.AppUsers.Update(currentUser);
+                await _recitopiaDbContext.SaveChangesAsync();
+
+                return RedirectToAction("Index", "Home");
             }
             return View(customers);
         }
@@ -340,23 +403,100 @@ namespace Recitopia.Controllers
                 };
                 await _recitopiaDbContext.Customers.AddAsync(customerNew);
                 await _recitopiaDbContext.SaveChangesAsync();
-                
-               
 
             }
             catch
             {
 
             }
-
-
-
                 return RedirectToAction(nameof(Index));
         }
+        public async Task<IActionResult> RequestAccess(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var customers = await _recitopiaDbContext.Customers
+                .FirstOrDefaultAsync(m => m.Customer_Id == id);
+
+            if (customers == null)
+            {
+                return NotFound();
+            }
+
+            return View(customers);
+        }
+        [HttpPost, ActionName("RequestAccess")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RequestAccess(int id)
+        {
+            
+            var customer = await _recitopiaDbContext.Customers.FindAsync(id);
+
+            var currentUser = await _recitopiaDbContext.AppUsers.Where(m => m.UserName == User.Identity.Name).FirstAsync();
+
+            try
+            {
+                //EMAIL CUSTOMER OWNER WITH LINK THAT WILL INSERT A NEW CUSTOMER USER FOR REQUESTOR
+
+                //var callbackUrl = Url.Page(
+                //    "/Customers/ConfirmCustomerAddRequest",
+                //    pageHandler: null,
+                //    values: new { user_Id = currentUser.Id, customer_Guid = customer.Customer_Guid },
+                //    protocol: Request.Scheme);
+
+                var callbackUrl = Url.Action("ConfirmCustomerAddRequest", "Customers", new { user_Id = currentUser.Id, customer_Guid = customer.Customer_Guid }, Request.Scheme);
+
+                await _emailSender.SendEmailAsync(customer.Email, "Confirm Customer Group Access Request",
+                    $"{currentUser.FullName} has requested access to {customer.Customer_Name}.  By <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>, you are approving the request and allowing {currentUser.FullName} access to all your Recipes.");
+
+                ViewBag.SuccessMessage = "Your request has succesfully been submitted to the Customer Group Owner.";
+            }
+            catch
+            {
+                ViewBag.ErrorMessage = "There was an error submitting your request.";
+            }
+
+            return View(customer);
+        }
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmCustomerAddRequest(string user_Id, string customer_Guid)
+        {
+            if (user_Id == null || customer_Guid == null)
+            {
+                ViewBag.ErrorMessage = "Error adding user to Customer Group.";
+                return View();
+            }
+            
+            try
+            {
+                var userInfo = await _recitopiaDbContext.AppUsers.FindAsync(user_Id);
+                var customerInfo = await _recitopiaDbContext.Customers.Where(m => m.Customer_Guid == customer_Guid).FirstOrDefaultAsync();
+
+                var customerUser = new Customer_Users()
+                {
+                    Customer_Name = customerInfo.Customer_Name,
+                    User_Name = userInfo.FullName,
+                    User_Id = userInfo.Id,
+                    Customer_Guid = customerInfo.Customer_Guid,
+                    Customer_Id = customerInfo.Customer_Id
+                };
+
+                _recitopiaDbContext.Add(customerUser);
+                await _recitopiaDbContext.SaveChangesAsync();
+
+                ViewBag.SuccessMessage = "Successfully added user to Customer Group.";
+            }
+            catch
+            {
+                ViewBag.ErrorMessage = "Error adding user to Customer Group.";
+            }
+                
 
 
-
-
-
+            return View();
+        }
     }
 }

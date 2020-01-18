@@ -1,0 +1,79 @@
+﻿@model IEnumerable<Recitopia.Models.Customers>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<table class="table table-borderless">
+    <tr class="pageBanner">
+        <th>
+            Registered Customers
+        </th>
+    </tr>
+</table>
+
+<div ng-app="myApp" ng-controller="Customers" class="container-fluid" style="font-size:13px">
+    @* Use ng-controller *@
+
+
+    <table class="table table-condensed table-hover table-striped table-bordered ">
+        <tr>
+            <th class="AngularTableHeaderColor" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('customer_Name')"><font style="color:black">Customer Name</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('customer_Name')"></i>
+            </th>
+            @*<th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('email')"><font style="color:black">Email</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('email')"></i>
+            </th>
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('web_URL')"><font style="color:black">Web URL</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('web_URL')"></i>
+            </th>*@
+          
+
+            <th style="text-align:right" class="AngularTableHeaderColor"></th>
+
+
+        </tr>
+        <tr>
+            <td style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.customer_Name"></td>
+            @*<td class=" d-none d-lg-table-cell"></td>
+            <td class=" d-none d-lg-table-cell"></td>*@
+           
+            <td></td>
+
+
+        </tr>
+       
+
+        <tr ng-repeat="customer in Customers | filter:f | orderBy:sort.active:sort.descending">
+            @* Fetch All the Recipe record using ng-repeat *@
+
+            <td style="height:15px;padding:1px">{{customer.customer_Name}}</td>
+            @*<td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{customer.email}}</td>
+            <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{customer.web_URL}}</td>*@
+           
+
+
+            <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:200px">
+                <button ng-click="RedirectToRequestAccess(customer)" class="btn btn-outline-info AngularButtons">
+                    Request Access
+                </button> 
+               
+            </td>
+        </tr>
+
+    </table>
+</div>
+
+
+
+
+
+
+
+
+

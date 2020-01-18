@@ -1,0 +1,70 @@
+﻿@model Recitopia.Models.Customers
+
+@{
+    ViewData["Title"] = "Request Access";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<table width="100%" class="table-borderless">
+    <tr>
+        <th style="font-size:30px;background-color:blanchedalmond">
+            Request Customer Group Access
+        </th>
+    </tr>
+
+</table>
+@if (ViewBag.ErrorMessage != null)
+{
+    <font style="color:red">@ViewBag.ErrorMessage</font>
+}
+@if (ViewBag.SuccessMessage != null)
+{
+    <font style="color:green">@ViewBag.SuccessMessage</font>
+}
+
+<div>
+
+    <table>
+        <tr>
+            <td>
+                <div style="text-align:left;width:100%">
+                    <a asp-action="SearchCustomerGroup">Back to List</a>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @if (ViewBag.SuccessMessage == null)
+                {
+                    <font class="alert-success">Are you sure you want to request access this Customer?  An email will be sent to the Customer Group owner.  Once they approve the link in their email inbox, you will have access.</font>
+                }
+            </td>
+
+        </tr>
+        <tr>
+            <th style="font-size:17px">
+                @Html.DisplayNameFor(model => model.Customer_Name)
+            </th>
+
+        </tr>
+        <tr>
+            <td  style="font-size:17px">
+                @Html.DisplayFor(model => model.Customer_Name)
+            </td>
+
+        </tr>
+
+    </table>
+    <br />
+    @if (ViewBag.SuccessMessage == null)
+    {
+        <form asp-action="RequestAccess">
+
+            <input type="hidden" asp-for="Customer_Id" />
+            <input type="submit" value="Request Access" class="btn alert-success" /> |
+          
+            <a asp-action="SearchCustomerGroup">Back to List</a>
+        </form>  
+    }
+</div>

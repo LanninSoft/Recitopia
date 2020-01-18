@@ -1078,7 +1078,11 @@
 
             window.location.href = '/Customers/Delete/' + customers.customer_Id;
         };
+        //Redrect index form to request access to group
+        $scope.RedirectToRequestAccess = function (customers) {
 
+            window.location.href = '/Customers/RequestAccess/' + customers.customer_Id;
+        };
         //Redrect index form to details form with parameter
         $scope.RedirectToCopy = function (customers) {
 
