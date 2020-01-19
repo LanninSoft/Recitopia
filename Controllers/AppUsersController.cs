@@ -201,7 +201,14 @@ namespace Recitopia.Controllers
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var appUser = await _recitopiaDbContext.AppUsers.FindAsync(id);
+
+            //NEED TO WRITE MULTIPLE CASCADING DELETES TO MAKE SURE THERE ARE NO ORPHANS
+            var customerUsersRemove = await _recitopiaDbContext.Customer_Users.Where(m => m.User_Id == appUser.Id).ToListAsync();
+
             _recitopiaDbContext.AppUsers.Remove(appUser);
+            await _recitopiaDbContext.SaveChangesAsync();
+
+            _recitopiaDbContext.Customer_Users.RemoveRange(customerUsersRemove);
             await _recitopiaDbContext.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));

@@ -54,7 +54,7 @@ namespace Recitopia.Controllers
         {
             var customerCount = 0;
             //RETURN LIST OF CUSTOMERS THAT A MEMBER OF
-            //IF ONLY ONE, TAKE THEM HOME.  IF MULTIPLE, PROVIDE LIST AND USER SELECTS WHICH CUSTOMER TO LOGIN TO
+           
             if (User.Identity.Name != null)
             {
 
@@ -111,7 +111,7 @@ namespace Recitopia.Controllers
                         return View();
                     }
                 }
-                else if (customerCount > 1 && clickLinktoChange == true)
+                else if (customerCount >= 1 && clickLinktoChange == true)
                 {
                     //Provide selection view
                     //create list and populate with Customer name and Id
@@ -346,12 +346,15 @@ namespace Recitopia.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var customers = await _recitopiaDbContext.Customers.FindAsync(id);
-            
-            
-            //NEED TO WRITE MULTIPLE CASCADING DELETES TO MAKE SURE THERE ARE NO ORPHANS
 
+
+            //NEED TO WRITE MULTIPLE CASCADING DELETES TO MAKE SURE THERE ARE NO ORPHANS
+            var customerUsersRemove = await _recitopiaDbContext.Customer_Users.Where(m => m.Customer_Guid == customers.Customer_Guid).ToListAsync();
 
             _recitopiaDbContext.Customers.Remove(customers);
+            await _recitopiaDbContext.SaveChangesAsync();
+
+            _recitopiaDbContext.Customer_Users.RemoveRange(customerUsersRemove);
             await _recitopiaDbContext.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
@@ -439,20 +442,24 @@ namespace Recitopia.Controllers
 
             try
             {
-                //EMAIL CUSTOMER OWNER WITH LINK THAT WILL INSERT A NEW CUSTOMER USER FOR REQUESTOR
+                //Already a member of the Customer Group?
 
-                //var callbackUrl = Url.Page(
-                //    "/Customers/ConfirmCustomerAddRequest",
-                //    pageHandler: null,
-                //    values: new { user_Id = currentUser.Id, customer_Guid = customer.Customer_Guid },
-                //    protocol: Request.Scheme);
+                var seeIfAlreadyExists = await _recitopiaDbContext.Customer_Users.Where(m => m.User_Id == currentUser.Id && m.Customer_Guid == customer.Customer_Guid).FirstOrDefaultAsync();
 
-                var callbackUrl = Url.Action("ConfirmCustomerAddRequest", "Customers", new { user_Id = currentUser.Id, customer_Guid = customer.Customer_Guid }, Request.Scheme);
+                if (seeIfAlreadyExists == null)
+                {
+                    var callbackUrl = Url.Action("ConfirmCustomerAddRequest", "Customers", new { user_Id = currentUser.Id, customer_Guid = customer.Customer_Guid }, Request.Scheme);
 
-                await _emailSender.SendEmailAsync(customer.Email, "Confirm Customer Group Access Request",
-                    $"{currentUser.FullName} has requested access to {customer.Customer_Name}.  By <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>, you are approving the request and allowing {currentUser.FullName} access to all your Recipes.");
+                    await _emailSender.SendEmailAsync(customer.Email, "Confirm Customer Group Access Request",
+                        $"{currentUser.FullName} has requested access to {customer.Customer_Name}.  By <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>, you are approving the request and allowing {currentUser.FullName} access to all your Recipes.");
 
-                ViewBag.SuccessMessage = "Your request has succesfully been submitted to the Customer Group Owner.";
+                    ViewBag.SuccessMessage = "Your request has succesfully been submitted to the Customer Group Owner.";
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "You are already a member of '" + customer.Customer_Name + "'!";
+                }
+                
             }
             catch
             {
