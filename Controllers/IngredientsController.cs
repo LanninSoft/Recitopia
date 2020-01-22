@@ -87,7 +87,10 @@ namespace Recitopia.Controllers
             {
                 return new StatusCodeResult(0);
             }
-            Ingredient ingredient = await _recitopiaDbContext.Ingredient.FindAsync(id);
+            Ingredient ingredient = await _recitopiaDbContext.Ingredient
+                .Include(v => v.Vendor)
+                .Where(v => v.Ingredient_Id == id)
+                .FirstOrDefaultAsync();
             if (ingredient == null)
             {
                 return NotFound();
