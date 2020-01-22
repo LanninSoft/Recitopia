@@ -25,7 +25,7 @@
             <td width="30%" valign="top" style="font-size:13px">
                 <table width=100% class="table-striped" border="1">
                     <tr>
-                        <th  style="background-color:darkseagreen;font-size:15px">
+                        <th style="background-color:darkseagreen;font-size:15px">
                             Details
                         </th>
                     </tr>
@@ -39,26 +39,50 @@
                             @Html.DisplayFor(model => model.Ingred_name)
                         </td>
                     </tr>
-                    <tr>
-                        <th>
-                            Cost per lb
-                        </th>
-                    </tr>
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(model => model.Cost_per_lb)
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            Cost $
-                        </th>
-                    </tr>
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(model => model.Cost)
-                        </td>
-                    </tr>
+                    @if (Model.Ingred_Comp_name != null)
+                    {
+                        <tr>
+                            <th>
+                                Ingredient Component Name
+                            </th>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(model => model.Ingred_Comp_name)
+                            </td>
+                        </tr>
+                        
+                    }
+
+                    @if (Model.Cost_per_lb != null)
+                    {
+                        <tr>
+                            <th>
+                                Cost per lb
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(model => model.Cost_per_lb)
+                            </td>
+                        </tr>
+                        
+                    }
+                    @if (Model.Cost != null)
+                    {
+                        <tr>
+                            <th>
+                                Cost $
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(model => model.Cost)
+                            </td>
+                        </tr>
+                        
+                    }
                     <tr>
                         <th>
                             Vendor Name
