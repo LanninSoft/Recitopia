@@ -23,7 +23,7 @@
         <table style="width:100%" border="0">
             <tr>
                 <td  style="font-size:13px;width:30%;vertical-align:top">
-                    <table style="width:100%" class="table-striped" border="1">
+                    <table style="width:100%" class="table-striped " border="1">
                         <tr>
                             <th style="background-color:darkseagreen;font-size:15px">
                                 Details
@@ -427,9 +427,9 @@
         </table>
 
     </div>   
-<p>
+<div class="d-print-none">
     @Html.ActionLink("Edit", "Edit", new { id = Model.Recipe_Id }) |
     @Html.ActionLink("Back to List", "Index") |
     @Html.ActionLink("Create Copy", "CreateCopy", new { id = Model.Recipe_Id })
    
-</p>
+</div>

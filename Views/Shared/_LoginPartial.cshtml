@@ -4,31 +4,35 @@
 
 @if (User.Identity.IsAuthenticated)
 {
-    <table border="0" style="width:100%">
+    
+        <table border="0" style="width:100%">
 
-        <tr style="font-size:13px">
-            
-            <td style="text-align:left;width:80%">
-                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><i class="fa fa-pen-fancy"></i>Hello @((await UserManager.GetUserAsync(User)).FullName)</a>
-                
-            </td>
-            <td style="text-align:right;width:20%">
-                <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                    <button style="padding:0px;font-size:13px" type="submit" class="btn btn-link btn-sm">Logout</button>
-                </form>
+            <tr style="font-size:13px">
 
-            </td>
-        </tr>
-        <tr style="background-color:gainsboro;font-size:17px">
-            <td style="text-align:center" colspan="2">
+                <td style="text-align:left;width:80%">
+                   
+                        <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><i class="fa fa-pen-fancy"></i>Hello @((await UserManager.GetUserAsync(User)).FullName)</a>
+                    
 
-                <a href="@Url.Action("CustomerLogin", "Customers", new { clickLinktoChange = true } )"><font style="color:saddlebrown">@UserManager.Users.Where(m => m.UserName == @User.Identity.Name).First().Customer_Name <i class="fa fa-users"></i></font></a>
+                </td>
+                <td style="text-align:right;width:20%">
+                    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                        <button style="padding:0px;font-size:13px" type="submit" class="btn btn-link btn-sm">Logout</button>
+                    </form>
+
+                </td>
+            </tr>
+            <tr style="background-color:gainsboro;font-size:17px">
+                <td style="text-align:center" colspan="2">
+
+                    <a href="@Url.Action("CustomerLogin", "Customers", new { clickLinktoChange = true } )"><font style="color:saddlebrown">@UserManager.Users.Where(m => m.UserName == @User.Identity.Name).First().Customer_Name <i class="fa fa-users"></i></font></a>
 
 
-            </td>
-        </tr>
+                </td>
+            </tr>
 
-    </table>
+        </table>
+    
 }
 else
 {

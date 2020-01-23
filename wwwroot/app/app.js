@@ -394,6 +394,92 @@
 
 
     });
+    //------------------------------------------------------------------------------------------------------
+    //-----------------------RECIPE_INGREDIENTS CREATE CONTROLLER--------------------------------------------------
+    //------------------------------------------------------------------------------------------------------
+
+    app.controller('RecipeIngredientsCreate', function ($scope, $http) {
+
+
+
+        $http.get("/Recipe_Ingredients/GetDataCreate")
+            .then(function (response) {
+                // First function handles success
+
+                $scope.Ingredients = response.data;
+
+            }, function (response) {
+                // Second function handles error
+                $scope.Ingredients = "Something went wrong";
+
+            });
+
+        //UPDATE Amount g
+        $scope.RedirectToAdd = function (Data) {
+            $scope.resultMessage = '';
+
+            $http({
+                url: "/Recipe_Ingredients/CreateRecipeIngredient/",
+                contentType: 'application/json',
+                method: 'POST',
+                traditional: true,
+                data: Data,
+
+            }).then(function (response) {
+
+                $scope.resultMessage = "Success saving";
+                window.location.href = '/Recipe_Ingredients/Index/?recipeId=' + response.data;
+            })
+            .catch(function (error) {
+
+                $scope.resultMessage = "Error saving";
+            });
+
+            
+            
+        };
+        //SORTING ICON CONTROL
+        $scope.sort = {
+            active: '',
+            descending: undefined
+        }
+
+        $scope.changeSorting = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                sort.descending = !sort.descending;
+
+            } else {
+                sort.active = column;
+                sort.descending = false;
+            }
+        };
+
+        $scope.getIcon = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                return sort.descending
+                    ? 'fa fa-caret-up'
+                    : 'fa fa-caret-down';
+            }
+
+            return 'fa fa-caret-left';
+        }
+
+
+
+        app.filter('YesNo', function () {
+            return function (text) {
+                return text ? "Yes" : "No";
+            }
+        })
+
+
+    });
 //------------------------------------------------------------------------------------------------------
 //-----------------------INGREDIENTS CONTROLLER-----------------------------------------------------------
 //------------------------------------------------------------------------------------------------------

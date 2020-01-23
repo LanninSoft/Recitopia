@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using MoreLinq;
 using Recitopia.Data;
 using Recitopia.Models;
 using System;
@@ -75,7 +76,50 @@ namespace Recitopia.Controllers
                 ? Json(recipeIngredientDetails) 
                 : Json(new { Status = "Failure" });
         }
+        [HttpGet]
+        public async Task<JsonResult> GetDataCreate()
+        {
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");            
 
+            var usedIngredientsForRecipe = await _recitopiaDbContext.Recipe_Ingredients
+                .Where(m => m.Customer_Guid == customerGuid)
+                .Select(ri => new View_Angular_Recipe_Ingredients_Details()
+                { 
+                    Ingredient_Id = ri.Ingredient_Id
+                })
+                .ToListAsync();
+
+                     
+            List<int> IngredientIdList = new List<int>();
+
+            foreach (View_Angular_Recipe_Ingredients_Details thing in usedIngredientsForRecipe)
+            {
+                IngredientIdList.Add(thing.Ingredient_Id);
+            }
+
+            
+            var filterIngredients = await _recitopiaDbContext.Ingredient
+                .Include(f => f.Vendor)
+                .Where(f => !IngredientIdList.Contains(f.Ingredient_Id) && f.Customer_Guid == customerGuid)
+                .OrderBy(i => i.Ingred_name)
+                .Select(ri => new View_Angular_Ingredients_Details()
+                {
+                    Ingredient_Id = ri.Ingredient_Id,
+                    Customer_Guid = ri.Customer_Guid,
+                    Ingred_name = ri.Ingred_name,
+                    Cost_per_lb = ri.Cost_per_lb,
+                    Cost = ri.Cost,
+                    Package = ri.Package,
+                    Vendor_Name = ri.Vendor.Vendor_Name,
+                    Amount_g = 0
+                })
+                .ToListAsync();
+
+
+            return filterIngredients != null
+                 ? Json(filterIngredients)
+                 : Json(new { Status = "Failure" });
+        }
         public async Task<ActionResult> Details(int id)
         {
             var recipeIngredients = await _recitopiaDbContext.Recipe_Ingredients.FindAsync(id);
@@ -264,9 +308,52 @@ namespace Recitopia.Controllers
 
             return View(recipe_Ingredients);
         }
+        [HttpPost]
+        public async Task<JsonResult> CreateRecipeIngredient([FromBody]List<View_Angular_Ingredients_Details> recipeIngredientsDetails)
+        {
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+            var recipeID = 0;
+
+            foreach (View_Angular_Ingredients_Details detail in recipeIngredientsDetails)
+            {
+                recipeID = detail.recipe_Id;
+
+                if (detail.Amount_g > 0)
+                {
+                    var recipeIngredient = new Recipe_Ingredients();
+
+                    recipeIngredient.Amount_g = detail.Amount_g;
+
+                    recipeIngredient.Recipe_Id = detail.recipe_Id;
+                    recipeIngredient.Ingredient_Id = detail.Ingredient_Id;
+                    recipeIngredient.Customer_Guid = customerGuid;
+
+                    //Lets see if it's already in the db
+                    var checkRecipeIngredients = await _recitopiaDbContext.Recipe_Ingredients
+                        .Where(m => m.Customer_Guid == customerGuid && m.Ingredient_Id == detail.Ingredient_Id && m.Recipe_Id == detail.recipe_Id)
+                        .FirstOrDefaultAsync();
+
+                    if (checkRecipeIngredients == null)
+                    {
+                        await _recitopiaDbContext.Recipe_Ingredients.AddAsync(recipeIngredient);
+                        await _recitopiaDbContext.SaveChangesAsync();
+                    }
+
+                    
+                }
+                
+                
+            }
+
+            
+            //return Json("Success");
+            return Json(recipeID);
+            //return RedirectToAction("Index", new { recipeId = recipeID });
+
+        }
 
         // GET: Recipe_Ingredients/Edit/5
-       public async Task<ActionResult> Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
