@@ -13,5 +13,7 @@ namespace Recitopia.Models
         public decimal? Cost { get; set; }
         public bool Package { get; set; }
         public string Vendor_Name { get; set; }
+        public decimal Amount_g { get; set; }
+        public int recipe_Id { get; set; }
     }
 }

@@ -82,7 +82,7 @@ namespace Recitopia.Controllers
 
 
         }
-
+       
         public async Task<ActionResult> Details(int id)
         {
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
@@ -410,7 +410,7 @@ namespace Recitopia.Controllers
                         {
                             Nutrition_Item = nutritionPanelList[i].Nutrition_Item,
                             //DIVIDE BY 100 MULTIPLY BY INGRED AMOUNT
-                            Nut_per_100_grams = nutValue,
+                            Nut_per_100_grams = nutValue / servingSize,
                             //Amount_g = (nutValue / servingSize) / (nDV),
                             Amount_g = tempAmountg,
                             Measurement = nM,
@@ -441,7 +441,7 @@ namespace Recitopia.Controllers
                     {
                         Nutrition_Item = nutritionPanelList[i].Nutrition_Item,
                         //DIVIDE BY 100 MULTIPLY BY INGRED AMOUNT
-                        Nut_per_100_grams = nutValue,
+                        Nut_per_100_grams = nutValue / servingSize,
                         //Amount_g = (nutValue / servingSize) / (nDV),
                         Amount_g = tempAmountg,
                         Measurement = nM,
@@ -919,10 +919,8 @@ namespace Recitopia.Controllers
             
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
-
             try
             {
-
                 //ADD RECIPE COPY
                 Recipe recipe_new = new Recipe();
                     recipe_new.Recipe_Name = recipe.Recipe_Name + " - COPY";
@@ -974,7 +972,7 @@ namespace Recitopia.Controllers
                     await _recitopiaDbContext.SaveChangesAsync();
 
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction("Edit", new { id = recipe_new.Recipe_Id });
             }
             
             catch (InvalidOperationException) // This will catch SqlConnection Exception
