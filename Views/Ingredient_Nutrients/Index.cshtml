@@ -63,7 +63,8 @@
 
                             <input type="number" min="0" step="0.001" style="width:75px" ng-show="nutrient.edit.nut_per_100_grams"
                                    ng-blur="nutrient.edit.nut_per_100_grams = !nutrient.edit.nut_per_100_grams | resultMessage = ''"
-                                   ng-model="nutrient.nut_per_100_grams" />
+                                   ng-model="nutrient.nut_per_100_grams" 
+                                       ng-focus="$event.target.select()" />
 
                         </td>
 

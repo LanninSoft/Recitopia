@@ -46,7 +46,8 @@
                                 </div>
                                 <input type="number" min="0" step="0.001" style="width:75px" required ng-show="packaging.edit.amount"
                                        ng-blur="packaging.edit.amount = !packaging.edit.amount"
-                                       ng-model="packaging.amount" />
+                                       ng-model="packaging.amount" 
+                                       ng-focus="$event.target.select()" />
                             </td>
                             <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:150px">
                                 @* <button ng-click="RedirectToEdit(packaging)" class="btn btn-outline-success AngularButtons">
