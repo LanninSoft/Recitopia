@@ -77,12 +77,12 @@ namespace Recitopia.Controllers
                 : Json(new { Status = "Failure" });
         }
         [HttpGet]
-        public async Task<JsonResult> GetDataCreate()
+        public async Task<JsonResult> GetDataCreate(int recipe_Id)
         {
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");            
 
             var usedIngredientsForRecipe = await _recitopiaDbContext.Recipe_Ingredients
-                .Where(m => m.Customer_Guid == customerGuid)
+                .Where(m => m.Customer_Guid == customerGuid && m.Recipe_Id == recipe_Id)
                 .Select(ri => new View_Angular_Recipe_Ingredients_Details()
                 { 
                     Ingredient_Id = ri.Ingredient_Id
