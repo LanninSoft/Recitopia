@@ -400,20 +400,20 @@
 
     app.controller('RecipeIngredientsCreate', function ($scope, $http) {
 
+        $scope.$watch('Recipe_Id', function () {
 
+            $http.get("/Recipe_Ingredients/GetDataCreate?recipe_Id=" + $scope.Recipe_Id)
+                .then(function (response) {
+                    // First function handles success
 
-        $http.get("/Recipe_Ingredients/GetDataCreate")
-            .then(function (response) {
-                // First function handles success
+                    $scope.Ingredients = response.data;
 
-                $scope.Ingredients = response.data;
+                }, function (response) {
+                    // Second function handles error
+                    $scope.Ingredients = "Something went wrong";
 
-            }, function (response) {
-                // Second function handles error
-                $scope.Ingredients = "Something went wrong";
-
-            });
-
+                });
+        });
         //UPDATE Amount g
         $scope.RedirectToAdd = function (Data) {
             $scope.resultMessage = '';
