@@ -595,11 +595,12 @@ namespace Recitopia.Controllers
 
                 await _recitopiaDbContext.SaveChangesAsync();
 
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", new { id = recipe.Recipe_Id });
             }
 
             ViewBag.Category_Id = new SelectList(await _recitopiaDbContext.Meal_Category.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Category_Name).ToListAsync(), "Category_Id", "Category_Name", recipe.Category_Id);
             ViewBag.SS_ID = new SelectList(await _recitopiaDbContext.Serving_Sizes.Where(m => m.Customer_Guid == customerGuid).OrderByDescending(m => m.Serving_Size).ToListAsync(), "SS_Id", "Serving_Size", recipe.SS_Id);
+
             return View(recipe);
         }
         [HttpGet]
@@ -823,7 +824,7 @@ namespace Recitopia.Controllers
 
                 await _recitopiaDbContext.SaveChangesAsync();
 
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", new { id = recipe.Recipe_Id });
             }
             ViewBag.Category_Id = new SelectList(await _recitopiaDbContext.Meal_Category.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Category_Name).ToListAsync(), "Category_Id", "Category_Name", recipe.Category_Id);
             ViewBag.SS_Id = new SelectList(await _recitopiaDbContext.Serving_Sizes.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Serving_Size).ToListAsync(), "SS_Id", "Serving_Size", recipe.SS_Id);

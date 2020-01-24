@@ -114,7 +114,13 @@
     
         
     </div>
-    
+<div class="d-print-none">
+   
+    @Html.ActionLink("Recipe Details", "Details", "Recipes", new { id = ViewBag.RecipeNameID }) |
+    @Html.ActionLink("Recipe List", "Index", "Recipes")
+
+</div>
+<br />
 <div ng-if="(Ingredients|filter:query).length > 0">
     <a href="@Url.Action("Create", "Recipe_Ingredients", new { recipeID = ViewBag.RecipeNameID })" class="btn alert-success" role="button"><i class="fa fa-plus"></i> Add Ingredient</a>
 </div>
