@@ -27,9 +27,10 @@ namespace Recitopia.Models
         
         public DateTime? LastModified { get; set; }
 
-        [Display(Name = "Cost")]
+        [Display(Name = "Cost($)")]
         [DataType(DataType.Currency)]
         [Column(TypeName = "decimal(18,3)")]
+        [DisplayFormat(DataFormatString = "{0:N3}")]
         public decimal Cost { get; set; }
 
         [Display(Name = "Weight(g)")]
