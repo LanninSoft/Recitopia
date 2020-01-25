@@ -49,43 +49,43 @@
                                 </th>
                             </tr>
                             <tr>
-                                <th>Recipe Name</th>
+                                <th>@Html.LabelFor(model => model.Recipe_Name)</th>
                             </tr>
                             <tr>
                                 <td>@Html.DisplayFor(model => model.Recipe_Name)</td>
                             </tr>
                             <tr>
-                                <th>Category Name</th>
+                                <th>@Html.LabelFor(model => model.Meal_Category.Category_Name)</th>
                             </tr>
                             <tr>
                                 <td>@Html.DisplayFor(model => model.Meal_Category.Category_Name)</td>
                             </tr>
                             <tr>
-                                <th>Serving Size</th>
+                                <th>@Html.LabelFor(model => model.Serving_Sizes.Serving_Size)</th>
                             </tr>
                             <tr>
                                 <td>@Html.DisplayFor(model => model.Serving_Sizes.Serving_Size)</td>
                             </tr>
                             <tr>
-                                <th>Labor Cost</th>
+                                <th>@Html.LabelFor(model => model.LaborCost)</th>
                             </tr>
                             <tr>
                                 <td>@Html.DisplayFor(model => model.LaborCost)</td>
                             </tr>
                             <tr>
-                                <th>Gluten Free</th>
+                                <th>@Html.LabelFor(model => model.Gluten_Free)</th>
                             </tr>
                             <tr>
                                 <td>@Html.DisplayFor(model => model.Gluten_Free)</td>
                             </tr>
                             <tr>
-                                <th>SKU</th>
+                                <th>@Html.LabelFor(model => model.SKU)</th>
                             </tr>
                             <tr>
                                 <td>@Html.DisplayFor(model => model.SKU)</td>
                             </tr>
                             <tr>
-                                <th>UPC</th>
+                                <th>@Html.LabelFor(model => model.UPC)</th>
                             </tr>
                             <tr>
                                 <td>@Html.DisplayFor(model => model.UPC)</td>
@@ -93,14 +93,14 @@
                             @if (Model.Notes != null)
                             {
                                 <tr>
-                                    <th>Notes</th>
+                                    <th>@Html.LabelFor(model => model.Notes)</th>
                                 </tr>
                                 <tr>
                                     <td>@Html.DisplayFor(model => model.Notes)</td>
                                 </tr>
                             }
                             <tr>
-                                <th>Last Modified</th>
+                                <th>@Html.LabelFor(model => model.LastModified)</th>
                             </tr>
                             <tr>
                                 <td>@Html.DisplayFor(model => model.LastModified)</td>

@@ -22,13 +22,16 @@ namespace Recitopia.Models
         public string Ingred_Comp_name { get; set; }
        
         public decimal? Cost_per_oz { get; set; }
-        [Display(Name = "Cost/g")]
+
+        [Display(Name = "Cost/g($)")]
         [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N2}")]
         public decimal? Cost_per_gram { get; set; }
         public decimal? Cost_per_cup { get; set; }
-        [Display(Name = "Cost/lb")]
-        [DataType(DataType.Currency)]
 
+        [Display(Name = "Cost/lb($)")]
+        [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N2}")]
         public decimal? Cost_per_lb { get; set; }
         public decimal? Cost_per_tsp { get; set; }
         public decimal? Cost_per_tbsp { get; set; }
@@ -52,8 +55,9 @@ namespace Recitopia.Models
         public string Brand { get; set; }
         public DateTime? LastModified { get; set; }
         public bool Package { get; set; }
-        [Display(Name = "Cost")]
+        [Display(Name = "Cost($)")]
         [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N2}")]
         public decimal? Cost { get; set; }
         //public int Customer_Id { get; set; }
         public string Customer_Guid { get; set; }

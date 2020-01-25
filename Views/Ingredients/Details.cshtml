@@ -31,7 +31,7 @@
                     </tr>
                     <tr>
                         <th>
-                            Ingredient Name
+                            @Html.LabelFor(model => model.Ingred_name)
                         </th>
                     </tr>
                     <tr>
@@ -43,7 +43,7 @@
                     {
                         <tr>
                             <th>
-                                Ingredient Component Name
+                                @Html.LabelFor(model => model.Ingred_Comp_name)
                             </th>
                         </tr>
 
@@ -59,7 +59,7 @@
                     {
                         <tr>
                             <th>
-                                Cost per lb
+                                @Html.LabelFor(model => model.Cost_per_lb)
                             </th>
                         </tr>
                         <tr>
@@ -73,7 +73,7 @@
                     {
                         <tr>
                             <th>
-                                Cost $
+                                @Html.LabelFor(model => model.Cost)
                             </th>
                         </tr>
                         <tr>
@@ -85,7 +85,7 @@
                     }
                     <tr>
                         <th>
-                            Vendor Name
+                            @Html.LabelFor(model => model.Vendor.Vendor_Name)
                         </th>
                     </tr>
                     <tr>
@@ -97,7 +97,7 @@
                     {
                         <tr>
                             <th>
-                                Notes
+                                @Html.LabelFor(model => model.Notes)
                             </th>
                         </tr>
 
@@ -113,7 +113,7 @@
                     {
                         <tr>
                             <th>
-                                Brand
+                                @Html.LabelFor(model => model.Brand)
                             </th>
 
                         </tr>

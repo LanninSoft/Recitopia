@@ -31,8 +31,9 @@ namespace Recitopia.Models
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
 
-        [Display(Name = "Labor Cost")]
+        [Display(Name = "Labor Cost($)")]
         [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:N2}")]
         public decimal? LaborCost { get; set; }
         [Display(Name = "Serving Size")]
         public int SS_Id { get; set; }
