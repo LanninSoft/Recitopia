@@ -438,7 +438,7 @@ namespace Recitopia.Controllers
 
             var stream = new MemoryStream();
             var writeFile = new StreamWriter(stream);
-            var csv = new CsvWriter(writeFile);
+            var csv = new CsvWriter(writeFile, System.Globalization.CultureInfo.CurrentCulture);
             //csv.Configuration.RegisterClassMap<GroupReportCSVMap>();
 
             csv.WriteRecords(CSVModels);
