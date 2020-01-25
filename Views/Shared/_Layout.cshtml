@@ -31,7 +31,8 @@
 <body>
 
     <div class="container-fluid box effect8" style="background-color:whitesmoke;">
-        <table width="100%" align="center" class="table-responsive-lg">
+        <br />
+        <table border="0" style="align-content:center;width:100%" class="table-responsive-lg">
             <tr>
                 <td>
                     <div style="font-size:30px">
@@ -127,43 +128,43 @@
                     </div>
                 </td>
             </tr>
-
             <tr>
                 <td>
                     <div class="container body-content">
+                        <br />
                         @RenderBody()
+                        <br />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="d-print-none" style="background-color:#343a40">                        
 
+                        <footer>
+                            <table border="0" style="width:100%">
+                                <tr>
+                                    <td style="text-align:left;width:50%">
+                                        <font style="color:lightgrey;font-size:12px">&nbsp;&copy; @DateTime.Now.Year - Recitopia</font>
 
+                                    </td>
+                                    <td style="text-align:right;width:50%">
+                                        @if (User.Identity.IsAuthenticated)
+                                        {
+                                            <a class="nav-link" href="@Url.Action("FeedbackUser", "Feedback")"><font style="color:whitesmoke;font-size:12px">FEEDBACK</font></a>
+                                        }
+                                    </td>
+                                </tr>
+                            </table>
 
+                        </footer>
+                        
                     </div>
                 </td>
             </tr>
         </table>
-        <br />
-        <div class="container-fluid d-print-none">
-            <div style="width:100%;background-color:#343a40">
-
-                <footer>
-                    <table style="width:100%">
-                        <tr>
-                            <td style="text-align:left;width:50%">
-                                <font style="color:lightgrey;font-size:12px">&nbsp;&copy; @DateTime.Now.Year - Recitopia</font>
-
-                            </td>
-                            <td style="text-align:right;width:50%">
-                                @if (User.Identity.IsAuthenticated)
-                                {
-                                    <a class="nav-link" href="@Url.Action("FeedbackUser", "Feedback")"><font style="color:whitesmoke;font-size:12px">FEEDBACK</font></a>
-                                }
-                            </td>
-                        </tr>
-                    </table>
-
-                </footer>
-
-
-            </div>
-        </div>
+        
+        
         <br />
     </div>
 
