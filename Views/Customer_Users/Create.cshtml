@@ -5,19 +5,20 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<table width="100%" class="table-borderless">
-    <tr>
-        <th style="font-size:30px;background-color:blanchedalmond">
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBannerAdmin">
+        <th style="font-size:20px">
             Create Customer User
         </th>
     </tr>
 
 </table>
+<br />
 @if (ViewBag.ErrorMessage != null)
 {
     <font style="color:red">@ViewBag.ErrorMessage</font>
 }
-<div class="row">
+
     <div style="width:350px">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -48,7 +49,7 @@
             </div>
         </form>
     </div>
-</div>
+
 
 <div>
     <a asp-action="Index">Back to List</a>

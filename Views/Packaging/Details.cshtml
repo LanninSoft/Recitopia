@@ -5,66 +5,69 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <table width="100%" class="table-borderless">
-        <tr>
-            <th style="font-size:20px">
-                Details
-            </th>
-        </tr>
-        <tr>
-            <th style="font-size:30px;background-color:blanchedalmond">
-                @Model.Package_Name
-            </th>
-        </tr>
-    </table>
+<table style="width:100%">
+    <tr>
+        <th>
+            Details
+        </th>
+    </tr>
+</table>
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBanner">
+        <th style="font-size:20px">
+           @Model.Package_Name
+        </th>
+    </tr>
 
+</table>
+<br />
 <div>
-   
+
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Package_Name)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Package_Name)
         </dd>
-       
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Vendor_Name)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Vendor_Name)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Website)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Website)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.LastModified)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.LastModified)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Cost)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Cost)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Weight)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Weight)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Notes)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Notes)
         </dd>
-        
+
     </dl>
 </div>
 <div>

@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "Ingredient Nutrients";
 }
-<table width="100%" class="table table-borderless">
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
     <tr class="pageBanner">
         <th>
             @ViewBag.IngredName (Allergen List)
@@ -14,22 +14,22 @@
 <div ng-app="myApp" ng-controller="IngredientAllergen" ng-init="Ingred_Id=(@ViewBag.IngredNameID)" class="container-fluid" style="font-size:13px">
     @* Use ng-controller *@
 
-    <table >
+    <table>
         <tr>
             <td>
                 <table width="100%" class="table table-condensed table-hover table-striped table-bordered table-responsive-lg">
                     <tr>
-                        <th  class="AngularTableHeaderColor" style="vertical-align:bottom">
+                        <th class="AngularTableHeaderColor" style="vertical-align:bottom">
                             <a href="" ng-click="changeSorting('component_Name')"><font style="color:black">Allergen Name</font></a>
                             <i class="fa fa-caret-left" ng-class="getIcon('component_Name')"></i>
                         </th>
-                        
-                        <th style="text-align:right"  class="AngularTableHeaderColor"> <a href="@Url.Action("Create", "Ingredient_Components", new { ingredID = ViewBag.IngredNameID })" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> Add Allergen</a></th>
+
+                        <th style="text-align:right" class="AngularTableHeaderColor"> <a href="@Url.Action("Create", "Ingredient_Components", new { ingredID = ViewBag.IngredNameID })" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> Add Allergen</a></th>
 
                     </tr>
                     <tr>
                         <td style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.component_Name"></td>
-                        
+
                         <td></td>
                     </tr>
 
@@ -42,8 +42,8 @@
 
                         <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:150px">
                             @*<button ng-click="RedirectToEdit(allergen)" class="btn btn-outline-success AngularButtons">
-                                <i class="fa fa-pen"></i>
-                            </button> |*@
+                                    <i class="fa fa-pen"></i>
+                                </button> |*@
                             <button ng-click="RedirectToDetails(allergen)" class="btn btn-outline-info AngularButtons">
                                 <i class="fa fa-clipboard"></i>
                             </button> |
@@ -60,9 +60,15 @@
             </td>
         </tr>
     </table>
+    <div class="d-print-none">
 
+        @Html.ActionLink("Ingredient Details", "Details", "Ingredients", new { id = ViewBag.IngredNameID }) |
+        @Html.ActionLink("Ingredient List", "Index", "Ingredients")
+
+    </div>
+    @*<br />
     <div ng-if="(IngredientComponents|filter:query).length > 0">
         <a href="@Url.Action("Create", "Ingredient_Components", new { ingredID = ViewBag.IngredNameID })" class="btn alert-success" role="button"><i class="fa fa-plus"></i> Add Allergen</a>
-    </div>
+    </div>*@
 </div>
     

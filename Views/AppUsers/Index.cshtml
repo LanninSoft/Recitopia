@@ -5,84 +5,86 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <table width="100%" class="table table-borderless ">
-        <tr class="pageBannerAdmin">
-            <th>
-                Application Users
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBannerAdmin">
+        <th style="font-size:20px">
+            Application users
+        </th>
+    </tr>
+
+</table>
+<br />
+
+
+<div ng-app="myApp" ng-controller="AppUsers" style="font-size:13px" class="container-fluid">
+    @* Use ng-controller *@
+
+
+    <table width="100%" class="table table-condensed table-hover table-striped table-bordered table-responsive-lg">
+        <tr>
+            <th class="AngularTableHeaderColor" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('lastName')"><font style="color:black">Last Name</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('lastName')"></i>
             </th>
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('firstName')"><font style="color:black">First Name</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('firstName')"></i>
+            </th>
+
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('email')"><font style="color:black">Email</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('email')"></i>
+            </th>
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('customer_Name')"><font style="color:black">Customer Name</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('customer_Name')"></i>
+            </th>
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('site_Role_Id')"><font style="color:black">Site Role</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('site_Role_Id')"></i>
+            </th>
+
+            <th class="AngularTableHeaderColor " style="vertical-align:bottom">
+
+            </th>
+
+
         </tr>
+        <tr>
+            <td style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.lastName"></td>
+            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input style="padding:1px;height:20px;width:100%" ng-model="f.firstName"></td>
+            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input style="padding:1px;height:20px;width:100%" ng-model="f.email"></td>
+            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"></td>
+
+            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input style="padding:1px;height:20px;width:100%" ng-model="f.site_Role_Id"></td>
+        </tr>
+
+
+        <tr ng-repeat="appuser in AppUsers | filter:f | orderBy:sort.active:sort.descending ">
+            @* Fetch All the Recipe record using ng-repeat *@
+
+            <td style="height:15px;padding:1px">{{appuser.lastName}}</td>
+            <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{appuser.firstName}}</td>
+            <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{appuser.email}}</td>
+            <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{appuser.customer_Name}}</td>
+            <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{appuser.site_Role_Id}}</td>
+
+
+            <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:175px">
+
+                <button ng-click="RedirectToEdit(appuser)" class="btn btn-outline-success AngularButtons">
+                    <i class="fa fa-pen"></i>
+                </button> |
+                <button ng-click="RedirectToDetails(appuser)" class="btn btn-outline-info AngularButtons">
+                    <i class="fa fa-clipboard"></i>
+                </button> |
+
+                <button ng-click="DelAppUser(appuser)" class="btn btn-outline-danger AngularButtons">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+
     </table>
-
-
-    <div ng-app="myApp" ng-controller="AppUsers" style="font-size:13px" class="container-fluid">
-        @* Use ng-controller *@
-
-
-        <table width="100%" class="table table-condensed table-hover table-striped table-bordered table-responsive-lg">
-            <tr>
-                <th class="AngularTableHeaderColor" style="vertical-align:bottom">
-                    <a href="" ng-click="changeSorting('lastName')"><font style="color:black">Last Name</font></a>
-                    <i class="fa fa-caret-left" ng-class="getIcon('lastName')"></i>
-                </th>
-                <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
-                    <a href="" ng-click="changeSorting('firstName')"><font style="color:black">First Name</font></a>
-                    <i class="fa fa-caret-left" ng-class="getIcon('firstName')"></i>
-                </th>
-
-                <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
-                    <a href="" ng-click="changeSorting('email')"><font style="color:black">Email</font></a>
-                    <i class="fa fa-caret-left" ng-class="getIcon('email')"></i>
-                </th>
-                <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
-                    <a href="" ng-click="changeSorting('customer_Name')"><font style="color:black">Customer Name</font></a>
-                    <i class="fa fa-caret-left" ng-class="getIcon('customer_Name')"></i>
-                </th>
-                <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
-                    <a href="" ng-click="changeSorting('site_Role_Id')"><font style="color:black">Site Role</font></a>
-                    <i class="fa fa-caret-left" ng-class="getIcon('site_Role_Id')"></i>
-                </th>
-
-                <th class="AngularTableHeaderColor " style="vertical-align:bottom">
-
-                </th>
-
-
-            </tr>
-            <tr>
-                <td style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.lastName"></td>
-                <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input style="padding:1px;height:20px;width:100%" ng-model="f.firstName"></td>
-                <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input style="padding:1px;height:20px;width:100%" ng-model="f.email"></td>
-                <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"></td>
-
-                <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input style="padding:1px;height:20px;width:100%" ng-model="f.site_Role_Id"></td>
-            </tr>
-           
-
-            <tr ng-repeat="appuser in AppUsers | filter:f | orderBy:sort.active:sort.descending ">
-                @* Fetch All the Recipe record using ng-repeat *@
-
-                <td style="height:15px;padding:1px">{{appuser.lastName}}</td>
-                <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{appuser.firstName}}</td>
-                <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{appuser.email}}</td>
-                <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{appuser.customer_Name}}</td>
-                <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{appuser.site_Role_Id}}</td>
-
-
-                <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:175px">
-
-                    <button ng-click="RedirectToEdit(appuser)" class="btn btn-outline-success AngularButtons">
-                        <i class="fa fa-pen"></i>
-                    </button> |
-                    <button ng-click="RedirectToDetails(appuser)" class="btn btn-outline-info AngularButtons">
-                        <i class="fa fa-clipboard"></i>
-                    </button> |
-
-                    <button ng-click="DelAppUser(appuser)" class="btn btn-outline-danger AngularButtons">
-                        <i class="fa fa-trash"></i>
-                    </button>
-                </td>
-            </tr>
-
-        </table>
-    </div>
+</div>
 

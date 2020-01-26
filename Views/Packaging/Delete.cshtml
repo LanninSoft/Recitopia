@@ -12,9 +12,19 @@
 
 
 
-<font class="alert-danger">Are you sure you want to delete '@Model.Package_Name'?</font>  <br />All associated recipe relationships will also be removed.<br />
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBannerAdmin">
+        <th>
+            Delete
+        </th>
+    </tr>
+</table>
+<br />
+<font class="alert-danger">Are you sure you want to delete '@Model.Package_Name'?</font>
+<br />All associated recipe relationships will also be removed.
+<br />
 <div>
-   
+
     <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Package_Name)
@@ -22,7 +32,7 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Package_Name)
         </dd>
-       
+
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Vendor_Name)
         </dt>
@@ -35,7 +45,7 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Website)
         </dd>
-       
+
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Cost)
         </dt>
@@ -54,7 +64,7 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Notes)
         </dd>
-        
+
     </dl>
 
     <form asp-action="Delete">

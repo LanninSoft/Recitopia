@@ -4,40 +4,59 @@
     ViewBag.Title = "Edit";
 }
 
-<table width="100%" class="table-borderless">
+<div class="d-print-none">
+    <table style="width:100%">
+        <tr>
+            <td>
+                <div>
+
+                    @Html.ActionLink("Back to List", "Index")
+
+
+                </div>
+            </td>
+
+        </tr>
+    </table>
+</div>
+<br />
+<table style="width:100%">
     <tr>
-        <th style="font-size:20px">
-            Edit Serving Size
+        <th>
+            Edit
         </th>
     </tr>
-    <tr>
-        <th style="font-size:30px;background-color:blanchedalmond">
+
+</table>
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBanner">
+        <th style="font-size:20px">
             @Model.Serving_Size
         </th>
     </tr>
 
 </table>
+<br />
 
-<div class="row">
-    <div style="width:350px">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="SS_Id" />
-            <div class="form-group">
-                <label asp-for="Serving_Size" class="control-label"></label>
-                <input asp-for="Serving_Size" class="form-control" />
-                <span asp-validation-for="Serving_Size" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                Notes
-                <textarea asp-for="Notes" class="form-control"></textarea>
-                <span asp-validation-for="Notes" class="text-danger"></span>
-            </div>
+<div style="width:350px">
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="SS_Id" />
+        <div class="form-group">
+            <label asp-for="Serving_Size" class="control-label"></label>
+            <input asp-for="Serving_Size" class="form-control" />
+            <span asp-validation-for="Serving_Size" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            Notes
+            <textarea asp-for="Notes" class="form-control"></textarea>
+            <span asp-validation-for="Notes" class="text-danger"></span>
+        </div>
 
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn alert-success" />
-            </div>
-        </form>
-    </div>
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn alert-success" />
+        </div>
+    </form>
 </div>
+
 

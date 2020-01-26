@@ -10,11 +10,21 @@
 }
 
 
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBannerAdmin">
+        <th>
+            Delete
+        </th>
+    </tr>
+</table>
+<br />
 
-<font class="alert-danger">Are you sure you want to delete this Allergen Component?</font><br />  This will also remove any associations to Ingredients?<br />
+<font class="alert-danger">Are you sure you want to delete this Allergen Component?</font>
+<br />  This will also remove any associations to Ingredients?
+<br />
 <div>
-   
-    
+
+
     <dl class="dl-horizontal" style="font-size:13px">
         <dt>
             Component Name
@@ -34,7 +44,8 @@
 
     </dl>
 
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">

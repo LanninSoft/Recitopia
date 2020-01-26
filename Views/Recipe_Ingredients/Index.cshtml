@@ -4,14 +4,14 @@
     ViewBag.Title = "Recipe Ingredients";
 }
 
-<table width="100%" class="table table-borderless">
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
     <tr class="pageBanner">
-        <th style="font-size:30px">
+        <th style="font-size:20px">
             @ViewBag.RecipeName (Ingredient List)
         </th>
     </tr>
 </table>
-
+<br />
 <div ng-app="myApp" ng-controller="RecipeIngredients" ng-init="Recipe_Id=(@ViewBag.RecipeNameID)" class="container-fluid" style="font-size:13px">
     @* Use ng-controller *@
       
@@ -120,10 +120,10 @@
     @Html.ActionLink("Recipe List", "Index", "Recipes")
 
 </div>
-<br />
+@*<br />
 <div ng-if="(Ingredients|filter:query).length > 0">
     <a href="@Url.Action("Create", "Recipe_Ingredients", new { recipeID = ViewBag.RecipeNameID })" class="btn alert-success" role="button"><i class="fa fa-plus"></i> Add Ingredient</a>
-</div>
+</div>*@
 
 
 

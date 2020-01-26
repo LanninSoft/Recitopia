@@ -3,76 +3,81 @@
 @{
     ViewBag.Title = "Edit";
 }
-    <table width="100%">
-        <tr>
-            <th>
-                Edit
-            </th>
-        </tr>
-        <tr>
-            <th style="font-size:30px;background-color:blanchedalmond">
-                @ViewBag.Recipe_Name
-            </th>
-        </tr>
-        </table>
-        <div class="row" >
-            <div style="width:350px" >
-                <form asp-action="Edit">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <input type="hidden" asp-for="Recipe_Id" />
-                    <div class="form-group">
-                        <label asp-for="Recipe_Name" class="control-label"></label>
-                        <input asp-for="Recipe_Name" class="form-control" />
-                        <span asp-validation-for="Recipe_Name" class="text-danger"></span>
-                    </div>
-                    <div>
-                        <label asp-for="Category_Id" class="control-label"></label>
-                        <select asp-for="Category_Id"
-                                asp-items="ViewBag.Category_Id">
-                        </select>
-                        <span asp-validation-for="Category_Id" class="text-danger"></span>
-                    </div>
-                    <div>
-                        <label asp-for="SS_Id" class="control-label"></label>
-                        <select asp-for="SS_Id"
-                                asp-items="ViewBag.SS_Id">
-                        </select>
-                        <span asp-validation-for="SS_Id" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="LaborCost" class="control-label"></label>
-                        <input asp-for="LaborCost" class="form-control" />
-                        <span asp-validation-for="LaborCost" class="text-danger"></span>
-                    </div>
+<table style="width:100%">
+    <tr>
+        <th>
+            Edit
+        </th>
+    </tr>
+   
+</table>
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBanner">
+        <th style="font-size:20px">
+            @ViewBag.Recipe_Name
+        </th>
+    </tr>
 
-                    <div class="form-group form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" asp-for="Gluten_Free" /> @Html.DisplayNameFor(model => model.Gluten_Free)
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="SKU" class="control-label"></label>
-                        <input asp-for="SKU" class="form-control" />
-                        <span asp-validation-for="SKU" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="UPC" class="control-label"></label>
-                        <input asp-for="UPC" class="form-control" />
-                        <span asp-validation-for="UPC" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Notes" class="control-label"></label>
-                        <textarea asp-for="Notes" class="form-control"></textarea>
-                        <span asp-validation-for="Notes" class="text-danger"></span>
-                    </div>
+</table>
+<br />
 
-                    <div class="form-group">
-                        <input type="submit" value="Save" class="btn alert-success" />
-                    </div>
-                </form>
-            </div>
+<div style="width:350px">
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Recipe_Id" />
+        <div class="form-group">
+            <label asp-for="Recipe_Name" class="control-label"></label>
+            <input asp-for="Recipe_Name" class="form-control" />
+            <span asp-validation-for="Recipe_Name" class="text-danger"></span>
         </div>
-
         <div>
-            <a asp-action="Index">Back to List</a>
+            <label asp-for="Category_Id" class="control-label"></label>
+            <select asp-for="Category_Id"
+                    asp-items="ViewBag.Category_Id">
+            </select>
+            <span asp-validation-for="Category_Id" class="text-danger"></span>
         </div>
+        <div>
+            <label asp-for="SS_Id" class="control-label"></label>
+            <select asp-for="SS_Id"
+                    asp-items="ViewBag.SS_Id">
+            </select>
+            <span asp-validation-for="SS_Id" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="LaborCost" class="control-label"></label>
+            <input asp-for="LaborCost" class="form-control" />
+            <span asp-validation-for="LaborCost" class="text-danger"></span>
+        </div>
+
+        <div class="form-group form-check">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="Gluten_Free" /> @Html.DisplayNameFor(model => model.Gluten_Free)
+            </label>
+        </div>
+        <div class="form-group">
+            <label asp-for="SKU" class="control-label"></label>
+            <input asp-for="SKU" class="form-control" />
+            <span asp-validation-for="SKU" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="UPC" class="control-label"></label>
+            <input asp-for="UPC" class="form-control" />
+            <span asp-validation-for="UPC" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Notes" class="control-label"></label>
+            <textarea asp-for="Notes" class="form-control"></textarea>
+            <span asp-validation-for="Notes" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn alert-success" />
+        </div>
+    </form>
+</div>
+
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

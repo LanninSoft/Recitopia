@@ -7,12 +7,20 @@
 {
     <font style="color:red">@ViewBag.ErrorMessage</font>
 }
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBannerAdmin">
+        <th>
+            Delete
+        </th>
+    </tr>
+</table>
+<br />
 <div style="font-size: 25px; text-decoration:none">
     <font class="alert-danger">Are you sure you want to delete this Meal Category?</font>
 </div>
 <div>
-    
-   
+
+
     <dl class="dl-horizontal" style="font-size:13px">
         <dt>
             Category Name
@@ -32,7 +40,8 @@
 
     </dl>
 
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">

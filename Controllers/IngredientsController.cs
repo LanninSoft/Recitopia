@@ -189,7 +189,8 @@ namespace Recitopia.Controllers
                 ingredient.Customer_Guid = customerGuid;
                 await _recitopiaDbContext.Ingredient.AddAsync(ingredient);
                 await _recitopiaDbContext.SaveChangesAsync();
-                return RedirectToAction("Index");
+
+                return RedirectToAction("Details", new { id = ingredient.Ingredient_Id });
             }
 
             ViewBag.Vendor_Id = new SelectList(await _recitopiaDbContext.Vendor.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Vendor_Name).ToListAsync(), "Vendor_Id", "Vendor_Name", ingredient.Vendor_Id);
@@ -248,7 +249,8 @@ namespace Recitopia.Controllers
                 ingredient.Customer_Guid = customerGuid;
                 _recitopiaDbContext.Entry(ingredient).State = EntityState.Modified;
                 await _recitopiaDbContext.SaveChangesAsync();
-                return RedirectToAction("Index");
+
+                return RedirectToAction("Details", new { id = ingredient.Ingredient_Id });
             }
             ViewBag.Vendor_Id = new SelectList(await _recitopiaDbContext.Vendor.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Vendor_Name).ToListAsync(), "Vendor_Id", "Vendor_Name", ingredient.Vendor_Id);
             return View(ingredient);

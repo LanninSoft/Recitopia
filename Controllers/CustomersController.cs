@@ -220,7 +220,54 @@ namespace Recitopia.Controllers
             {
                 customers.Customer_Guid = Guid.NewGuid().ToString();
                 _recitopiaDbContext.Add(customers);
+
                 await _recitopiaDbContext.SaveChangesAsync();
+
+                //PRIME VENDOR, SERVING SIZE AND CATEGORY WITH NA VALUE SO RECIPES/INGREDIENTS CAN BE CREATED WITH THESE DEPENDENCIES RIGHT AWAY
+                //VENDOR
+                var vendorPrime = new Vendor()
+                {
+                    Vendor_Name = "Example Vendor",
+                    Notes = "Default Value added as example",
+                    Phone = "000-000-0000",
+                    Email = "ExampleVendorEmail@gmail.com",
+                    Address1 = "1234 Vendor Lane",
+                    City = "Recipeville",
+                    State = "MN",
+                    Zip = 12345,
+                    Web_URL = "http://www.examplevendorURL.com",
+                    Customer_Guid = customers.Customer_Guid
+                };
+                
+                _recitopiaDbContext.Vendor.Add(vendorPrime);
+
+                await _recitopiaDbContext.SaveChangesAsync();
+
+                //SERVING SIZE
+                var ssPrime = new Serving_Sizes()
+                {
+                    Customer_Guid = customers.Customer_Guid,
+                    Serving_Size = 1,
+                    Notes = "Default Value added as example"
+                };
+
+                _recitopiaDbContext.Serving_Sizes.Add(ssPrime);
+
+                await _recitopiaDbContext.SaveChangesAsync();
+
+                //CATEGORY
+                var categoryPrime = new Meal_Category()
+                {
+                    Customer_Guid = customers.Customer_Guid,
+                    Category_Name = "Snack",
+                    Notes = "Default Value added as example"
+                };
+
+                _recitopiaDbContext.Meal_Category.Add(categoryPrime);
+
+                await _recitopiaDbContext.SaveChangesAsync();
+
+
                 return RedirectToAction(nameof(Index));
             }
             return View(customers);
@@ -239,6 +286,50 @@ namespace Recitopia.Controllers
             {
                 customers.Customer_Guid = Guid.NewGuid().ToString();
                 _recitopiaDbContext.Add(customers);
+                await _recitopiaDbContext.SaveChangesAsync();
+
+                //PRIME VENDOR, SERVING SIZE AND CATEGORY WITH EXAMPLE VALUES SO RECIPES/INGREDIENTS CAN BE CREATED WITH THESE DEPENDENCIES RIGHT AWAY
+                //VENDOR
+                var vendorPrime = new Vendor()
+                {
+                    Vendor_Name = "Example Vendor",
+                    Notes = "Default Value added as example",
+                    Phone = "000-000-0000",
+                    Email = "ExampleVendorEmail@gmail.com",
+                    Address1 = "1234 Vendor Lane",
+                    City = "Recipeville",
+                    State = "MN",
+                    Zip = 12345,
+                    Web_URL = "http://www.examplevendorURL.com",
+                    Customer_Guid = customers.Customer_Guid
+                };
+
+                _recitopiaDbContext.Vendor.Add(vendorPrime);
+
+                await _recitopiaDbContext.SaveChangesAsync();
+
+                //SERVING SIZE
+                var ssPrime = new Serving_Sizes()
+                {
+                    Customer_Guid = customers.Customer_Guid,
+                    Serving_Size = 1,
+                    Notes = "Default Value added as example"
+                };
+
+                _recitopiaDbContext.Serving_Sizes.Add(ssPrime);
+
+                await _recitopiaDbContext.SaveChangesAsync();
+
+                //CATEGORY
+                var categoryPrime = new Meal_Category()
+                {
+                    Customer_Guid = customers.Customer_Guid,
+                    Category_Name = "Snack",
+                    Notes = "Default Value added as example"
+                };
+
+                _recitopiaDbContext.Meal_Category.Add(categoryPrime);
+
                 await _recitopiaDbContext.SaveChangesAsync();
 
                 //ADDED THE CUSTOMER GROUP NOW ADD THE CURRENT USER TO THAT CUSTOMER GROUP AND TAKE TO HOME PAGE

@@ -3,14 +3,14 @@
 @{
     ViewBag.Title = "Serving Sizes";
 }
-<table width="100%" class="table table-borderless">
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
     <tr class="pageBanner">
         <th>
             Serving Sizes
         </th>
     </tr>
 </table>
-
+<br />
 <div ng-app="myApp" ng-controller="ServingSize" class="container-fluid" style="font-size:13px">
     @* Use ng-controller *@
     
@@ -38,18 +38,19 @@
                 <td style="height:15px;padding:1px" >{{serving.serving_Size}}</td>
                 <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px" >{{serving.notes}}</td>
 
-                <td style="height:15px;padding:1px" align="right" >
+                <td style="height:15px;padding:1px" align="right">
 
-                    <button class="AngularButtons" ng-click="RedirectToEdit(serving)">
-                        <i class="btn alert-success btn-sm fa fa-pen"></i>
+                    <button class="btn btn-outline-success AngularButtons" ng-click="RedirectToEdit(serving)">
+                        <i class="fa fa-pen"></i>
                     </button> |
-                    @*<button class="AngularButtons" ng-click="RedirectToDetails(serving)">
-                        <i class="btn alert-info btn-sm fa fa-clipboard"></i>
-                    </button> |*@
 
-                    <button class="AngularButtons" ng-click="DelServingSize(serving)">
-                        <i class="btn alert-danger btn-sm fa fa-trash"></i>
+                    <button class="btn btn-outline-danger AngularButtons" ng-click="DelServingSize(serving)">
+                        <i class="fa fa-trash"></i>
                     </button>
+
+                    
+
+
                 </td>
             </tr>
 

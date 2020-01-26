@@ -5,154 +5,155 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBannerAdmin">
+        <th style="font-size:20px">
+            Feedback Details
+        </th>
+    </tr>
 
-    <div>
-        <table style="width:100%" class="table-borderless">
-            <tr>
-                <th style="font-size:20px">
-                    Feedback Details
-                </th>
-            </tr>
-            <tr>
-                <th style="font-size:30px;background-color:blanchedalmond">
-                    @Model.Subject
-                </th>
-            </tr>
+</table>
+<br />
 
+    <table style="width:100%" class="table-borderless">
+
+        <tr>
+            <th style="font-size:20px;background-color:blanchedalmond">
+                @Model.Subject
+            </th>
+        </tr>
+
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.Comment)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </th>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.PhoneNumber)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.EmailAddress)
+            </th>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.EmailAddress)
+            </td>
+        </tr>
+        @if (Model.Actions != null)
+        {
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Comment)
+                    @Html.DisplayNameFor(model => model.Actions)
                 </th>
             </tr>
             <tr>
                 <td>
-                    @Html.DisplayFor(model => model.Comment)
+                    @Html.DisplayFor(model => model.Actions)
+                </td>
+            </tr>
+        }
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Resolved)
+            </th>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.Resolved)
+            </td>
+        </tr>
+        @if (Model.UpdatedDate != DateTime.MinValue)
+        {
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.UpdatedBy)
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => model.UpdatedBy)
                 </td>
             </tr>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.PhoneNumber)
+                    @Html.DisplayNameFor(model => model.UpdatedDate)
                 </th>
             </tr>
-            <tr>
-                <td>
-                    @Html.DisplayFor(model => model.PhoneNumber)
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.EmailAddress)
-                </th>
-            </tr>
-            <tr>
-                <td>
-                    @Html.DisplayFor(model => model.EmailAddress)
-                </td>
-            </tr>
-            @if (Model.Actions != null)
-            {
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Actions)
-                    </th>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.DisplayFor(model => model.Actions)
-                    </td>
-                </tr>
-            }
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Resolved)
-                </th>
-            </tr>
-            <tr>
-                <td>
-                    @Html.DisplayFor(model => model.Resolved)
-                </td>
-            </tr>
-            @if (Model.UpdatedDate != DateTime.MinValue)
-            {
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.UpdatedBy)
-                    </th>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.DisplayFor(model => model.UpdatedBy)
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.UpdatedDate)
-                    </th>
-                </tr>
 
-                <tr>
-                    <td>
-                        <div class="posted-date">
-                            @Html.DisplayFor(model => model.UpdatedDate)
-                        </div>
-                    </td>
-                </tr>
-            }
-            @if (Model.ResolvedDate != DateTime.MinValue)
-            {
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResolvedDate)
-                    </th>
-                </tr>
-
-                <tr>
-                    <td>
-                        <div class="posted-date">
-                            @Html.DisplayFor(model => model.ResolvedDate)
-                        </div>
-                    </td>
-                </tr>
-            }
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.TimeStamp)
-                </th>
-            </tr>
             <tr>
                 <td>
-
                     <div class="posted-date">
-                        @Html.DisplayFor(model => model.TimeStamp)
+                        @Html.DisplayFor(model => model.UpdatedDate)
                     </div>
                 </td>
             </tr>
+        }
+        @if (Model.ResolvedDate != DateTime.MinValue)
+        {
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Customer_Name)
+                    @Html.DisplayNameFor(model => model.ResolvedDate)
                 </th>
             </tr>
+
             <tr>
                 <td>
-                    @Html.DisplayFor(model => model.Customer_Name)
+                    <div class="posted-date">
+                        @Html.DisplayFor(model => model.ResolvedDate)
+                    </div>
                 </td>
             </tr>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.User_Name)
-                </th>
-            </tr>
-            <tr>
-                <td>
-                    @Html.DisplayFor(model => model.User_Name)
-                </td>
-            </tr>
-        </table>
+        }
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TimeStamp)
+            </th>
+        </tr>
+        <tr>
+            <td>
 
-    </div>
+                <div class="posted-date">
+                    @Html.DisplayFor(model => model.TimeStamp)
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer_Name)
+            </th>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.Customer_Name)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.User_Name)
+            </th>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.User_Name)
+            </td>
+        </tr>
+    </table>
 
-
+<br />
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>

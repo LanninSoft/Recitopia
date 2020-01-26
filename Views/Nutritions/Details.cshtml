@@ -4,22 +4,26 @@
     ViewBag.Title = "Details";
 }
 
-<table width="100%" class="table-borderless">
+
+<table style="width:100%">
     <tr>
         <th>
-            Nutrition Details
-        </th>
-    </tr>
-    <tr>
-        <th style="font-size:25px;background-color:blanchedalmond">
-            @Model.Nutrition_Item
+            Details
         </th>
     </tr>
 </table>
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBanner">
+        <th style="font-size:20px">
+            @Model.Nutrition_Item
+        </th>
+    </tr>
 
+</table>
+<br />
 <div>
 
-    
+
     <dl class="dl-horizontal" style="font-size:13px">
         <dt>
             Nutrition Item

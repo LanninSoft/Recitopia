@@ -4,42 +4,47 @@
     ViewBag.Title = "Edit";
 }
 
-<table width="100%" class="table-borderless">
+
+<table style="width:100%">
     <tr>
-        <th style="font-size:20px">
+        <th>
             Edit
-        </th>
-    </tr>
-    <tr>
-        <th style="font-size:30px;background-color:blanchedalmond">
-            @Model.Category_Name
         </th>
     </tr>
 
 </table>
-<div class="row">
-    <div style="width:350px">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Category_Id" />
-            <div class="form-group">
-                <label asp-for="Category_Name" class="control-label"></label>
-                <input asp-for="Category_Name" class="form-control" />
-                <span asp-validation-for="Category_Name" class="text-danger"></span>
-            </div>
-            
-            <div class="form-group">
-                <label asp-for="Notes" class="control-label"></label>
-                <textarea asp-for="Notes" class="form-control"></textarea>
-                <span asp-validation-for="Notes" class="text-danger"></span>
-            </div>
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBanner">
+        <th style="font-size:20px">
+             @Model.Category_Name
+        </th>
+    </tr>
 
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn alert-success" />
-            </div>
-        </form>
-    </div>
+</table>
+<br />
+
+<div style="width:350px">
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Category_Id" />
+        <div class="form-group">
+            <label asp-for="Category_Name" class="control-label"></label>
+            <input asp-for="Category_Name" class="form-control" />
+            <span asp-validation-for="Category_Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Notes" class="control-label"></label>
+            <textarea asp-for="Notes" class="form-control"></textarea>
+            <span asp-validation-for="Notes" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn alert-success" />
+        </div>
+    </form>
 </div>
+
 
 <div>
     <a asp-action="Index">Back to List</a>
