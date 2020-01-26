@@ -5,9 +5,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<table width="100%" class="table table-borderless">
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
     <tr class="pageBanner">
-        <th style="font-size:30px">
+        <th style="font-size:20px">
             @ViewBag.RecipeName (Packaging List)
         </th>
     </tr>
@@ -100,7 +100,7 @@
     @Html.ActionLink("Recipe List", "Index", "Recipes")
 
 </div>
-<br />
+@*<br />
 <div ng-if="(Packaging|filter:query).length > 0">
     <a href="@Url.Action("Create", "Recipe_Packaging", new { recipeID = ViewBag.RecipeNameID })" class="btn alert-success" role="button"><i class="fa fa-plus"></i> Add Packaging</a>
-</div>
+</div>*@

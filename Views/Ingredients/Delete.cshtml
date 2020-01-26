@@ -9,11 +9,20 @@
 {
     <font style="color:red">@ViewBag.ErrorMessage</font>
 }
-<font class="alert-danger">Are you sure you want to delete '@ViewBag.IngredientName'?</font>  
-<br />All associated Nutrition and Allergen relationships will removed.  This will also remove the ingredient from recipes.<br />
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBannerAdmin">
+        <th>
+            Delete
+        </th>
+    </tr>
+</table>
+<br />
+<font class="alert-danger">Are you sure you want to delete '@ViewBag.IngredientName'?</font>
+<br />All associated Nutrition and Allergen relationships will removed.  This will also remove the ingredient from recipes.
+<br />
 
 <div>
-   <dl style="font-size:13px">
+    <dl style="font-size:13px">
         <dt>
             Ingredient Name
         </dt>

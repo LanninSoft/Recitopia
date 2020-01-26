@@ -5,13 +5,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<table width="100%" class="table table-borderless ">
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
     <tr class="pageBanner">
         <th>
             Packaging
         </th>
     </tr>
 </table>
+<br />
 <div ng-app="myApp" ng-controller="Packaging" style="font-size:13px" class="container-fluid">
     @* Use ng-controller *@
 
@@ -62,7 +63,7 @@
 
 
             <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:225px">
-                
+
                 <button ng-click="RedirectToEdit(packaging)" class="btn btn-outline-success AngularButtons">
                     <i class="fa fa-pen"></i>
                 </button> |

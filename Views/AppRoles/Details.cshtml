@@ -5,19 +5,22 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<table width="100%" class="table-borderless">
-    <tr>
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBannerAdmin">
         <th style="font-size:20px">
             Role Details
         </th>
     </tr>
+   
+</table>
+<br />
+<table style="width:100%">
     <tr>
-        <th style="font-size:30px;background-color:blanchedalmond">
+        <th style="font-size:20px;background-color:blanchedalmond">
             @Model.Name
         </th>
     </tr>
 </table>
-
 <div>
     
     <dl class="row">

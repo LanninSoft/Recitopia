@@ -5,15 +5,15 @@
 }
 
     
-        <table width="100%" class="table-borderless">
+        <table style="width:100%" class="table table-borderless rounded-sm box effect8">
             <tr>
-                <th style="font-size:30px;background-color:blanchedalmond">
+                <th style="font-size:20px;background-color:blanchedalmond">
                     New Ingredient
                 </th>
             </tr>
 
         </table>
-        <div class="row">
+        <br />
             <div style="width:350px">
                 <form asp-action="Create">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -67,7 +67,7 @@
                     </div>
                 </form>
             </div>
-        </div>
+       
 
         <div>
             <a asp-action="Index">Back to List</a>

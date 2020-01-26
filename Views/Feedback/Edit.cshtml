@@ -5,102 +5,107 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<table width="100%" class="table-borderless">
-    <tr>
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBannerAdmin">
         <th style="font-size:20px">
             Edit Feedback
         </th>
     </tr>
 
 </table>
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-<div class="row" style="width:300px">
-    <div style="width:350px">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="User_Id" />
-            <div class="form-group">
-                <label asp-for="Subject" class="control-label"></label>
-                <input asp-for="Subject" readonly="readonly" class="form-control" />
-                <span asp-validation-for="Subject" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Comment" class="control-label"></label>
-                <textarea asp-for="Comment" readonly="readonly" class="form-control"></textarea>
-                <span asp-validation-for="Comment" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PhoneNumber" class="control-label"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EmailAddress" class="control-label"></label>
-                <input asp-for="EmailAddress" class="form-control" />
-                <span asp-validation-for="EmailAddress" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Actions" class="control-label"></label>
-                <textarea asp-for="Actions" class="form-control"></textarea>
-                <span asp-validation-for="Actions" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Resolved" /> @Html.DisplayNameFor(model => model.Resolved)
-                </label>
-            </div>
-            @if (Model.ResolvedDate != DateTime.MinValue)
-            {
-                <div class="form-group">
-                    <font style="font-weight:bold"><label asp-for="ResolvedDate" class="control-label"></label></font>
-                    <input type="hidden" asp-for="ResolvedDate" />
-                    <div class="posted-date">
-                        @Html.DisplayFor(model => model.ResolvedDate)
-                    </div>
+<br />
+<table style="width:100%">
+    <tr>
+        <td>
+            
+                <div style="width:350px">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="User_Id" />
+                        <div class="form-group">
+                            <label asp-for="Subject" class="control-label"></label>
+                            <input asp-for="Subject" readonly="readonly" class="form-control" />
+                            <span asp-validation-for="Subject" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Comment" class="control-label"></label>
+                            <textarea asp-for="Comment" readonly="readonly" class="form-control"></textarea>
+                            <span asp-validation-for="Comment" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="PhoneNumber" class="control-label"></label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EmailAddress" class="control-label"></label>
+                            <input asp-for="EmailAddress" class="form-control" />
+                            <span asp-validation-for="EmailAddress" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Actions" class="control-label"></label>
+                            <textarea asp-for="Actions" class="form-control"></textarea>
+                            <span asp-validation-for="Actions" class="text-danger"></span>
+                        </div>
+                        <div class="form-group form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="Resolved" /> @Html.DisplayNameFor(model => model.Resolved)
+                            </label>
+                        </div>
+                        @if (Model.ResolvedDate != DateTime.MinValue)
+                        {
+                            <div class="form-group">
+                                <font style="font-weight:bold"><label asp-for="ResolvedDate" class="control-label"></label></font>
+                                <input type="hidden" asp-for="ResolvedDate" />
+                                <div class="posted-date">
+                                    @Html.DisplayFor(model => model.ResolvedDate)
+                                </div>
+                            </div>
+                        }
+
+
+                        <div class="form-group">
+                            <font style="font-weight:bold"><label asp-for="UpdatedDate" class="control-label"></label></font>
+                            <input type="hidden" asp-for="UpdatedDate" />
+                            <div class="posted-date">
+                                @Html.DisplayFor(model => model.UpdatedDate)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="UpdatedBy" class="control-label"></label>
+                            <input asp-for="UpdatedBy" readonly="readonly" class="form-control" />
+                            <span asp-validation-for="UpdatedBy" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Customer_Name" class="control-label"></label>
+                            <input asp-for="Customer_Name" readonly="readonly" class="form-control" />
+                            <span asp-validation-for="Customer_Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="User_Name" class="control-label"></label>
+                            <input asp-for="User_Name" readonly="readonly" class="form-control" />
+                            <span asp-validation-for="User_Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <font style="font-weight:bold"><label asp-for="TimeStamp" class="control-label"></label></font>
+                            <input type="hidden" asp-for="TimeStamp" />
+                            <div class="posted-date">
+                                @Html.DisplayFor(model => model.TimeStamp)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                        </div>
+                    </form>
                 </div>
-            }
+            
+        </td>
+    </tr>
+</table>
 
-
-            <div class="form-group">
-                <font style="font-weight:bold"><label asp-for="UpdatedDate" class="control-label"></label></font>
-                <input type="hidden" asp-for="UpdatedDate" />
-                <div class="posted-date">
-                    @Html.DisplayFor(model => model.UpdatedDate)
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="UpdatedBy" class="control-label"></label>
-                <input asp-for="UpdatedBy" readonly="readonly" class="form-control" />
-                <span asp-validation-for="UpdatedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Customer_Name" class="control-label"></label>
-                <input asp-for="Customer_Name" readonly="readonly" class="form-control" />
-                <span asp-validation-for="Customer_Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="User_Name" class="control-label"></label>
-                <input asp-for="User_Name" readonly="readonly" class="form-control" />
-                <span asp-validation-for="User_Name" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <font style="font-weight:bold"><label asp-for="TimeStamp" class="control-label"></label></font>
-                <input type="hidden" asp-for="TimeStamp" />
-                <div class="posted-date">
-                    @Html.DisplayFor(model => model.TimeStamp)
-                </div>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
 <br />
 @{ await Html.RenderPartialAsync("_FeedbackFiles", Model); }
 <br />

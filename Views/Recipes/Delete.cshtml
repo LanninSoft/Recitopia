@@ -9,15 +9,22 @@
     <font style="color:red">@ViewBag.ErrorMessage</font>
 }
 
-
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBannerAdmin">
+        <th>
+            Delete
+        </th>
+    </tr>
+</table>
+<br />
 
 <font class="alert-danger">Are you sure you want to delete '@Model.Recipe_Name'?</font>
 <br />
 All associated ingredient and packaging relationships will also be removed.
 <br />
 <div>
-   
-    
+
+
     <dl class="dl-horizontal" style="font-size:13px">
         <dt>
             @*@Html.DisplayNameFor(model => model.Recipe_Name)*@

@@ -8,14 +8,14 @@
 }
 
 
-<table width="100%" class="table table-borderless">
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
     <tr class="pageBanner">
-        <th style="font-size:30px">
+        <th style="font-size:20px">
             @ViewBag.RecipeName (Add Ingredients)
         </th>
     </tr>
 </table>
-
+<br />
 <div ng-app="myApp" ng-controller="RecipeIngredientsCreate" ng-init="Recipe_Id=(@ViewBag.Rec_Id)" class="container-fluid" style="font-size:13px">
     @* Use ng-controller *@
    

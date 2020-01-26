@@ -3,23 +3,47 @@
 @{
     ViewBag.Title = "Details";
 }
+<div class="d-print-none">
+    <table style="width:100%">
+        <tr>
+            <td>
+                <div>
+                    @Html.ActionLink("Edit", "Edit", new { id = Model.Ingredient_Id }) |
+                    @Html.ActionLink("Back to List", "Index") |
+                    @Html.ActionLink("Create Copy", "CreateCopy", new { id = Model.Ingredient_Id })
 
-    <table width="100%" class="table-borderless">
-        <tr>
-            <th style="font-size:20px">
-                Ingredient Details
-            </th>
-        </tr>
-        <tr>
-            <th style="font-size:30px;background-color:blanchedalmond">
-                @ViewBag.IngredientName
-            </th>
+
+                </div>
+            </td>
+            <td style="text-align:right">
+                <div>
+                    <a href="@Url.Action("Index", "Ingredient_Nutrients", new { IngredID = Model.Ingredient_Id })" style="background-color:lavender;padding:9px" class="btn btn-sm AngularButtons" role="button"><i class="fa fa-plus"></i> Nutrition</a>
+                    <a href="@Url.Action("Index", "Ingredient_Components", new { IngredID = Model.Ingredient_Id })" style="background-color:wheat;padding:9px" class="btn btn-sm AngularButtons" role="button"><i class="fa fa-plus"></i> Allergens</a>
+                </div>
+            </td>
         </tr>
     </table>
+</div>
 
+<table style="width:100%">
+    <tr>
+        <th>
+            Details
+        </th>
+    </tr>
+</table>
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBanner">
+        <th style="font-size:20px">
+            @ViewBag.IngredientName
+        </th>
+    </tr>
+    
+</table>
+<br />
 <div>
-   
-   
+
+
     <table width="100%" border="0">
         <tr>
             <td width="30%" valign="top" style="font-size:13px">
@@ -52,7 +76,7 @@
                                 @Html.DisplayFor(model => model.Ingred_Comp_name)
                             </td>
                         </tr>
-                        
+
                     }
 
                     @if (Model.Cost_per_lb != null)
@@ -67,7 +91,7 @@
                                 @Html.DisplayFor(model => model.Cost_per_lb)
                             </td>
                         </tr>
-                        
+
                     }
                     @if (Model.Cost != null)
                     {
@@ -81,7 +105,7 @@
                                 @Html.DisplayFor(model => model.Cost)
                             </td>
                         </tr>
-                        
+
                     }
                     <tr>
                         <th>
@@ -162,25 +186,25 @@
                 <br />
                 <table border="1" width="100%" class="table-striped">
                     <tr>
-                        <th  style="background-color:darkseagreen;font-size:15px">
+                        <th style="background-color:darkseagreen;font-size:15px">
                             Allergens
                         </th>
                     </tr>
-                    
+
 
                     @if (ViewBag.RComponents != null)
+                    {
+                        foreach (var allergen in ViewBag.RComponents)
                         {
-                            foreach (var allergen in ViewBag.RComponents)
+                            if (allergen != null)
                             {
-                                if (allergen != null)
-                                {
-                                    <tr>
-                                        <td>
-                                            <span> @allergen </span>
-                                        </td>
-                                    </tr>
-                                }
-                                @*else
+                                <tr>
+                                    <td>
+                                        <span> @allergen </span>
+                                    </td>
+                                </tr>
+                            }
+                            @*else
                                 {
                                     <tr>
                                         <td>
@@ -190,19 +214,37 @@
                                     </tr>
                                 }*@
 
-                            }
                         }
+                    }
                 </table>
             </td>
         </tr>
-        
+
 
     </table>
-    
-    
+
+
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Ingredient_Id }) |
-    @Html.ActionLink("Back to List", "Index")|
-    @Html.ActionLink("Create Copy", "CreateCopy", new { id = Model.Ingredient_Id })
-</p>
+<br />
+<div class="d-print-none">
+    <table style="width:100%">
+        <tr>
+            <td>
+                <div>
+                    @Html.ActionLink("Edit", "Edit", new { id = Model.Ingredient_Id }) |
+                    @Html.ActionLink("Back to List", "Index") |
+                    @Html.ActionLink("Create Copy", "CreateCopy", new { id = Model.Ingredient_Id })
+
+
+                </div>
+            </td>
+            <td style="text-align:right">
+                <div>
+                    <a href="@Url.Action("Index", "Ingredient_Nutrients", new { IngredID = Model.Ingredient_Id })" style="background-color:lavender;padding:9px" class="btn btn-sm AngularButtons" role="button"><i class="fa fa-plus"></i> Nutrition</a>
+                    <a href="@Url.Action("Index", "Ingredient_Components", new { IngredID = Model.Ingredient_Id })" style="background-color:wheat;padding:9px" class="btn btn-sm AngularButtons" role="button"><i class="fa fa-plus"></i> Allergens</a>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+

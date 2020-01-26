@@ -4,21 +4,25 @@
     ViewBag.Title = "Edit";
 }
 
-<table width="100%" class="table-borderless">
+
+<table style="width:100%">
     <tr>
-        <th style="font-size:20px">
+        <th>
             Edit
         </th>
     </tr>
-    <tr>
-        <th style="font-size:30px;background-color:blanchedalmond">
+
+</table>
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBanner">
+        <th style="font-size:20px">
             @Model.Vendor_Name
         </th>
     </tr>
 
 </table>
+<br />
 
-<div class="row">
     <div style="width:350px">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -78,7 +82,7 @@
             </div>
         </form>
     </div>
-</div>
+
 
 <div>
     <a asp-action="Index">Back to List</a>

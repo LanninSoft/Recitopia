@@ -5,63 +5,67 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <table width="100%" class="table-borderless">
-        <tr>
-            <th style="font-size:20px">
-                Edit
-            </th>
-        </tr>
-        <tr>
-            <th style="font-size:30px;background-color:blanchedalmond">
-                Customer User Details
-            </th>
-        </tr>
-    </table>
-<div class="row">
-    <div style="width:350px">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="User_Id" />
-            <input type="hidden" asp-for="User_Name" />
-            <input type="hidden" asp-for="Customer_Guid" />
-            @*<div>
-            <label asp-for="User_Name" class="control-label"></label><br />
-            <select asp-for="Id"
-                    asp-items="ViewBag.AppUsers">
-            </select>
-            <span asp-validation-for="Id" class="text-danger"></span>
-        </div>*@
-            <br />
-            <div>
-                <font style="font-weight:bold">User Name</font>
-            </div>
-            <div>
-                <input disabled value="@ViewBag.AppUsers.User_Name" />
-            </div>
-            <br />
-            <div>
+<table style="width:100%">
+    <tr>
+        <th>
+            Edit
+        </th>
+    </tr>
 
-                <font style="font-weight:bold">Associated Customer Name</font>
-            </div>
-            <div>
-                <select asp-for="Customer_Id"
-                        asp-items="ViewBag.Customers">
+</table>
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBannerAdmin">
+        <th style="font-size:20px">
+            Customer User Association
+        </th>
+    </tr>
+
+</table>
+<br />
+<div style="width:350px">
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="User_Id" />
+        <input type="hidden" asp-for="User_Name" />
+        <input type="hidden" asp-for="Customer_Guid" />
+        @*<div>
+                <label asp-for="User_Name" class="control-label"></label><br />
+                <select asp-for="Id"
+                        asp-items="ViewBag.AppUsers">
                 </select>
-                <span asp-validation-for="Customer_Id" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <font style="font-weight:bold">Notes</font>
-                <textarea asp-for="Notes" class="form-control"></textarea>
-                <span asp-validation-for="Notes" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>*@
+        <br />
+        <div>
+            <font style="font-weight:bold">User Name</font>
+        </div>
+        <div>
+            <input disabled value="@ViewBag.AppUsers.User_Name" />
+        </div>
+        <br />
+        <div>
+
+            <font style="font-weight:bold">Associated Customer Name</font>
+        </div>
+        <div>
+            <select asp-for="Customer_Id"
+                    asp-items="ViewBag.Customers">
+            </select>
+            <span asp-validation-for="Customer_Id" class="text-danger"></span>
+        </div>
+        <br />
+        <div class="form-group">
+            <font style="font-weight:bold">Notes</font>
+            <textarea asp-for="Notes" class="form-control"></textarea>
+            <span asp-validation-for="Notes" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    </form>
 </div>
+
 
 <div>
     <a asp-action="Index">Back to List</a>

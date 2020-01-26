@@ -3,467 +3,474 @@
 @{
     ViewBag.Title = "Details";
 }
-    <div class="d-print-none">
-        <table style="width:100%">
-            <tr>
-                <td>
-                    <div >
-                        @Html.ActionLink("Edit", "Edit", new { id = Model.Recipe_Id }) |
-                        @Html.ActionLink("Back to List", "Index") |
-                        @Html.ActionLink("Create Copy", "CreateCopy", new { id = Model.Recipe_Id })
+
+<div class="d-print-none">
+    <table style="width:100%">
+        <tr>
+            <td>
+                <div>
+                    @Html.ActionLink("Edit", "Edit", new { id = Model.Recipe_Id }) |
+                    @Html.ActionLink("Back to List", "Index") |
+                    @Html.ActionLink("Create Copy", "CreateCopy", new { id = Model.Recipe_Id })
 
 
-                    </div>
-                </td>
-                <td style="text-align:right">
-                    <div >
-                        <a href="@Url.Action("Index", "Recipe_Ingredients", new { recipeID = Model.Recipe_Id })" style="background-color:lavender;padding:9px" class="btn btn-sm AngularButtons" role="button"><i class="fa fa-plus"></i> Ingredients</a>
-                        <a href="@Url.Action("Index", "Recipe_Packaging", new { recipeID = Model.Recipe_Id })" style="background-color:wheat;padding:9px" class="btn btn-sm AngularButtons" role="button"><i class="fa fa-plus"></i> Packaging</a>
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </div>
-        <table style="width:100%" class="table-borderless">
-            <tr>
-                <th style="font-size:20px">
-                    Details
-                </th>
-            </tr>
-            <tr>
-                <th style="font-size:30px;background-color:blanchedalmond">
-                    @Model.Recipe_Name
-                </th>
-            </tr>
-        </table>
-        <div>
+                </div>
+            </td>
+            <td style="text-align:right">
+                <div>
+                    <a href="@Url.Action("Index", "Recipe_Ingredients", new { recipeID = Model.Recipe_Id })" style="background-color:lavender;padding:9px" class="btn btn-sm AngularButtons" role="button"><i class="fa fa-plus"></i> Ingredients</a>
+                    <a href="@Url.Action("Index", "Recipe_Packaging", new { recipeID = Model.Recipe_Id })" style="background-color:wheat;padding:9px" class="btn btn-sm AngularButtons" role="button"><i class="fa fa-plus"></i> Packaging</a>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<br />
+<table style="width:100%">
+    <tr>
+        <th>
+            Details
+        </th>
+    </tr>
+
+</table>
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBanner">
+        <th style="font-size:20px">
+            @Model.Recipe_Name
+        </th>
+    </tr>
+
+</table>
+<br />
+<div>
 
 
-            <table style="width:100%" border="0">
-                <tr>
-                    <td style="font-size:13px;width:30%;vertical-align:top">
-                        <table style="width:100%" class="table-striped " border="1">
-                            <tr>
-                                <th style="background-color:darkseagreen;font-size:15px">
-                                    Details
-                                </th>
-                            </tr>
-                            <tr>
-                                <th>@Html.LabelFor(model => model.Recipe_Name)</th>
-                            </tr>
-                            <tr>
-                                <td>@Html.DisplayFor(model => model.Recipe_Name)</td>
-                            </tr>
-                            <tr>
-                                <th>@Html.LabelFor(model => model.Meal_Category.Category_Name)</th>
-                            </tr>
-                            <tr>
-                                <td>@Html.DisplayFor(model => model.Meal_Category.Category_Name)</td>
-                            </tr>
-                            <tr>
-                                <th>@Html.LabelFor(model => model.Serving_Sizes.Serving_Size)</th>
-                            </tr>
-                            <tr>
-                                <td>@Html.DisplayFor(model => model.Serving_Sizes.Serving_Size)</td>
-                            </tr>
-                            <tr>
-                                <th>@Html.LabelFor(model => model.LaborCost)</th>
-                            </tr>
-                            <tr>
-                                <td>@Html.DisplayFor(model => model.LaborCost)</td>
-                            </tr>
-                            <tr>
-                                <th>@Html.LabelFor(model => model.Gluten_Free)</th>
-                            </tr>
-                            <tr>
-                                <td>@Html.DisplayFor(model => model.Gluten_Free)</td>
-                            </tr>
-                            <tr>
-                                <th>@Html.LabelFor(model => model.SKU)</th>
-                            </tr>
-                            <tr>
-                                <td>@Html.DisplayFor(model => model.SKU)</td>
-                            </tr>
-                            <tr>
-                                <th>@Html.LabelFor(model => model.UPC)</th>
-                            </tr>
-                            <tr>
-                                <td>@Html.DisplayFor(model => model.UPC)</td>
-                            </tr>
-                            @if (Model.Notes != null)
+    <table style="width:100%" border="0">
+        <tr>
+            <td style="font-size:13px;width:30%;vertical-align:top">
+                <table style="width:100%" class="table-striped " border="1">
+                    <tr>
+                        <th style="background-color:darkseagreen;font-size:15px">
+                            Details
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(model => model.Recipe_Name)</th>
+                    </tr>
+                    <tr>
+                        <td>@Html.DisplayFor(model => model.Recipe_Name)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(model => model.Meal_Category.Category_Name)</th>
+                    </tr>
+                    <tr>
+                        <td>@Html.DisplayFor(model => model.Meal_Category.Category_Name)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(model => model.Serving_Sizes.Serving_Size)</th>
+                    </tr>
+                    <tr>
+                        <td>@Html.DisplayFor(model => model.Serving_Sizes.Serving_Size)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(model => model.LaborCost)</th>
+                    </tr>
+                    <tr>
+                        <td>@Html.DisplayFor(model => model.LaborCost)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(model => model.Gluten_Free)</th>
+                    </tr>
+                    <tr>
+                        <td>@Html.DisplayFor(model => model.Gluten_Free)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(model => model.SKU)</th>
+                    </tr>
+                    <tr>
+                        <td>@Html.DisplayFor(model => model.SKU)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(model => model.UPC)</th>
+                    </tr>
+                    <tr>
+                        <td>@Html.DisplayFor(model => model.UPC)</td>
+                    </tr>
+                    @if (Model.Notes != null)
+                    {
+                        <tr>
+                            <th>@Html.LabelFor(model => model.Notes)</th>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayFor(model => model.Notes)</td>
+                        </tr>
+                    }
+                    <tr>
+                        <th>@Html.LabelFor(model => model.LastModified)</th>
+                    </tr>
+                    <tr>
+                        <td>@Html.DisplayFor(model => model.LastModified)</td>
+                    </tr>
+                </table>
+                <br />
+                <table border="1" style="width:100%" class="table-striped">
+                    <tr>
+                        <th colspan="3" style="background-color:darkseagreen;font-size:15px">
+                            Nutrition (per serving)
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="text-align:right;width:50%">
+                            Nutrient
+                        </th>
+                        <th style="width:25%">
+                            NV
+                        </th>
+                        <th style="width:25%">
+                            %DV
+                        </th>
+                    </tr>
+                    @if (ViewBag.Nutrition != null)
+                    {
+                        foreach (var nutItem in ViewBag.Nutrition)
+                        {
+                            if (nutItem != null)
                             {
                                 <tr>
-                                    <th>@Html.LabelFor(model => model.Notes)</th>
-                                </tr>
-                                <tr>
-                                    <td>@Html.DisplayFor(model => model.Notes)</td>
-                                </tr>
-                            }
-                            <tr>
-                                <th>@Html.LabelFor(model => model.LastModified)</th>
-                            </tr>
-                            <tr>
-                                <td>@Html.DisplayFor(model => model.LastModified)</td>
-                            </tr>
-                        </table>
-                        <br />
-                        <table border="1" style="width:100%" class="table-striped">
-                            <tr>
-                                <th colspan="3" style="background-color:darkseagreen;font-size:15px">
-                                    Nutrition (per serving)
-                                </th>
-                            </tr>
-                            <tr>
-                                <th style="text-align:right;width:50%">
-                                    Nutrient
-                                </th>
-                                <th style="width:25%">
-                                    NV
-                                </th>
-                                <th style="width:25%">
-                                    %DV
-                                </th>
-                            </tr>
-                            @if (ViewBag.Nutrition != null)
-                            {
-                                foreach (var nutItem in ViewBag.Nutrition)
-                                {
-                                    if (nutItem != null)
-                                    {
-                                        <tr>
-                                            <td style="text-align:right">
-                                                <span style="font-weight:bolder"> @nutItem.Nutrition_Item @nutItem.Measurement</span>
-                                            </td>
-                                            <td>
-                                                <span> @Math.Round(nutItem.Nut_per_100_grams, 3) </span>
-                                            </td>
-                                            <td>
-                                                @if (nutItem.Amount_g == 0)
-                                                {
-                                                    <span>NA</span>
-                                                }
-                                                else
-                                                {
-                                                    <span>@Math.Round(nutItem.Amount_g, 3)</span>
-                                                }
-
-
-                                            </td>
-                                        </tr>
-                                    }
-
-
-                                }
-                            }
-
-                        </table>
-                    </td>
-                    <td style="font-size:13px;text-align:right;width:65%;vertical-align:top">
-                        <table border="1" style="width:100%" class="table-striped">
-                            <tr>
-                                <th colspan="4" style="background-color:darkseagreen;font-size:15px;text-align:left">
-                                    Ingredients
-                                </th>
-                            </tr>
-                            <tr>
-                                <th style="text-align:left">
-                                    Ingredients
-                                </th>
-                                <th>
-                                    Amount g
-                                </th>
-                                <th>
-                                    Cost/lb
-                                </th>
-                                <th>
-                                    Ingredient Cost
-                                </th>
-                            </tr>
-                            @if (ViewBag.MIComponents != null)
-                            {
-                                foreach (var Ingr in ViewBag.MIComponents)
-                                {
-
-                                    <tr>
-                                        <td style="text-align:left">
-                                            <span> @Ingr.Ingred_name </span>
-                                        </td>
-                                        <td>
-                                            <span> @Ingr.Amount_g </span>
-                                        </td>
-                                        <td>
-                                            <span> @Ingr.Cost_per_lb </span>
-                                        </td>
-                                        <td>
-                                            <span> @Ingr.Cost  </span>
-                                        </td>
-                                    </tr>
-
-
-
-                                }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td style="text-align:left">
-
-                                        @Html.ActionLink("Ingredients", "Index", "Recipe_Ingredients", new { recipeId = @Model.Recipe_Id }, null)
+                                    <td style="text-align:right">
+                                        <span style="font-weight:bolder"> @nutItem.Nutrition_Item @nutItem.Measurement</span>
                                     </td>
-                                </tr>
-                            }
-                            <tr>
-                                <td style="text-align:right">
-                                    <strong>Net Weight g</strong>
-                                </td>
-                                <td>
-                                    @ViewBag.MICGramsSubtotal
-                                </td>
-                                <td style="text-align:right">
-                                    <strong>Subtotal $</strong>
-                                </td>
-                                <td>
-                                    @ViewBag.MIComponentsSubtotal
-                                </td>
-                            </tr>
-                        </table>
-
-                        <br />
-                        <table border="1" style="width:100%" class="table-striped">
-                            <tr>
-                                <th colspan="4" style="background-color:darkseagreen;font-size:15px;text-align:left">
-                                    Packaging
-                                </th>
-                            </tr>
-                            <tr>
-                                <th style="text-align:left">
-                                    Packaging
-                                </th>
-                                <th>
-                                    Amount
-                                </th>
-                                <th>
-                                    Weight g
-                                </th>
-                                <th>
-                                    Packaging Cost
-                                </th>
-                            </tr>
-                            @if (ViewBag.MIPComponents != null)
-                            {
-                                foreach (var package in ViewBag.MIPComponents)
-                                {
-
-                                    <tr>
-                                        <td style="text-align:left">
-                                            <span> @package.Package_Name </span>
-                                        </td>
-                                        <td>
-                                            <span> @package.Amount </span>
-                                        </td>
-                                        <td>
-                                            <span> @package.Weight </span>
-                                        </td>
-                                        <td>
-                                            <span> @package.Cost </span>
-                                        </td>
-                                    </tr>
-
-
-
-                                }
-                            }
-                            else
-                            {
-                                <tr>
                                     <td>
+                                        <span> @Math.Round(nutItem.Nut_per_100_grams, 3) </span>
+                                    </td>
+                                    <td>
+                                        @if (nutItem.Amount_g == 0)
+                                        {
+                                            <span>NA</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@Math.Round(nutItem.Amount_g, 3)</span>
+                                        }
 
-                                        @Html.ActionLink("Ingredients", "Index", "Recipe_Ingredients", new { recipeId = @Model.Recipe_Id }, null)
+
                                     </td>
                                 </tr>
                             }
-                            <tr>
 
-                                <td style="text-align:right">
-                                    <strong>Net Weight g</strong>
-                                </td>
-                                <td style="text-align:right">
-                                    @ViewBag.GramSubtotalPackaging
-                                </td>
-                                <td style="text-align:right">
-                                    <strong>Subtotal $</strong>
+
+                        }
+                    }
+
+                </table>
+            </td>
+            <td style="font-size:13px;text-align:right;width:65%;vertical-align:top">
+                <table border="1" style="width:100%" class="table-striped">
+                    <tr>
+                        <th colspan="4" style="background-color:darkseagreen;font-size:15px;text-align:left">
+                            Ingredients
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="text-align:left">
+                            Ingredients
+                        </th>
+                        <th>
+                            Amount g
+                        </th>
+                        <th>
+                            Cost/lb
+                        </th>
+                        <th>
+                            Ingredient Cost
+                        </th>
+                    </tr>
+                    @if (ViewBag.MIComponents != null)
+                    {
+                        foreach (var Ingr in ViewBag.MIComponents)
+                        {
+
+                            <tr>
+                                <td style="text-align:left">
+                                    <span> @Ingr.Ingred_name </span>
                                 </td>
                                 <td>
-                                    @ViewBag.MIPComponentsSubtotal
+                                    <span> @Ingr.Amount_g </span>
+                                </td>
+                                <td>
+                                    <span> @Ingr.Cost_per_lb </span>
+                                </td>
+                                <td>
+                                    <span> @Ingr.Cost  </span>
                                 </td>
                             </tr>
 
+
+
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td style="text-align:left">
+
+                                @Html.ActionLink("Ingredients", "Index", "Recipe_Ingredients", new { recipeId = @Model.Recipe_Id }, null)
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td style="text-align:right">
+                            <strong>Net Weight g</strong>
+                        </td>
+                        <td>
+                            @ViewBag.MICGramsSubtotal
+                        </td>
+                        <td style="text-align:right">
+                            <strong>Subtotal $</strong>
+                        </td>
+                        <td>
+                            @ViewBag.MIComponentsSubtotal
+                        </td>
+                    </tr>
+                </table>
+
+                <br />
+                <table border="1" style="width:100%" class="table-striped">
+                    <tr>
+                        <th colspan="4" style="background-color:darkseagreen;font-size:15px;text-align:left">
+                            Packaging
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="text-align:left">
+                            Packaging
+                        </th>
+                        <th>
+                            Amount
+                        </th>
+                        <th>
+                            Weight g
+                        </th>
+                        <th>
+                            Packaging Cost
+                        </th>
+                    </tr>
+                    @if (ViewBag.MIPComponents != null)
+                    {
+                        foreach (var package in ViewBag.MIPComponents)
+                        {
+
                             <tr>
-                                <td>
+                                <td style="text-align:left">
+                                    <span> @package.Package_Name </span>
                                 </td>
                                 <td>
+                                    <span> @package.Amount </span>
                                 </td>
-                                <td style="background-color:goldenrod;text-align:right">
-                                    <strong>Total Weight g</strong>
+                                <td>
+                                    <span> @package.Weight </span>
                                 </td>
-                                <td style="background-color:goldenrod">
-                                    @ViewBag.GramTotal
+                                <td>
+                                    <span> @package.Cost </span>
                                 </td>
                             </tr>
-                        </table>
-                        <br />
-                        <table style="width:100%">
-                            <tr>
-                                <td valign="top" style="width:50%">
-                                    <table border="1" style="width:100%" class="table-striped">
-                                        <tr>
-                                            <th style="background-color:darkseagreen;font-size:15px;text-align:left">
-                                                Allergen Components
-                                            </th>
-                                        </tr>
-                                        @if (ViewBag.RComponents != null)
+
+
+
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td>
+
+                                @Html.ActionLink("Ingredients", "Index", "Recipe_Ingredients", new { recipeId = @Model.Recipe_Id }, null)
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+
+                        <td style="text-align:right">
+                            <strong>Net Weight g</strong>
+                        </td>
+                        <td style="text-align:right">
+                            @ViewBag.GramSubtotalPackaging
+                        </td>
+                        <td style="text-align:right">
+                            <strong>Subtotal $</strong>
+                        </td>
+                        <td>
+                            @ViewBag.MIPComponentsSubtotal
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td style="background-color:goldenrod;text-align:right">
+                            <strong>Total Weight g</strong>
+                        </td>
+                        <td style="background-color:goldenrod">
+                            @ViewBag.GramTotal
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                <table style="width:100%">
+                    <tr>
+                        <td valign="top" style="width:50%">
+                            <table border="1" style="width:100%" class="table-striped">
+                                <tr>
+                                    <th style="background-color:darkseagreen;font-size:15px;text-align:left">
+                                        Allergen Components
+                                    </th>
+                                </tr>
+                                @if (ViewBag.RComponents != null)
+                                {
+                                    foreach (var allergen in ViewBag.RComponents)
+                                    {
+                                        if (allergen != null)
                                         {
-                                            foreach (var allergen in ViewBag.RComponents)
-                                            {
-                                                if (allergen != null)
-                                                {
-                                                    <tr>
-                                                        <td style="text-align:left">
-                                                            <span> @allergen </span>
-                                                        </td>
-                                                    </tr>
-                                                }
-                                                else
-                                                {
-                                                    <tr>
-                                                        <td>
-
-                                                            NA
-                                                        </td>
-                                                    </tr>
-                                                }
-
-                                            }
+                                            <tr>
+                                                <td style="text-align:left">
+                                                    <span> @allergen </span>
+                                                </td>
+                                            </tr>
                                         }
                                         else
                                         {
                                             <tr>
-                                                <td style="text-align:left">
+                                                <td>
 
-                                                    Once Ingredients are added, this will automatically populate.
+                                                    NA
                                                 </td>
                                             </tr>
                                         }
-                                    </table>
-                                </td>
 
-                                <td style="text-align:right;width:50%">
-                                    <table border="1" style="width:100%" class="table-striped">
-                                        <tr>
-                                            <th colspan="4" style="background-color:darkseagreen;font-size:15px;text-align:left">
-                                                Totals
-                                            </th>
-                                        </tr>
-                                        <tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td style="text-align:left">
 
-                                            <td style="text-align:right" colspan="3">
-                                                <strong>Ingredient Costs $</strong>
-                                            </td>
-                                            <td>
-                                                @ViewBag.MIComponentsSubtotal
-                                            </td>
-                                        </tr>
-                                        <tr>
+                                            Once Ingredients are added, this will automatically populate.
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </td>
 
-                                            <td style="text-align:right" colspan="3">
-                                                <strong>Packaging Cost $</strong>
-                                            </td>
-                                            <td>
-                                                @ViewBag.MIPComponentsSubtotal
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="text-align:right" colspan="3">
-                                                <strong>Subtotal $</strong>
-                                            </td>
-                                            <td>
-                                                @ViewBag.CostGSubtotal
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="text-align:right" colspan="3">
-                                                <strong>Labor Costs $</strong>
-                                            </td>
-                                            <td>
-                                                @Model.LaborCost
-                                            </td>
-                                        </tr>
-                                        <tr style="background-color:goldenrod">
-
-                                            <td style="text-align:right" colspan="3">
-                                                <strong>Total Cost $</strong>
-                                            </td>
-                                            <td>
-                                                @ViewBag.CostGRANDTotal
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-
-
-
-
-                        <br />
-                        <table border="1" style="width:100%" class="table-striped">
-                            <tr>
-                                <th style="background-color:darkseagreen;font-size:15px;text-align:left">
-                                    Recipe Component Names
-                                </th>
-                            </tr>
-                            @if (ViewBag.IComponents != null)
-                            {
+                        <td style="text-align:right;width:50%">
+                            <table border="1" style="width:100%" class="table-striped">
                                 <tr>
-                                    <td style="text-align:left">
-                                        <span> @ViewBag.IComponents </span>
+                                    <th colspan="4" style="background-color:darkseagreen;font-size:15px;text-align:left">
+                                        Totals
+                                    </th>
+                                </tr>
+                                <tr>
+
+                                    <td style="text-align:right" colspan="3">
+                                        <strong>Ingredient Costs $</strong>
+                                    </td>
+                                    <td>
+                                        @ViewBag.MIComponentsSubtotal
                                     </td>
                                 </tr>
-
-                            }
-                            else
-                            {
                                 <tr>
-                                    <td style="text-align:left">
 
-                                        Once Ingredients are added, this will automatically populate.
+                                    <td style="text-align:right" colspan="3">
+                                        <strong>Packaging Cost $</strong>
+                                    </td>
+                                    <td>
+                                        @ViewBag.MIPComponentsSubtotal
                                     </td>
                                 </tr>
-                            }
-                        </table>
-                </tr>
-            </table>
+                                <tr>
+                                    <td style="text-align:right" colspan="3">
+                                        <strong>Subtotal $</strong>
+                                    </td>
+                                    <td>
+                                        @ViewBag.CostGSubtotal
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right" colspan="3">
+                                        <strong>Labor Costs $</strong>
+                                    </td>
+                                    <td>
+                                        @Model.LaborCost
+                                    </td>
+                                </tr>
+                                <tr style="background-color:goldenrod">
 
-        </div>
-        <div class="d-print-none">
-            <table style="width:100%">
-                <tr>
-                    <td>
-                        <div >
-                            @Html.ActionLink("Edit", "Edit", new { id = Model.Recipe_Id }) |
-                            @Html.ActionLink("Back to List", "Index") |
-                            @Html.ActionLink("Create Copy", "CreateCopy", new { id = Model.Recipe_Id }) 
+                                    <td style="text-align:right" colspan="3">
+                                        <strong>Total Cost $</strong>
+                                    </td>
+                                    <td>
+                                        @ViewBag.CostGRANDTotal
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
 
 
-                        </div>
-                    </td>
-                    <td style="text-align:right">
-                        <div >
-                            <a href="@Url.Action("Index", "Recipe_Ingredients", new { recipeID = Model.Recipe_Id })" style="background-color:lavender;padding:9px" class="btn btn-sm AngularButtons" role="button"><i class="fa fa-plus"></i> Ingredients</a>
-                            <a href="@Url.Action("Index", "Recipe_Packaging", new { recipeID = Model.Recipe_Id })" style="background-color:wheat;padding:9px" class="btn btn-sm AngularButtons" role="button"><i class="fa fa-plus"></i> Packaging</a>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </div>
+
+
+                <br />
+                <table border="1" style="width:100%" class="table-striped">
+                    <tr>
+                        <th style="background-color:darkseagreen;font-size:15px;text-align:left">
+                            Recipe Component Names
+                        </th>
+                    </tr>
+                    @if (ViewBag.IComponents != null)
+                    {
+                        <tr>
+                            <td style="text-align:left">
+                                <span> @ViewBag.IComponents </span>
+                            </td>
+                        </tr>
+
+                    }
+                    else
+                    {
+                        <tr>
+                            <td style="text-align:left">
+
+                                Once Ingredients are added, this will automatically populate.
+                            </td>
+                        </tr>
+                    }
+                </table>
+        </tr>
+    </table>
+
+</div>
+<div class="d-print-none">
+    <table style="width:100%">
+        <tr>
+            <td>
+                <div>
+                    @Html.ActionLink("Edit", "Edit", new { id = Model.Recipe_Id }) |
+                    @Html.ActionLink("Back to List", "Index") |
+                    @Html.ActionLink("Create Copy", "CreateCopy", new { id = Model.Recipe_Id })
+
+
+                </div>
+            </td>
+            <td style="text-align:right">
+                <div>
+                    <a href="@Url.Action("Index", "Recipe_Ingredients", new { recipeID = Model.Recipe_Id })" style="background-color:lavender;padding:9px" class="btn btn-sm AngularButtons" role="button"><i class="fa fa-plus"></i> Ingredients</a>
+                    <a href="@Url.Action("Index", "Recipe_Packaging", new { recipeID = Model.Recipe_Id })" style="background-color:wheat;padding:9px" class="btn btn-sm AngularButtons" role="button"><i class="fa fa-plus"></i> Packaging</a>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
 

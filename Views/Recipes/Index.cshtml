@@ -5,14 +5,14 @@
     ViewBag.Title = "Recipe List";
 }
 
-<table width="100%" class="table table-borderless ">
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
     <tr class="pageBanner">
         <th>
             Recipes
         </th>
     </tr>
 </table>
-
+<br />
 
 <div ng-app="myApp" ng-controller="Recipes" style="font-size:13px" class="container-fluid">
     @* Use ng-controller *@
@@ -71,11 +71,6 @@
         <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:225px">
             <input type="button" style="background-color:lavender" class="btn btn-sm AngularButtons" value="Ingredients" ng-click="RedirectToRecipeIngredients(recipe)" /> |
             <input type="button" style="background-color:wheat" class="btn btn-sm AngularButtons" value="Packaging" ng-click="RedirectToRecipePackaging(recipe)" /> |
-            @*<button ng-click="RedirectToCopy(recipe)" class="btn btn-outline-info AngularButtons">
-                <i class="fa fa-copy"></i>
-            </button> |*@
-
-
             <button ng-click="RedirectToEdit(recipe)" class="btn btn-outline-success AngularButtons">
                 <i class="fa fa-pen"></i>
             </button> |
