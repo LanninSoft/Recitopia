@@ -28,7 +28,7 @@
         }
 
     </div>
-
+    <br />
     <table>
         <tr>
             <td>
@@ -45,7 +45,7 @@
                         <th style="text-align:right" class="AngularTableHeaderColor"><a href="@Url.Action("Create", "Ingredient_Nutrients", new { IngredID = ViewBag.IngredNameID })" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> Add Item</a></th>
 
                     </tr>
-                    <tr>
+                    <tr ng-if="(IngredientNutrition|filter:query).length > 0">
                         <td style="font-size:13px">
                             <input style="padding:1px;height:20px;width:100%" ng-model="f.nutrition_Item">
                         </td>
@@ -54,7 +54,7 @@
                     </tr>
 
 
-                    <tr ng-repeat="nutrient in IngredientNutrition | filter:f | orderBy:sort.active:sort.descending">
+                    <tr ng-repeat="nutrient in IngredientNutrition | filter:f | orderBy:sort.active:sort.descending" ng-if="(IngredientNutrition|filter:query).length > 0">
                         <td style="height:15px;padding:1px">{{nutrient.nutrition_Item}}</td>
                         <td style="height:15px;padding:1px">
                             <div ng-show="!nutrient.edit.nut_per_100_grams"
@@ -84,7 +84,7 @@
                         </td>
 
                     </tr>
-                    <tr>
+                    <tr ng-if="(IngredientNutrition|filter:query).length > 0">
                         <td colspan="2">
                             <div>
                                 <div ng-if="resultMessage == 'Update Successful'">
@@ -98,7 +98,7 @@
                             </div>
                         </td>
                         <td align="right" colspan="2">
-                            <div ng-if="(IngredientNutrition|filter:query).length > 0">
+                            <div >
                                 <button class="btn alert-warning AngularButtons border-dark" ng-click="RedirectToUpdate(IngredientNutrition)">
                                     &nbsp;<i style="height:15px" class=" fa fa-save"></i> Save your changes&nbsp;
                                 </button>
