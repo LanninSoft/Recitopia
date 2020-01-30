@@ -19,7 +19,7 @@
     <table>
         <tr>
             <td>
-                <div ng-if="(Packaging|filter:query).length > 0">
+                <div >
                     <table width="100%" class="table table-condensed table-hover table-striped table-bordered table-responsive-lg">
                         <tr>
                             <th class="AngularTableHeaderColor" style="vertical-align:bottom">
@@ -32,12 +32,12 @@
                             </th>
                             <th style="text-align:right" class="AngularTableHeaderColor"><a href="@Url.Action("Create", "Recipe_Packaging", new { recipeID = ViewBag.RecipeNameID })" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> Packaging</a></th>
                         </tr>
-                        <tr>
+                        <tr ng-if="(Packaging|filter:query).length > 0">
                             <td style="font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.package_Name"></td>
                             <td></td>
                             <td></td>
                         </tr>
-                        <tr ng-repeat="packaging in Packaging | filter:f | orderBy:sort.active:sort.descending">
+                        <tr ng-repeat="packaging in Packaging | filter:f | orderBy:sort.active:sort.descending" ng-if="(Packaging|filter:query).length > 0">
                             <td style="height:15px;padding:1px">{{packaging.package_Name}}</td>
                             <td style="height:15px;padding:1px">
                                 <div ng-show="!packaging.edit.amount"
@@ -62,7 +62,7 @@
                                 </button>
                             </td>
                         </tr>
-                        <tr>
+                        <tr ng-if="(Packaging|filter:query).length > 0">
                             <td colspan="1">
                                 <div>
                                     <div ng-if="resultMessage == 'Update Successful'">
@@ -76,9 +76,9 @@
                                 </div>
                             </td>
                             <td align="right" colspan="3">
-                                <div ng-if="(Packaging|filter:query).length > 0">
+                                <div >
                                     <button class="btn alert-warning AngularButtons border-dark" ng-click="RedirectToUpdate(Packaging)">
-                                        &nbsp;<i style="height:15px" class=" fa fa-save"></i> Save your changes&nbsp;
+                                        &nbsp;<i style="height:10px" class=" fa fa-save"></i> Save your changes&nbsp;
                                     </button>
                                 </div>
                             </td>

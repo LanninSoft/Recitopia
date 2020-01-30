@@ -3,42 +3,37 @@
 @{
     ViewBag.Title = "Details";
 }
+<table style="width:100%">
+    <tr>
+        <th>
+            Details
+        </th>
+    </tr>
+</table>
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBanner">
+        <th style="font-size:20px">
+            @Model.Component_Name
+        </th>
+    </tr>
 
-    <table style="width:100%" class="table table-borderless rounded-sm box effect8">
-        <tr>
-            <th style="font-size:20px">
-                Allergen Component Details
-            </th>
-        </tr>
-        <tr>
-            <th style="font-size:20px;background-color:blanchedalmond">
-                @Model.Component_Name
-            </th>
-        </tr>
-    </table>
+</table>
+<br />            
+<table>
+    <tr>
+        <th>@Html.LabelFor(model => model.Component_Name)</th>
+    </tr>
+    <tr>
+        <td>@Html.DisplayFor(model => model.Component_Name)</td>
+    </tr>
+    <tr>
+        <th>@Html.LabelFor(model => model.Notes)</th>
+    </tr>
+    <tr>
+        <td>@Html.DisplayFor(model => model.Notes)</td>
+    </tr>
+</table>      
 
-<div>
-   
-    
-    <dl class="dl-horizontal"  style="font-size:13px">
-        <dt>
-            Component Name
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Component_Name)
-        </dd>
-
-        <dt>
-            Notes
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Notes)
-        </dd>
-
-    </dl>
-</div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Comp_Id }) |
     @Html.ActionLink("Back to List", "Index")

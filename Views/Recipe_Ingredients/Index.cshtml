@@ -18,7 +18,7 @@
     <table >
         <tr>
             <td>
-                <div ng-if="(Ingredients|filter:query).length > 0">
+                <div >
                     <table width="100%" class="table table-condensed table-hover table-striped table-bordered table-responsive-lg">
                         <tr>
                             <th class="AngularTableHeaderColor" style="vertical-align:bottom">
@@ -32,11 +32,11 @@
 
 
 
-                            <th style="text-align:right" class="AngularTableHeaderColor"><a href="@Url.Action("Create", "Recipe_Ingredients", new { recipeID = ViewBag.RecipeNameID })" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> Add Ingredient</a></th>
+                            <th style="text-align:right" class="AngularTableHeaderColor"><a href="@Url.Action("Create", "Recipe_Ingredients", new { recipeID = ViewBag.RecipeNameID })" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> Ingredient(s)</a></th>
 
 
                         </tr>
-                        <tr>
+                        <tr ng-if="(Ingredients|filter:query).length > 0">
                             <td style="font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.ingred_Name"></td>
                             <td></td>
                             <td></td>
@@ -44,7 +44,7 @@
                         </tr>
 
 
-                        <tr ng-repeat="ingredient in Ingredients | filter:f | orderBy:sort.active:sort.descending">
+                        <tr ng-repeat="ingredient in Ingredients | filter:f | orderBy:sort.active:sort.descending" ng-if="(Ingredients|filter:query).length > 0">
                             <td style="height:15px;padding:1px">{{ingredient.ingred_name}}</td>
 
 
@@ -82,7 +82,7 @@
 
 
                         </tr>
-                        <tr>
+                        <tr ng-if="(Ingredients|filter:query).length > 0">
                             <td colspan="1">
                                 <div>
                                     <div ng-if="resultMessage == 'Update Successful'">
@@ -96,7 +96,7 @@
                                 </div>
                             </td>
                             <td align="right" colspan="3">
-                                <div ng-if="(Ingredients|filter:query).length > 0">
+                                <div>
                                     <button class="btn alert-warning AngularButtons border-dark" ng-click="RedirectToUpdate(Ingredients)">
                                         &nbsp;<i style="height:15px" class=" fa fa-save"></i> Save your changes&nbsp;
                                     </button>
@@ -120,8 +120,8 @@
     @Html.ActionLink("Recipe List", "Index", "Recipes")
 
 </div>
-@*<br />
-<div ng-if="(Ingredients|filter:query).length > 0">
+<br />
+@*<div ng-if="(Ingredients|filter:query).length > 0">
     <a href="@Url.Action("Create", "Recipe_Ingredients", new { recipeID = ViewBag.RecipeNameID })" class="btn alert-success" role="button"><i class="fa fa-plus"></i> Add Ingredient</a>
 </div>*@
 

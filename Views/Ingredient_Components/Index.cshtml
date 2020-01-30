@@ -27,7 +27,7 @@
                         <th style="text-align:right" class="AngularTableHeaderColor"> <a href="@Url.Action("Create", "Ingredient_Components", new { ingredID = ViewBag.IngredNameID })" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> Add Allergen</a></th>
 
                     </tr>
-                    <tr>
+                    <tr ng-if="(IngredientComponents|filter:query).length > 0">
                         <td style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.component_Name"></td>
 
                         <td></td>
