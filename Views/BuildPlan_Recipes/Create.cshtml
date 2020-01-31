@@ -1,0 +1,155 @@
+﻿@model Recitopia.Models.BuildPlan_Recipes
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBanner">
+        <th style="font-size:20px">
+            @ViewBag.OrderName (Add Items)
+        </th>
+    </tr>
+</table>
+<br />
+<div ng-app="myApp" ng-controller="PlanRecipesCreate" ng-init="Plan_Id=(@ViewBag.BuildPlan_Id)" class="container-fluid" style="font-size:13px">
+    @* Use ng-controller *@
+
+
+    <div ng-if="resultMessage == 'Update Successful'">
+
+        <font style="color:darkgreen">{{resultMessage}}</font><i class="fa fa-check"></i>
+    </div>
+    <div ng-if="resultMessage == 'Error saving'">
+
+        <font style="color:red">{{resultMessage}}</font><i class="fa fa-exclamation"></i>
+    </div>
+
+    <table>
+        <tr>
+            <td>
+                <div ng-if="(Plans|filter:query).length > 0">
+                    <table width="100%" class="table table-condensed table-hover table-striped table-bordered table-responsive-lg">
+                        <tr>
+                            <th class="AngularTableHeaderColor" style="vertical-align:bottom">
+                                <a href="" ng-click="changeSorting('recipe_Name')"><font style="color:black">Recipe Name</font></a>
+                                <i class="fa fa-caret-left" ng-class="getIcon('recipe_Name')"></i>
+                            </th>
+                            <th class="AngularTableHeaderColor" style="vertical-align:bottom">
+                                <font style="color:black">Amount</font>
+
+                            </th>
+
+                            <th style="text-align:right" class="AngularTableHeaderColor">
+                                <button class="btn alert-warning AngularButtons border-dark" ng-click="RedirectToAdd(Plans)">
+                                    &nbsp;<i style="height:15px" class=" fa fa-save"></i> Save&nbsp;
+                                </button>
+                            </th>
+
+
+                        </tr>
+                        <tr>
+                            <td style="font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.recipe_Name"></td>
+                            <td></td>
+                            <td></td>
+
+                        </tr>
+
+
+                        <tr ng-repeat="plan in Plans | filter:f | orderBy:sort.active:sort.descending">
+                            <td style="height:15px;padding:1px">{{plan.recipe_Name}}</td>
+
+
+
+                            <td style="height:15px;padding:1px">
+                                <div ng-show="!plan.edit.amount"
+                                     ng-click="plan.edit.amount = !plan.edit.amount">
+                                    <i class="fa fa-pen"></i> {{plan.amount}}
+                                </div>
+
+                                <input type="number" min="0" step="0.001" style="width:75px" required ng-show="plan.edit.amount"
+                                       @*ng-blur="plan.edit.amount_g = !plan.edit.amount_g"*@
+                                       ng-model="plan.amount"
+                                       ng-focus="$event.target.select()" />
+                                <input hidden type="text" ng-model="plan.BuildPlan_Id" ng-init="plan.BuildPlan_Id=@ViewBag.BuildPlan_Id" />
+
+                            </td>
+
+
+
+
+                            <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:100px">
+                                @*<button ng-click="RedirectToAdd(ingredient)" class="btn btn-outline-success AngularButtons">
+                                        <i class="fa fa-plus"></i>
+                                    </button>*@
+
+                            </td>
+
+
+
+
+                        </tr>
+                        <tr>
+                            <td colspan="1">
+                                <div>
+                                    <div ng-if="resultMessage == 'Update Successful'">
+
+                                        <font style="color:darkgreen">{{resultMessage}}</font><i class="fa fa-check"></i>
+                                    </div>
+                                    <div ng-if="resultMessage == 'Error saving'">
+
+                                        <font style="color:red">{{resultMessage}}</font><i class="fa fa-exclamation"></i>
+                                    </div>
+                                </div>
+                            </td>
+                            <td align="right" colspan="3">
+
+                                <button class="btn alert-warning AngularButtons border-dark" ng-click="RedirectToAdd(Plans)">
+                                    &nbsp;<i style="height:15px" class=" fa fa-save"></i> Save&nbsp;
+                                </button>
+                            </td>
+
+                        </tr>
+
+                    </table>
+
+                </div>
+            </td>
+            <td style="vertical-align:top;text-align:left">
+                <div>
+                    <table>
+                        <tr style="background-color:lightblue">
+                            <td style="font-weight:bolder" align="center">
+                                Items already in '@ViewBag.OrderName'
+                            </td>
+
+                        </tr>
+                        @if (ViewBag.Recipes != null)
+                        {
+                            foreach (var thing in ViewBag.Recipes)
+                            {
+                                <tr>
+                                    <td style="font-size:small">
+                                        -@thing
+                                    </td>
+
+
+                                </tr>
+                            }
+                        }
+
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index", new { planId = ViewBag.BuildPlan_Id })
+   
+</div>
+
