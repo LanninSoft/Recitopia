@@ -1,7 +1,8 @@
 ﻿(function () {
     'use strict';
     var app = angular.module('myApp', [])
-        .filter('utcToLocal', utcToLocal);
+        .filter('utcToLocal', utcToLocal)
+        .filter('formatDate', formatDate);
 //------------------------------------------------------------------------------------------------------
 //-----------------------SHARED CODE--------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------
@@ -21,10 +22,294 @@
             return $filter('date')(utcDateString, format);
         };
     }
+    //CONVERTS UTC TIME TO LOCAL
+    function formatDate($filter) {
+        return function (DateString, format) {
+            if (!DateString) {
+                return;
+            }
+
+           
+            return $filter('date')(DateString, format);
+        };
+    }
 //------------------------------------------------------------------------------------------------------
 //-----------------------CONTROLLERS--------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------
 
+//------------------------------------------------------------------------------------------------------
+//-----------------------BUILD PLANS CONTROLLER--------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
+
+app.controller('BuildPlans', function ($scope, $http) {
+
+    $http.get("/BuildPlan/GetData")
+        .then(function (response) {
+            // First function handles success
+            $scope.Plans = response.data;
+
+        }, function (response) {
+            // Second function handles error
+            $scope.Plans = "Something went wrong";
+
+        });
+
+    //Redrect index form to edit form with parameter
+    //Redrect index form to details form with parameter
+    $scope.RedirectToCopy = function (plans) {
+
+        window.location.href = '/BuildPlan/CreateCopy/' + plans.buildPlan_Id;
+    };
+    $scope.RedirectToEdit = function (plans) {
+
+        window.location.href = '/BuildPlan/Edit/' + plans.buildPlan_Id;
+    };
+
+    //Redrect index form to delete form with parameter
+    $scope.DelPlan = function (plans) {
+
+        window.location.href = '/BuildPlan/Delete/' + plans.buildPlan_Id;
+    };
+    //Redrect recipe ingredients form 
+    $scope.RedirectToPlanItems = function (plans) {
+
+        window.location.href = '/BuildPlan_Recipes/Index/?planID=' + plans.buildPlan_Id;
+
+    };
+    
+    //Redrect index form to details form with parameter
+    $scope.RedirectToDetails = function (plans) {
+
+        window.location.href = '/BuildPlan/Details/' + plans.buildPlan_Id;
+    };
+    app.filter('YesNo', function () {
+        return function (text) {
+            return text ? "Yes" : "No";
+        }
+    })
+    //SORTING ICON CONTROL
+    $scope.sort = {
+        active: '',
+        descending: undefined
+    }
+
+    $scope.changeSorting = function (column) {
+
+        var sort = $scope.sort;
+
+        if (sort.active == column) {
+            sort.descending = !sort.descending;
+
+        } else {
+            sort.active = column;
+            sort.descending = false;
+        }
+    };
+
+    $scope.getIcon = function (column) {
+
+        var sort = $scope.sort;
+
+        if (sort.active == column) {
+            return sort.descending
+                ? 'fa fa-caret-up'
+                : 'fa fa-caret-down';
+        }
+
+        return 'fa fa-caret-left';
+    }
+
+});
+//------------------------------------------------------------------------------------------------------
+//-----------------------BUILD PLAN RECIPES CONTROLLER--------------------------------------------------
+//------------------------------------------------------------------------------------------------------
+
+app.controller('BuildPlanRecipes', function ($scope, $http) {
+
+    $scope.$watch('Plan_Id', function () {
+
+        $http.get("/BuildPlan_Recipes/GetData?planId=" + $scope.Plan_Id)
+            .then(function (response) {
+                // First function handles success
+
+                $scope.Plans = response.data;
+
+            }, function (response) {
+                // Second function handles error
+                $scope.Plans = "Something went wrong";
+
+            });
+    });
+    //UPDATE Amount g
+    $scope.RedirectToUpdate = function (Data) {
+        $scope.resultMessage = '';
+
+        $http({
+            url: "/BuildPlan_Recipes/UpdateFromAngularController",
+            contentType: 'application/json',
+            method: 'POST',
+            traditional: true,
+            data: Data,
+
+        }).then(function (response) {
+
+            $scope.resultMessage = "Update Successful";
+        })
+            .catch(function (error) {
+
+                $scope.resultMessage = "Error saving";
+            });
+    };
+    //SORTING ICON CONTROL
+    $scope.sort = {
+        active: '',
+        descending: undefined
+    }
+
+    $scope.changeSorting = function (column) {
+
+        var sort = $scope.sort;
+
+        if (sort.active == column) {
+            sort.descending = !sort.descending;
+
+        } else {
+            sort.active = column;
+            sort.descending = false;
+        }
+    };
+
+    $scope.getIcon = function (column) {
+
+        var sort = $scope.sort;
+
+        if (sort.active == column) {
+            return sort.descending
+                ? 'fa fa-caret-up'
+                : 'fa fa-caret-down';
+        }
+
+        return 'fa fa-caret-left';
+    }
+    //Redrect index form to edit form with parameter
+    $scope.RedirectToEdit = function (Plans) {
+
+        window.location.href = '/BuildPlan_Recipes/Edit/?id=' + Plans.id;
+    };
+
+    //Redrect index form to delete form with parameter
+    $scope.DelOrder = function (Plans) {
+
+        window.location.href = '/BuildPlan_Recipes/Delete/?id=' + Plans.id;
+    };
+
+    //Redrect index form to details form with parameter
+    $scope.RedirectToDetails = function (Plans) {
+
+
+        window.location.href = '/BuildPlan_Recipes/Details/?id=' + Plans.BuildPlan_Id;
+    };
+
+    //Redrect recipe ingredients form 
+    $scope.RedirectToOrderdetails = function (Plans) {
+
+        window.location.href = '/BuildPlan_Recipes/Index/?planID=' + Plans.BuildPlan_Id;
+
+    };
+    app.filter('YesNo', function () {
+        return function (text) {
+            return text ? "Yes" : "No";
+        }
+    })
+
+
+});
+//------------------------------------------------------------------------------------------------------
+//-----------------------PLAN RECIPE CREATE CONTROLLER--------------------------------------------------
+//------------------------------------------------------------------------------------------------------
+
+    app.controller('PlanRecipesCreate', function ($scope, $http) {
+
+    $scope.$watch('Plan_Id', function () {
+
+        $http.get("/BuildPlan_Recipes/GetDataCreate?plan_Id=" + $scope.Plan_Id)
+            .then(function (response) {
+                // First function handles success
+
+                $scope.Plans = response.data;
+
+            }, function (response) {
+                // Second function handles error
+                    $scope.Plans = "Something went wrong";
+
+            });
+    });
+    //UPDATE Amount g
+    $scope.RedirectToAdd = function (Data) {
+        $scope.resultMessage = '';
+
+        $http({
+            url: "/BuildPlan_Recipes/CreatePlanRecipes/",
+            contentType: 'application/json',
+            method: 'POST',
+            traditional: true,
+            data: Data,
+
+        }).then(function (response) {
+
+            $scope.resultMessage = "Success saving";
+            window.location.href = '/BuildPlan_Recipes/Index/?planId=' + response.data;
+        })
+            .catch(function (error) {
+
+                $scope.resultMessage = "Error saving";
+            });
+
+
+
+    };
+    //SORTING ICON CONTROL
+    $scope.sort = {
+        active: '',
+        descending: undefined
+    }
+
+    $scope.changeSorting = function (column) {
+
+        var sort = $scope.sort;
+
+        if (sort.active == column) {
+            sort.descending = !sort.descending;
+
+        } else {
+            sort.active = column;
+            sort.descending = false;
+        }
+    };
+
+    $scope.getIcon = function (column) {
+
+        var sort = $scope.sort;
+
+        if (sort.active == column) {
+            return sort.descending
+                ? 'fa fa-caret-up'
+                : 'fa fa-caret-down';
+        }
+
+        return 'fa fa-caret-left';
+    }
+
+
+
+    app.filter('YesNo', function () {
+        return function (text) {
+            return text ? "Yes" : "No";
+        }
+    })
+
+
+});
 //------------------------------------------------------------------------------------------------------
 //-----------------------RECIPE CONTROLLER--------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------

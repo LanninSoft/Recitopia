@@ -1,0 +1,67 @@
+﻿@model Recitopia.Models.BuildPlan
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table style="width:100%">
+    <tr>
+        <th>
+            Edit
+        </th>
+    </tr>
+
+</table>
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBanner">
+        <th style="font-size:20px">
+            @Model.Plan_Name
+        </th>
+    </tr>
+
+</table>
+<br />
+
+<div class="col-md-4">
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="BuildPlan_Id" />
+        <div class="form-group">
+            <label asp-for="Plan_Name" class="control-label"></label>
+            <input asp-for="Plan_Name" class="form-control" />
+            <span asp-validation-for="Plan_Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="PlanDate" class="control-label"></label>
+            <input asp-for="PlanDate" class="form-control" />
+            <span asp-validation-for="PlanDate" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="NeedByDate" class="control-label"></label>
+            <input asp-for="NeedByDate" class="form-control" />
+            <span asp-validation-for="NeedByDate" class="text-danger"></span>
+        </div>
+        <div class="form-group form-check">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="FullFilled" /> @Html.DisplayNameFor(model => model.FullFilled)
+            </label>
+        </div>
+       
+        <div class="form-group">
+            <label asp-for="Notes" class="control-label"></label>
+            <textarea asp-for="Notes" class="form-control"></textarea>
+            <span asp-validation-for="Notes" class="text-danger"></span>
+        </div>
+       
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

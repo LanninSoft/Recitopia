@@ -32,6 +32,16 @@
     <Compile Remove="Data\Migrations\20200107192136_PackagingTables.Designer.cs" />
     <Compile Remove="Data\Migrations\20200108001427_PackagingTablesDUEX.cs" />
     <Compile Remove="Data\Migrations\20200108001427_PackagingTablesDUEX.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200130113817_OrderManagement.cs" />
+    <Compile Remove="Data\Migrations\20200130113817_OrderManagement.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200130114526_OrderManagement.cs" />
+    <Compile Remove="Data\Migrations\20200130114526_OrderManagement.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200130120537_FixMisspelledentity.cs" />
+    <Compile Remove="Data\Migrations\20200130120537_FixMisspelledentity.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200130121357_OrderManagement.cs" />
+    <Compile Remove="Data\Migrations\20200130121357_OrderManagement.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200130171600_updateOrders.cs" />
+    <Compile Remove="Data\Migrations\20200130171600_updateOrders.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,7 +49,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="CsvHelper" Version="13.0.0" />
+    <PackageReference Include="CsvHelper" Version="14.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.1" />
@@ -53,9 +63,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.1" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
     <PackageReference Include="Moment.js" Version="2.24.0" />
     <PackageReference Include="morelinq" Version="3.3.2" />
-    <PackageReference Include="Sendgrid" Version="9.12.5" />
+    <PackageReference Include="Sendgrid" Version="9.12.6" />
   </ItemGroup>
 </Project>

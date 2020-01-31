@@ -428,7 +428,9 @@ namespace Recitopia.Data
         public virtual DbSet<Packaging> Packaging { get; set; }
         public virtual DbSet<Recipe_Packaging> Recipe_Packaging { get; set; }
 
-        //public virtual DbSet<AppUser> AppUser { get; set; }
+        public virtual DbSet<BuildPlan> BuildPlan { get; set; }
+
+        public virtual DbSet<BuildPlan_Recipes> BuildPlan_Recipes { get; set; }
 
         //public virtual DbSet<View_All_Recipe_Components> View_All_Recipe_Components { get; set; }
         //public virtual DbSet<View_All_Recipe_Ingredients> View_All_Recipe_Ingredients { get; set; }

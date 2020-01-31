@@ -1,0 +1,90 @@
+﻿@model IEnumerable<Recitopia.Models.BuildPlan>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBanner">
+        <th>
+            Simple MRP - Build Plans
+        </th>
+    </tr>
+</table>
+<br />
+
+<div ng-app="myApp" ng-controller="BuildPlans" style="font-size:13px" class="container-fluid">
+    @* Use ng-controller *@
+
+
+    <table width="100%" class="table table-condensed table-hover table-striped table-bordered table-responsive-lg">
+        <tr>
+            <th class="AngularTableHeaderColor" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('plan_Name')"><font style="color:black">Plan Name</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('plan_Name')"></i>
+            </th>
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('planDate')"><font style="color:black">Plan Date</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('planDate')"></i>
+            </th>
+
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('needByDate')"><font style="color:black">Need Date</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('needByDate')"></i>
+            </th>
+
+            <th class="AngularTableHeaderColor" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('fullFilled')"><font style="color:black">Fullfilled</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('fullFilled')"></i>
+            </th>
+
+            <th style="text-align:right" class="AngularTableHeaderColor"><a href="@Url.Action("Create", "BuildPlan")" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> New Plan</a></th>
+
+
+        </tr>
+        <tr>
+            <td style="padding:1px;height:20px;font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.plan_Name"></td>
+            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"></td>
+            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"></td>
+            <td style="padding:1px;height:20px;font-size:13px" ></td>
+            <td> </td>
+
+        </tr>
+       
+
+        <tr ng-repeat="plan in Plans | filter:f | orderBy:sort.active:sort.descending ">
+            @* Fetch All the Recipe record using ng-repeat *@
+
+            <td style="height:15px;padding:1px;width:250px">{{plan.plan_Name}}</td>
+            <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{plan.planDate | formatDate:"MMM dd yyyy"}}</td>
+            
+            <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{plan.needByDate | formatDate:"MMM dd yyyy"}}</td>
+            <td  style="height:15px;padding:1px;width:125px">
+                <div class="{{plan.fullFilled == true ? 'AngularTrueResults' : 'AngularNAResults' }} ">
+                    {{plan.fullFilled ? "T":"F"}}
+
+                </div>
+            </td>
+
+            <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:225px">
+                <input type="button" style="background-color:lavender" class="btn btn-sm AngularButtons" value="Items" ng-click="RedirectToPlanItems(plan)" /> |
+                
+                <button ng-click="RedirectToEdit(plan)" class="btn btn-outline-success AngularButtons">
+                    <i class="fa fa-pen"></i>
+                </button> |
+                <button ng-click="RedirectToDetails(plan)" class="btn btn-outline-info AngularButtons">
+                    <i class="fa fa-clipboard"></i>
+                </button> |
+
+                <button ng-click="DelPlan(plan)" class="btn btn-outline-danger AngularButtons">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+
+    </table>
+</div>
+
+
+
