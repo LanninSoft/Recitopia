@@ -226,9 +226,9 @@ namespace Recitopia.Controllers
                             Package_Name = p.Package_Name,
                             Weight = p.Weight,
                             Amount = br.Amount,
-                            Cost = p.Cost,
+                            Cost = p.Cost * br.Amount,
                             CountIt = rp.Amount * br.Amount,
-                            SubTotalCostPackaging = (p.Cost * br.Amount),
+                            SubTotalCostPackaging = (p.Cost * rp.Amount) * br.Amount,
                             Amount_lbs = (p.Weight * br.Amount) / (decimal)453.592,
                             SubTotalGrams = p.Weight * br.Amount
 
@@ -257,11 +257,8 @@ namespace Recitopia.Controllers
 
             //GRAND TOTAL
             ViewBag.MainPackagingPanelCostGrandTotal = ViewBag.MainPackagingPanelCostTotal + ViewBag.MainIngredientPanelCostTotal ;
+
             ViewBag.MainPackagingPanellbsGrandTotal = ViewBag.MainPackagingPanellbsTotal + ViewBag.MainIngredientPanellbsTotal;
-
-
-
-
 
             return View(plan);
         }
