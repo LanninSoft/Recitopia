@@ -159,7 +159,7 @@
                                             </td>
                                             <td>
                                                 
-                                                @string.Format("{0:C}", recipe.Cost)
+                                                @recipe.Cost.ToString("N")
                                             </td>
 
                                         </tr>
@@ -176,7 +176,7 @@
                                     </th>
                                     <td style="background-color:goldenrod">
                                        
-                                        @string.Format("{0:C}", ViewBag.MainRecipePanelSubTotal)
+                                        @ViewBag.MainRecipePanelSubTotal.ToString("N")
                                     </td>
 
                                 </tr>
@@ -219,7 +219,7 @@
                                                 @Math.Round(ingredient.Amount_lbs, 3)
                                             </td>
                                             <td>
-                                                @string.Format("{0:C}", ingredient.SubTotalCostIngredients)
+                                                @ingredient.SubTotalCostIngredients.ToString("N")
                                                 
                                             </td>
 
@@ -240,7 +240,7 @@
                                         @ViewBag.MainIngredientPanellbsTotal.ToString("N")
                                     </td>
                                     <td style="background-color:goldenrod;">
-                                        @string.Format("{0:C}", ViewBag.MainIngredientPanelCostTotal)
+                                        @ViewBag.MainIngredientPanelCostTotal.ToString("N")
                                         
                                     </td>
 
@@ -292,7 +292,7 @@
                                             </td>
                                             <td>
                                                
-                                                @string.Format("{0:C}", package.SubTotalCostPackaging)
+                                                @package.SubTotalCostPackaging.ToString("N")
                                             </td>
 
                                         </tr>
@@ -316,7 +316,7 @@
                                 </td>
                                 <td style="background-color:goldenrod;">
                                     
-                                    @string.Format("{0:C}", ViewBag.MainPackagingPanelCostTotal)
+                                    @ViewBag.MainPackagingPanelCostTotal.ToString("N")
                                 </td>
 
                             </tr>
@@ -348,7 +348,7 @@
                                     </th>
                                     <td style="text-align:right;background-color:goldenrod">
                                        
-                                        @string.Format("{0:C}", ViewBag.MainPackagingPanelCostGrandTotal)
+                                        @ViewBag.MainPackagingPanelCostGrandTotal.ToString("N")
                                     </td>
 
                                 </tr>
