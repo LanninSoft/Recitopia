@@ -31,7 +31,7 @@
                             <th style="text-align:right" class="AngularTableHeaderColor"><a href="@Url.Action("Create", "BuildPlan_Recipes", new { planID = ViewBag.PlanNameID })" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> Items(s)</a></th>
                         </tr>
                         <tr ng-if="(Plans|filter:query).length > 0">
-                            <td style="font-size:13px"><input style="padding:1px;height:20px;width:100%" ng-model="f.recipe_Name"></td>
+                            <td style="font-size:13px"><input placeholder="Filter" style="padding:1px;height:20px;width:100%" ng-model="f.recipe_Name"></td>
                             <td></td>
                             <td></td>
                         </tr>

@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Recitopia.Models.Ingredient>
+
+@{
+    ViewBag.Title = "Where Used";
+}
+
+
+
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBanner">
+        <th>
+            Where is it used?
+        </th>
+    </tr>
+</table>
+<br />
+<div ng-app="myApp" ng-controller="Ingredients" class="container-fluid" style="font-size:13px">
+    @* Use ng-controller *@
+
+
+    <table style="width:100%" class="table table-condensed table-hover table-striped  table-responsive-lg">
+        <tr>
+            <th class="AngularTableHeaderColor" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('ingred_name')"><font style="color:black">Ingredient Name</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('ingred_name')"></i>
+            </th>
+            
+
+
+        </tr>
+        <tr>
+            <td style="padding:1px;height:20px;font-size:13px"><input placeholder="Filter" style="padding:1px;height:20px;width:200px" ng-model="f.ingred_name"></td>
+            
+
+        </tr>
+
+        <tr ng-repeat="ingredient in Ingredients | filter:f | orderBy:sort.active:sort.descending">
+            @* Fetch All the Recipe record using ng-repeat *@
+
+            <td style="height:15px;padding:1px;">
+                <a href="@Url.Action("WhereUsedResults","Ingredients")?ingredientId={{ingredient.ingredient_Id}}">{{ingredient.ingred_name}}</a>
+            </td>
+            
+        </tr>
+
+    </table>
+</div>
+
