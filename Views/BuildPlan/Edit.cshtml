@@ -27,6 +27,8 @@
     <form asp-action="Edit">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="BuildPlan_Id" />
+        <input type="hidden" asp-for="CreateDate" />
+        <input type="hidden" asp-for="FullFilled" />
         <div class="form-group">
             <label asp-for="Plan_Name" class="control-label"></label>
             <input asp-for="Plan_Name" class="form-control" />
@@ -47,13 +49,13 @@
                 <input class="form-check-input" asp-for="FullFilled" /> @Html.DisplayNameFor(model => model.FullFilled)
             </label>
         </div>
-       
+
         <div class="form-group">
             <label asp-for="Notes" class="control-label"></label>
             <textarea asp-for="Notes" class="form-control"></textarea>
             <span asp-validation-for="Notes" class="text-danger"></span>
         </div>
-       
+
         <div class="form-group">
             <input type="submit" value="Save" class="btn btn-primary" />
         </div>

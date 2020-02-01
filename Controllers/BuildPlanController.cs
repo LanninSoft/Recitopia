@@ -301,12 +301,12 @@ namespace Recitopia.Controllers
                 return NotFound();
             }
 
-            var order = await _recitopiaDbContext.BuildPlan.FindAsync(id);
-            if (order == null)
+            var plan = await _recitopiaDbContext.BuildPlan.FindAsync(id);
+            if (plan == null)
             {
                 return NotFound();
             }
-            return View(order);
+            return View(plan);
         }
 
         // POST: Orders/Edit/5
@@ -314,7 +314,7 @@ namespace Recitopia.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [FromForm] BuildPlan order)
+        public async Task<IActionResult> Edit(int id, [FromForm] BuildPlan plan)
         {
             
 
@@ -324,15 +324,15 @@ namespace Recitopia.Controllers
             {
                 try
                 {
-                    order.LastModified = DateTime.UtcNow;
-                    order.Customer_Guid = customerGuid;
+                    plan.LastModified = DateTime.UtcNow;
+                    plan.Customer_Guid = customerGuid;
 
-                    _recitopiaDbContext.Update(order);
+                    _recitopiaDbContext.Update(plan);
                     await _recitopiaDbContext.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OrderExists(order.BuildPlan_Id))
+                    if (!OrderExists(plan.BuildPlan_Id))
                     {
                         return NotFound();
                     }
@@ -341,9 +341,9 @@ namespace Recitopia.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Details", new { id = order.BuildPlan_Id });
+                return RedirectToAction("Details", new { id = plan.BuildPlan_Id });
             }
-            return View(order);
+            return View(plan);
         }
 
         // GET: Orders/Delete/5
