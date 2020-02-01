@@ -341,7 +341,7 @@ namespace Recitopia.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", new { id = order.BuildPlan_Id });
             }
             return View(order);
         }
@@ -390,5 +390,89 @@ namespace Recitopia.Controllers
         {
             return _recitopiaDbContext.BuildPlan.Any(e => e.BuildPlan_Id == id);
         }
+        public async Task<ActionResult> CreateCopy(int? id)
+        {
+            if (id == null)
+            {
+                return new StatusCodeResult(0);
+            }
+
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+
+            if (customerGuid == null || customerGuid.Trim() == "")
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
+
+            BuildPlan plan = await _recitopiaDbContext.BuildPlan.FindAsync(id);
+
+            if (plan == null)
+            {
+                return NotFound();
+            }
+            return View(plan);
+        }
+        [HttpPost, ActionName("CreateCopy")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CreateCopyConfirmed(int id)
+        {
+
+            BuildPlan plan = await _recitopiaDbContext.BuildPlan.FindAsync(id);
+
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+
+            try
+            {
+                //ADD RECIPE COPY
+                var buildPlan = new BuildPlan()
+                {
+                    Plan_Name = plan.Plan_Name + "-copy",
+                    PlanDate = plan.PlanDate,
+                    NeedByDate = plan.NeedByDate,
+                    FullFilled = plan.FullFilled,
+                    Notes = plan.Notes,
+                    CreateDate = DateTime.UtcNow,
+                    Customer_Guid = customerGuid
+                };
+
+                await _recitopiaDbContext.BuildPlan.AddAsync(buildPlan);
+                await _recitopiaDbContext.SaveChangesAsync();
+
+                //GET PLAN RECIPES
+                var planRecipes = await _recitopiaDbContext.BuildPlan_Recipes.Where(m => m.BuildPlan_Id == plan.BuildPlan_Id && m.Customer_Guid == customerGuid).ToListAsync();
+
+                foreach (BuildPlan_Recipes planRecipe in planRecipes)
+                {
+                    BuildPlan_Recipes planIngredientsNew = new BuildPlan_Recipes()
+                    {
+                        Recipe_Id = planRecipe.Recipe_Id,
+                        BuildPlan_Id = buildPlan.BuildPlan_Id,
+                        Amount = planRecipe.Amount,
+                        Customer_Guid = planRecipe.Customer_Guid,
+
+                    };
+                    //UPDATE DB - INSERT
+                    _recitopiaDbContext.BuildPlan_Recipes.Add(planIngredientsNew);
+                    await _recitopiaDbContext.SaveChangesAsync();
+
+                }
+                
+                return RedirectToAction("Edit", new { id = buildPlan.BuildPlan_Id });
+            }
+
+            catch (InvalidOperationException) // This will catch SqlConnection Exception
+            {
+                ViewBag.ErrorMessage = "Uh Oh, There is a problem 2";
+                return View(plan);
+            }
+            catch (Exception)
+            {
+                ViewBag.ErrorMessage = "Uh Oh, There is a problem 3";
+                return View(plan);
+            }
+
+
+        }
+
     }
 }

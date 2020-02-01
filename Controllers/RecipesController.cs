@@ -870,7 +870,16 @@ namespace Recitopia.Controllers
 
                 //remove packaging
                 var packagingRemove = await _recitopiaDbContext.Recipe_Packaging.Where(m => m.Recipe_Id == id).ToListAsync();
+
                 _recitopiaDbContext.Recipe_Packaging.RemoveRange(packagingRemove);
+
+                await _recitopiaDbContext.SaveChangesAsync();
+
+                //remove build plans
+                var planRemove = await _recitopiaDbContext.BuildPlan_Recipes.Where(m => m.Recipe_Id == id).ToListAsync();
+
+                _recitopiaDbContext.BuildPlan_Recipes.RemoveRange(planRemove);
+
                 await _recitopiaDbContext.SaveChangesAsync();
 
                 return RedirectToAction("Index");

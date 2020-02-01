@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Recitopia.Models.Recipe>
+
+@{
+    ViewData["Title"] = "WhereUsedResults";
+
+}
+
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBanner">
+        <th>
+            Where is it used? (@ViewBag.IngredientName)
+        </th>
+    </tr>
+</table>
+<br />
+<div>
+    <a href="@Url.Action("WhereUsed", "Ingredients")">Back to Ingredient List</a>
+</div>
+<br />
+<div class="effect8">
+    <table style="width:100%">
+        <tr>
+            <td>
+                <table class="table  table-hover table-striped  " style="font-size:13px">
+
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Recipe_Name)
+                        </th>
+
+
+                    </tr>
+
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                
+                                <a href="@Url.Action("Details","Recipes")?id=@item.Recipe_Id">@Html.DisplayFor(modelItem => item.Recipe_Name)</a>
+                            </td>
+
+                        </tr>
+                    }
+
+                </table>
+            </td>
+        </tr>
+    </table>
+    
+</div>
+<br />
+<div>
+    <a href="@Url.Action("WhereUsed", "Ingredients")">Back to Ingredient List</a>
+</div>

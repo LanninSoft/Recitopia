@@ -10,8 +10,9 @@
         <tr>
             <td>
                 <div>
-                    <a asp-action="Edit" asp-route-id="@Model.BuildPlan_Id">Edit Plan</a> |
-                    <a asp-action="Index">Build Plan List</a>
+                    @Html.ActionLink("Edit Plan", "Edit", new { id = Model.BuildPlan_Id }) |
+                    @Html.ActionLink("Build Plan List", "Index") |
+                    @Html.ActionLink("Create Copy", "CreateCopy", new { id = Model.BuildPlan_Id })
                 </div>
             </td>
             <td style="text-align:right">
@@ -357,6 +358,7 @@
 </div>
 <br />
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.BuildPlan_Id">Edit Plan</a> |
-    <a asp-action="Index">Build Plan List</a>
+    @Html.ActionLink("Edit Plan", "Edit", new { id = Model.BuildPlan_Id }) |
+    @Html.ActionLink("Build Plan List", "Index") |
+    @Html.ActionLink("Create Copy", "CreateCopy", new { id = Model.BuildPlan_Id })
 </div>

@@ -45,7 +45,63 @@ namespace Recitopia.Controllers
 
             return View(ingredients);
         }
+        public async Task<ActionResult> WhereUsed()
+        {
 
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+
+            if (customerGuid == null || customerGuid.Trim() == "")
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
+
+            var ingredients = await _recitopiaDbContext.Ingredient
+                .Include(i => i.Vendor)
+                .Where(i => i.Customer_Guid == customerGuid)
+                .OrderBy(i => i.Ingred_name)
+                .ToListAsync();
+
+            return View(ingredients);
+        }
+        public async Task<ActionResult> WhereUsedResults(int ingredientId)
+        {
+
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+
+            var ingredientInfo = await _recitopiaDbContext.Ingredient.Where(m => m.Ingredient_Id == ingredientId).FirstOrDefaultAsync();
+
+            //LOOP THROUGH RECIPE INGREDIENTS AND GET DISTINCT LIST OF RECIPES THAT IT IS USED IN
+            var recipesIn = await _recitopiaDbContext.Recipe_Ingredients
+                .Include(g => g.Recipe)
+                .Where(a => a.Ingredient_Id == ingredientId)
+                .GroupBy(g => new { Id = g.Recipe_Id, Name = g.Recipe.Recipe_Name })
+                       .Select(g => new Recipe()
+                       {
+                           Recipe_Id = g.Key.Id,
+                           Recipe_Name = g.Key.Name,
+                           
+                       })
+                .OrderBy(a => a.Recipe_Name)
+                .ToListAsync(); 
+
+
+            //var recipesIn2 = await _recitopiaDbContext.Recipe_Ingredients
+            //.Include(a => a.Ingredient)
+            //.Include(a=> a.Recipe)
+            //.Where(a => a.Ingredient_Id == ingredientId)
+            //.GroupBy(a => a.Recipe_Id)
+            //.Select(a => new Recipe()
+            //{
+            //    Recipe_Id = a.Key,
+            //    Recipe_Name = a.
+            //})
+            //.OrderBy(a => a.Recipe_Name)
+            //.ToListAsync();
+
+            ViewBag.IngredientName = ingredientInfo.Ingred_name;
+
+            return View(recipesIn);
+        }
         [HttpGet]
         public async Task<JsonResult> GetData()
         {
