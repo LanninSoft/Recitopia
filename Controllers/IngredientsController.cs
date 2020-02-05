@@ -85,18 +85,7 @@ namespace Recitopia.Controllers
                 .ToListAsync(); 
 
 
-            //var recipesIn2 = await _recitopiaDbContext.Recipe_Ingredients
-            //.Include(a => a.Ingredient)
-            //.Include(a=> a.Recipe)
-            //.Where(a => a.Ingredient_Id == ingredientId)
-            //.GroupBy(a => a.Recipe_Id)
-            //.Select(a => new Recipe()
-            //{
-            //    Recipe_Id = a.Key,
-            //    Recipe_Name = a.
-            //})
-            //.OrderBy(a => a.Recipe_Name)
-            //.ToListAsync();
+            
 
             ViewBag.IngredientName = ingredientInfo.Ingred_name;
 
