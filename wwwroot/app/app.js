@@ -398,7 +398,94 @@ app.controller('BuildPlanRecipes', function ($scope, $http) {
         }
 
     });
+    //------------------------------------------------------------------------------------------------------
+    //-----------------------RECIPE COMPARE CONTROLLER--------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------
 
+    app.controller('RecipesCompare', function ($scope, $http) {
+
+        $http.get("/Recipes/GetDataCompare")
+            .then(function (response) {
+                // First function handles success
+                $scope.Recipes = response.data;
+
+            }, function (response) {
+                // Second function handles error
+                $scope.Recipes = "Something went wrong";
+
+            });
+           
+       
+        $scope.RedirectToCompare = function (recipes) {
+
+            $scope.resultMessage = '';
+            var cnt = 0;
+
+            var arrayLength = recipes.length;
+            var newList = [];
+            for (var i = 0; i < arrayLength; i++) {
+                if (recipes[i].isSelected == true)
+                {
+                    newList.push(recipes[i].recipe_Id);
+                    cnt++
+                }
+                
+            }
+
+
+            if (cnt > 3) {
+                $scope.resultMessage = 'Error';
+            }
+            else
+            {
+                $scope.resultMessage = null;
+
+                var recipeStringList = newList.toString();
+
+                window.location.href = '/Recipes/CompareNutritions/?id=' + recipeStringList;
+            }
+            
+
+        };
+
+        app.filter('YesNo', function () {
+            return function (text) {
+                return text ? "Yes" : "No";
+            }
+        })
+        //SORTING ICON CONTROL
+        $scope.sort = {
+            active: '',
+            descending: undefined
+        }
+
+        $scope.changeSorting = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                sort.descending = !sort.descending;
+
+            } else {
+                sort.active = column;
+                sort.descending = false;
+            }
+        };
+
+        $scope.getIcon = function (column) {
+
+            var sort = $scope.sort;
+
+            if (sort.active == column) {
+                return sort.descending
+                    ? 'fa fa-caret-up'
+                    : 'fa fa-caret-down';
+            }
+
+            return 'fa fa-caret-left';
+        }
+
+    });
 //------------------------------------------------------------------------------------------------------
 //-----------------------RECIPE_INGREDIENTS CONTROLLER--------------------------------------------------
 //------------------------------------------------------------------------------------------------------

@@ -83,7 +83,60 @@ namespace Recitopia.Controllers
 
 
         }
-        
+        [HttpGet]
+        public async Task<JsonResult> GetDataCompare()
+        {
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+
+            //BUILD VIEW FOR ANGULARJS RENDERING
+            var recipes = await _recitopiaDbContext.Recipe
+               .Include(ri => ri.Meal_Category)
+               .Include(ri => ri.Serving_Sizes)
+               .Where(ri => ri.Customer_Guid == customerGuid)
+               .OrderBy(ri => ri.Recipe_Name)
+               .Select(ri => new RecipeNutritionCompare()
+               {
+                   Recipe_Id = ri.Recipe_Id,
+                   Recipe_Name = ri.Recipe_Name,
+                   
+               })
+               .ToListAsync();
+
+
+            return recipes != null
+                 ? Json(recipes)
+                 : Json(new { Status = "Failure" });
+
+
+        }
+        [HttpPost]
+        public JsonResult CompareRecipes([FromBody]List<RecipeNutritionCompare> recipes)
+        {
+            List<string> recipeIdList = new List<string>();
+
+            foreach (RecipeNutritionCompare item in recipes)
+            {
+                if (item.isSelected == true)
+                {
+                    //put in model to display
+                    recipeIdList.Add(item.Recipe_Id.ToString());
+
+                }
+
+            }
+
+            var howManySelected = recipeIdList.Count();
+
+            if (howManySelected > 3)
+            {
+                ViewBag.ErrorMessage = "Limit 3 recipes to compare!";
+                return Json(new { Status = "Failure" });
+            }
+
+            return recipeIdList != null
+                 ? Json(recipeIdList)
+                 : Json(new { Status = "Failure" });
+        }
         public async Task<ActionResult> CompareSelectRecipes()
         {
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
@@ -106,63 +159,38 @@ namespace Recitopia.Controllers
 
             return recipes != null ? View(recipes) : View();
         }
-        [HttpPost]
-        public ActionResult CompareSelectRecipes([FromForm]List<RecipeNutritionCompare> recipes)
-        {
-            
-            List<string> recipeIdList = new List<string>();
-
-            foreach (RecipeNutritionCompare item in recipes)
-            {
-                if (item.isSelected == true)
-                {
-                    //put in model to display
-                    recipeIdList.Add(item.Recipe_Id.ToString());
-
-                }
-
-            }
-
-            var howManySelected = recipeIdList.Count();
-
-            if (howManySelected > 3)
-            {
-                ViewBag.ErrorMessage = "Limit 3 recipes to compare!";
-                return View(recipes);
-            }
-
-            return RedirectToAction("CompareNutritions", new { recipeIds = recipeIdList });
-
-        }
-        public async Task<ActionResult> CompareNutritions(List<string> recipeIds)
+       
+       
+        public async Task<ActionResult> CompareNutritions(string id)
         {
             List<List<View_Nutrition_Panel>> mainNutritionPanel = new List<List<View_Nutrition_Panel>>();
 
-           
-           List<string> recipeIdsList = recipeIds.ToList();
-           List<int> recipeIdsListInt = recipeIdsList.Select(s => int.Parse(s)).ToList();
+
+            List<string> recipeIdsList = id.Split(',').ToList();
+
+            List<int> recipeIdsListInt = recipeIdsList.Select(s => int.Parse(s)).ToList();
 
             //get recipe name
             var recipeNames = await (from r in _recitopiaDbContext.Recipe
-                    where recipeIdsListInt.Contains(r.Recipe_Id)
-                    select r).ToListAsync();
+                                     where recipeIdsListInt.Contains(r.Recipe_Id)
+                                     select r).ToListAsync();
 
             foreach (string item in recipeIdsList)
             {
-                
-                    //put in model to display
-                    var nutritionDisplay = await GetNutritionPanel(Int32.Parse(item));
 
-                    List<View_Nutrition_Panel> NutritionPanelItems = new List<View_Nutrition_Panel>();
+                //put in model to display
+                var nutritionDisplay = await GetNutritionPanel(Int32.Parse(item));
 
-                    foreach (View_Nutrition_Panel thing in nutritionDisplay)
-                    {
-                        NutritionPanelItems.Add(thing);
-                    }
+                List<View_Nutrition_Panel> NutritionPanelItems = new List<View_Nutrition_Panel>();
 
-                    mainNutritionPanel.Add(NutritionPanelItems);
+                foreach (View_Nutrition_Panel thing in nutritionDisplay)
+                {
+                    NutritionPanelItems.Add(thing);
+                }
 
-               
+                mainNutritionPanel.Add(NutritionPanelItems);
+
+
 
             }
 
