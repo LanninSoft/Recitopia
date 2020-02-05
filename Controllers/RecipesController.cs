@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic.FileIO;
 using Recitopia.Data;
+using Recitopia.Services;
 using Recitopia.Models;
 using System;
 using System.Collections.Generic;
@@ -82,7 +83,96 @@ namespace Recitopia.Controllers
 
 
         }
-       
+        
+        public async Task<ActionResult> CompareSelectRecipes()
+        {
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+
+            if (customerGuid == null || customerGuid.Trim() == "")
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
+
+            var recipes = await _recitopiaDbContext.Recipe
+                .Include(r => r.Meal_Category)
+                .Where(r => r.Customer_Guid == customerGuid)
+                .OrderBy(r => r.Recipe_Name)
+                .Select(r => new RecipeNutritionCompare()
+                {
+                    Recipe_Name = r.Recipe_Name,
+                    Recipe_Id = r.Recipe_Id
+                })
+                .ToListAsync();
+
+            return recipes != null ? View(recipes) : View();
+        }
+        [HttpPost]
+        public ActionResult CompareSelectRecipes([FromForm]List<RecipeNutritionCompare> recipes)
+        {
+            
+            List<string> recipeIdList = new List<string>();
+
+            foreach (RecipeNutritionCompare item in recipes)
+            {
+                if (item.isSelected == true)
+                {
+                    //put in model to display
+                    recipeIdList.Add(item.Recipe_Id.ToString());
+
+                }
+
+            }
+
+            var howManySelected = recipeIdList.Count();
+
+            if (howManySelected > 3)
+            {
+                ViewBag.ErrorMessage = "Limit 3 recipes to compare!";
+                return View(recipes);
+            }
+
+            return RedirectToAction("CompareNutritions", new { recipeIds = recipeIdList });
+
+        }
+        public async Task<ActionResult> CompareNutritions(List<string> recipeIds)
+        {
+            List<List<View_Nutrition_Panel>> mainNutritionPanel = new List<List<View_Nutrition_Panel>>();
+
+           
+           List<string> recipeIdsList = recipeIds.ToList();
+           List<int> recipeIdsListInt = recipeIdsList.Select(s => int.Parse(s)).ToList();
+
+            //get recipe name
+            var recipeNames = await (from r in _recitopiaDbContext.Recipe
+                    where recipeIdsListInt.Contains(r.Recipe_Id)
+                    select r).ToListAsync();
+
+            foreach (string item in recipeIdsList)
+            {
+                
+                    //put in model to display
+                    var nutritionDisplay = await GetNutritionPanel(Int32.Parse(item));
+
+                    List<View_Nutrition_Panel> NutritionPanelItems = new List<View_Nutrition_Panel>();
+
+                    foreach (View_Nutrition_Panel thing in nutritionDisplay)
+                    {
+                        NutritionPanelItems.Add(thing);
+                    }
+
+                    mainNutritionPanel.Add(NutritionPanelItems);
+
+               
+
+            }
+
+            ViewBag.RecipeInfo = recipeNames;
+
+            return View(mainNutritionPanel);
+        }
+
+
+
         public async Task<ActionResult> Details(int id)
         {
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
@@ -317,150 +407,14 @@ namespace Recitopia.Controllers
             //HOLDS SUMMERIZED DATA
             var ListFields = new List<View_All_Ingredient_Nutrients>();
 
-            //BUILD OUT NUTRITION PANEL
-            var nutritionPanel =
-                 await (from ri in _recitopiaDbContext.Recipe_Ingredients
-                        join r in _recitopiaDbContext.Recipe
-                        on ri.Recipe_Id equals r.Recipe_Id
-                        join ss in _recitopiaDbContext.Serving_Sizes
-                        on r.SS_Id equals ss.SS_Id
-                        join inn in _recitopiaDbContext.Ingredient_Nutrients
-                        on ri.Ingredient_Id equals inn.Ingred_Id
-                        join i in _recitopiaDbContext.Ingredient
-                        on ri.Ingredient_Id equals i.Ingredient_Id
-                        join n in _recitopiaDbContext.Nutrition
-                        on inn.Nutrition_Item_Id equals n.Nutrition_Item_Id
-                        where ri.Recipe_Id == id && n.ShowOnNutrientPanel == true && ri.Customer_Guid == customerGuid
-                        orderby n.OrderOnNutrientPanel, n.Nutrition_Item
-                        select new View_Nutrition_Panel
-                        {
-                            Customer_Guid = ri.Customer_Guid,
-                            Recipe_Id = ri.Recipe_Id,
-                            Recipe_Name = r.Recipe_Name,
-                            Serving_Size = ss.Serving_Size,
-                            Ingred_Id = ri.Ingredient_Id,
-                            Ingred_name = i.Ingred_name,
-                            ShowOnNutrientPanel = n.ShowOnNutrientPanel,
-                            OrderOnNutrientPanel = n.OrderOnNutrientPanel,
-                            Nut_per_100_grams = inn.Nut_per_100_grams,
-                            Amount_g = ri.Amount_g,
-                            Nutrition_Item = n.Nutrition_Item,
-                            DV = n.DV,
-                            Measurement = n.Measurement,
-                            Nutrition_Item_Id = n.Nutrition_Item_Id
-                        })
-                .ToListAsync();
+            //CALL NUTRITION PANEL
 
-
-            List<View_Nutrition_Panel> nutritionPanelList = nutritionPanel;
-           
-            var NutrientTable = new List<View_Nutrition_Panel>();
-            decimal nutValue = 0;
-            int nDV = 0;
-            string nM = "";
-            int servingSize = 1;    
-
-            //LOOP THROUGH VIEW AND GET ALL INGREDIENT NUTRIENTS THAT EQUAL ASSOCIATED INGRED IDS
-            for (int i = 0; i < nutritionPanelList.Count(); i++)
-            {
-                if (nutritionPanelList[i].DV != null)
-                {
-                    nDV = (int)nutritionPanelList[i].DV;
-                }
-                else
-                {
-                    nDV = 0;
-                }
-
-                nM = nutritionPanelList[i].Measurement;
-                if (nutritionPanelList[i].Serving_Size != null)
-                {
-                    servingSize = (int)nutritionPanelList[i].Serving_Size;
-                }
-                else
-                {
-                    servingSize = 1;
-                }
-
-                if (nutritionPanelList[i].Nut_per_100_grams != null && nutritionPanelList[i].Amount_g.ToString() != null)
-                {
-                    nutValue += ((decimal)nutritionPanelList[i].Nut_per_100_grams / (decimal)100) * (decimal)nutritionPanelList[i].Amount_g;
-                }
-
-                //IF THE NEXT NUTRIENT IS DIFFERENT, DUMP nutValue and reset 
-                //CATCH OUT OF BOUNDS INDEX 
-                try
-                {
-                    decimal tempAmountg = 0;
-
-                    if (nutritionPanelList[i].Nutrition_Item_Id != nutritionPanelList[i + 1].Nutrition_Item_Id)
-                    {
-                        if (nDV != 0)
-                        {
-                            tempAmountg = ((nutValue / servingSize) / nDV) * (decimal)100;
-                        }
-                        else
-                        {
-                            tempAmountg = 0;
-
-                        }
-
-                        //BUILD LIST ITEM
-                        var Fieldproperties = new View_Nutrition_Panel
-                        {
-                            Nutrition_Item = nutritionPanelList[i].Nutrition_Item,
-                            //DIVIDE BY 100 MULTIPLY BY INGRED AMOUNT
-                            Nut_per_100_grams = nutValue / servingSize,
-                            //Amount_g = (nutValue / servingSize) / (nDV),
-                            Amount_g = tempAmountg,
-                            Measurement = nM,
-
-                        };
-                        //ADD TO THE LIST
-                        NutrientTable.Add(Fieldproperties);
-                        //RESET BUTVALUE FOR NEXT ENTRY
-                        nutValue = 0;
-                    }
-
-                }
-                catch (Exception)
-                {
-                    decimal tempAmountg = 0;
-                    //CAUGHT OUT OF INDEX (out of items in list above)
-                    if (nDV != 0)
-                    {
-                        tempAmountg = ((nutValue / servingSize) / nDV) * (decimal)100;
-                    }
-                    else
-                    {
-                        tempAmountg = 0;
-
-                    }
-                    //BUILD LIST ITEM
-                    var Fieldproperties = new View_Nutrition_Panel
-                    {
-                        Nutrition_Item = nutritionPanelList[i].Nutrition_Item,
-                        //DIVIDE BY 100 MULTIPLY BY INGRED AMOUNT
-                        Nut_per_100_grams = nutValue / servingSize,
-                        //Amount_g = (nutValue / servingSize) / (nDV),
-                        Amount_g = tempAmountg,
-                        Measurement = nM,
-
-                    };
-                    //ADD TO THE LIST
-                    NutrientTable.Add(Fieldproperties);
-                    //RESET BUTVALUE FOR NEXT ENTRY
-                    nutValue = 0;
-                }
-
-            }
-
-            ViewBag.Nutrition = NutrientTable;
+            ViewBag.Nutrition = await GetNutritionPanel(id);
 
             //---------------------------------------------------
             //GET ALLERGENS LIST     
             //---------------------------------------------------
-           
+
             var allergensList =
                  await (from r in _recitopiaDbContext.Recipe
                         join ri in _recitopiaDbContext.Recipe_Ingredients
@@ -997,6 +951,147 @@ namespace Recitopia.Controllers
             }
 
 
+        }
+        public async Task<List<View_Nutrition_Panel>> GetNutritionPanel(int id)
+        {
+
+            //BUILD OUT NUTRITION PANEL
+            var nutritionPanelList =
+                 await (from ri in _recitopiaDbContext.Recipe_Ingredients
+                        join r in _recitopiaDbContext.Recipe
+                        on ri.Recipe_Id equals r.Recipe_Id
+                        join ss in _recitopiaDbContext.Serving_Sizes
+                        on r.SS_Id equals ss.SS_Id
+                        join inn in _recitopiaDbContext.Ingredient_Nutrients
+                        on ri.Ingredient_Id equals inn.Ingred_Id
+                        join i in _recitopiaDbContext.Ingredient
+                        on ri.Ingredient_Id equals i.Ingredient_Id
+                        join n in _recitopiaDbContext.Nutrition
+                        on inn.Nutrition_Item_Id equals n.Nutrition_Item_Id
+                        where ri.Recipe_Id == id && n.ShowOnNutrientPanel == true
+                        orderby n.OrderOnNutrientPanel, n.Nutrition_Item
+                        select new View_Nutrition_Panel
+                        {
+                            Customer_Guid = ri.Customer_Guid,
+                            Recipe_Id = ri.Recipe_Id,
+                            Recipe_Name = r.Recipe_Name,
+                            Serving_Size = ss.Serving_Size,
+                            Ingred_Id = ri.Ingredient_Id,
+                            Ingred_name = i.Ingred_name,
+                            ShowOnNutrientPanel = n.ShowOnNutrientPanel,
+                            OrderOnNutrientPanel = n.OrderOnNutrientPanel,
+                            Nut_per_100_grams = inn.Nut_per_100_grams,
+                            Amount_g = ri.Amount_g,
+                            Nutrition_Item = n.Nutrition_Item,
+                            DV = n.DV,
+                            Measurement = n.Measurement,
+                            Nutrition_Item_Id = n.Nutrition_Item_Id
+                        })
+                .ToListAsync();
+
+            var NutrientTable = new List<View_Nutrition_Panel>();
+            decimal nutValue = 0;
+            int nDV = 0;
+            string nM = "";
+            int servingSize = 1;
+
+            //LOOP THROUGH VIEW AND GET ALL INGREDIENT NUTRIENTS THAT EQUAL ASSOCIATED INGRED IDS
+
+            for (int i = 0; i < nutritionPanelList.Count(); i++)
+            {
+                if (nutritionPanelList[i].DV != null)
+                {
+                    nDV = (int)nutritionPanelList[i].DV;
+                }
+                else
+                {
+                    nDV = 0;
+                }
+
+                nM = nutritionPanelList[i].Measurement;
+                if (nutritionPanelList[i].Serving_Size != null)
+                {
+                    servingSize = (int)nutritionPanelList[i].Serving_Size;
+                }
+                else
+                {
+                    servingSize = 1;
+                }
+                //updated 2/6
+                if (nutritionPanelList[i].Nut_per_100_grams > 0 && nutritionPanelList[i].Amount_g > 0)
+                {
+                    nutValue += ((decimal)nutritionPanelList[i].Nut_per_100_grams / (decimal)100) * (decimal)nutritionPanelList[i].Amount_g;
+                }
+
+                //IF THE NEXT NUTRIENT IS DIFFERENT, DUMP nutValue and reset 
+                //CATCH OUT OF BOUNDS INDEX 
+                try
+                {
+                    decimal tempAmountg = 0;
+
+                    if (nutritionPanelList[i].Nutrition_Item_Id != nutritionPanelList[i + 1].Nutrition_Item_Id)
+                    {
+                        if (nDV != 0)
+                        {
+                            tempAmountg = ((nutValue / servingSize) / nDV) * (decimal)100;
+                        }
+                        else
+                        {
+                            tempAmountg = 0;
+
+                        }
+
+                        //BUILD LIST ITEM
+                        var Fieldproperties = new View_Nutrition_Panel
+                        {
+                            Nutrition_Item = nutritionPanelList[i].Nutrition_Item,
+                            //DIVIDE BY 100 MULTIPLY BY INGRED AMOUNT
+                            Nut_per_100_grams = nutValue / servingSize,
+                            //Amount_g = (nutValue / servingSize) / (nDV),
+                            Amount_g = tempAmountg,
+                            Measurement = nM,
+
+                        };
+                        //ADD TO THE LIST
+                        NutrientTable.Add(Fieldproperties);
+                        //RESET BUTVALUE FOR NEXT ENTRY
+                        nutValue = 0;
+                    }
+
+                }
+                catch (Exception)
+                {
+                    decimal tempAmountg = 0;
+                    //CAUGHT OUT OF INDEX (out of items in list above)
+                    if (nDV != 0)
+                    {
+                        tempAmountg = ((nutValue / servingSize) / nDV) * (decimal)100;
+                    }
+                    else
+                    {
+                        tempAmountg = 0;
+
+                    }
+                    //BUILD LIST ITEM
+                    var Fieldproperties = new View_Nutrition_Panel
+                    {
+                        Nutrition_Item = nutritionPanelList[i].Nutrition_Item,
+                        //DIVIDE BY 100 MULTIPLY BY INGRED AMOUNT
+                        Nut_per_100_grams = nutValue / servingSize,
+                        //Amount_g = (nutValue / servingSize) / (nDV),
+                        Amount_g = tempAmountg,
+                        Measurement = nM,
+
+                    };
+                    //ADD TO THE LIST
+                    NutrientTable.Add(Fieldproperties);
+                    //RESET BUTVALUE FOR NEXT ENTRY
+                    nutValue = 0;
+                }
+
+            }
+
+            return NutrientTable;
         }
     }
 }

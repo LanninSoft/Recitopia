@@ -15,7 +15,7 @@ namespace Recitopia.Models
         public bool? ShowOnNutrientPanel { get; set; }
         public int? OrderOnNutrientPanel { get; set; }
         public int? Nutrition_Item_Id { get; set; }
-        public decimal? Nut_per_100_grams { get; set; }
+        public decimal Nut_per_100_grams { get; set; }
         public decimal Amount_g { get; set; }
         public string Nutrition_Item { get; set; }
         public int? DV { get; set; }

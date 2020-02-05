@@ -1,0 +1,86 @@
+﻿@model List<List<Recitopia.Models.View_Nutrition_Panel>>
+
+@{
+    ViewData["Title"] = "CompareNutritions";
+}
+
+
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBanner">
+        <th style="font-size:20px">
+            Compare Nutritions
+        </th>
+    </tr>
+
+</table>
+
+<div>
+    <br />
+    <a href="@Url.Action("CompareSelectRecipes", "Recipes")">Back to Recipe List</a>
+    <br />
+</div>
+<br />
+<div style="width:100%">
+
+
+    <table>
+
+        <tr>
+            @for (var i = 0; i < Model.Count(); i++)
+            {
+                <td style="vertical-align:top">
+                    <table border="1" style="width:100%">
+                        <tr style="background-color:lightgoldenrodyellow">
+                            <th colspan="3" style="text-align:center">
+                                @ViewBag.RecipeInfo[i].Recipe_Name
+                            </th>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="background-color:darkseagreen;font-size:13px">
+                                Nutrition (per serving)
+                            </td>
+                        </tr>
+                        <tr style="font-size:13px;height:10px">
+                            <th style="text-align:left;width:50%">
+                                Nutrient
+                            </th>
+                            <th style="width:25%">
+                                NV
+                            </th>
+                            <th style="width:25%">
+                                %DV
+                            </th>
+                        </tr>
+                        @for (var j = 0; j < Model[i].Count(); j++)
+                        {
+                            <tr style="font-size:13px">
+                                <th>
+                                    @Model[i][j].Nutrition_Item
+                                </th>
+                                <td>
+                                    @Math.Round(Model[i][j].Nut_per_100_grams, 3)
+                                </td>
+                                <td>
+                                    @Math.Round(Model[i][j].Amount_g, 3)
+                                </td>
+                            </tr>
+                        }
+                    </table>
+
+                </td>
+                <td>&nbsp;</td>
+            }
+        </tr>
+
+
+    </table>
+
+
+
+
+</div>
+<div>
+    <br />
+    <a href="@Url.Action("CompareSelectRecipes", "Recipes")">Back to Recipe List</a>
+    <br />
+</div>

@@ -1,0 +1,58 @@
+﻿@model List<Recitopia.Models.RecipeNutritionCompare>
+
+
+@{
+    ViewBag.Title = "Recipe List";
+}
+
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBanner">
+        <th>
+            Select Recipes to Compare Nutrition - Limit 3
+        </th>
+    </tr>
+</table>
+<br />
+@if (ViewBag.ErrorMessage != null)
+{
+    
+    <div>
+        <font style="color:red">@ViewBag.ErrorMessage</font>
+    </div>
+}
+<div style="width:100%">
+    @using (Html.BeginForm())
+    {
+        <div>
+            <input id="Submit1" type="submit" value="Compare" class="btn alert-success" />
+        </div>
+        <br />
+        <table style="width:100%" class="table table-hover table-striped table-bordered ">
+            @for (var i = 0; i < Model.Count(); i++)
+            {
+
+                <tr style="height:20px;margin:0 0 0 0">
+                    <td style="width:15px">
+                        @Html.CheckBoxFor(it => it[i].isSelected, new { Style = "vertical-align:3px}" })
+                    </td>
+                    <td>
+                        @Html.HiddenFor(it => it[i].Recipe_Id)
+                        @Html.HiddenFor(it => it[i].Recipe_Name)
+                        @Html.DisplayFor(it => it[i].Recipe_Name)
+                    </td>
+
+                </tr>
+
+
+            }
+        </table>
+        <br />
+        <div>
+            <input id="Submit1" type="submit" value="Compare" class="btn alert-success" />
+        </div>
+
+
+    }
+</div>
+
+
