@@ -13,46 +13,62 @@
     </tr>
 </table>
 <br />
-@if (ViewBag.ErrorMessage != null)
-{
-    
-    <div>
-        <font style="color:red">@ViewBag.ErrorMessage</font>
+
+
+<div ng-app="myApp" ng-controller="RecipesCompare" style="font-size:13px" class="container-fluid">
+    @* Use ng-controller *@
+
+    <div ng-if="resultMessage != null">
+
+        <font style="color:red">Only Up to 3 Recipes can be compared at a time!</font>
+        <br />
     </div>
-}
-<div style="width:100%">
-    @using (Html.BeginForm())
-    {
-        <div>
-            <input id="Submit1" type="submit" value="Compare" class="btn alert-success" />
-        </div>
-        <br />
-        <table style="width:100%" class="table table-hover table-striped table-bordered ">
-            @for (var i = 0; i < Model.Count(); i++)
-            {
-
-                <tr style="height:20px;margin:0 0 0 0">
-                    <td style="width:15px">
-                        @Html.CheckBoxFor(it => it[i].isSelected, new { Style = "vertical-align:3px}" })
-                    </td>
-                    <td>
-                        @Html.HiddenFor(it => it[i].Recipe_Id)
-                        @Html.HiddenFor(it => it[i].Recipe_Name)
-                        @Html.DisplayFor(it => it[i].Recipe_Name)
-                    </td>
-
-                </tr>
+    <table style="width:100%" class="table table-condensed table-hover table-striped table-bordered table-responsive-lg">
+        <tr>
+            
+            <th class="AngularTableHeaderColor" style="vertical-align:bottom;text-align:right">
+            </th>
+            <th class="AngularTableHeaderColor" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('recipe_Name')"><font style="color:black">Recipe Name</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('recipe_Name')"></i>
+            </th>
 
 
-            }
-        </table>
-        <br />
-        <div>
-            <input id="Submit1" type="submit" value="Compare" class="btn alert-success" />
-        </div>
+        </tr>
+        <tr>
+            
+            <td style="padding:1px;height:20px;font-size:13px;text-align:right">
+
+                <input type="button" style="background-color:wheat" class="btn btn-sm" value="Compare" ng-click="RedirectToCompare(Recipes)" />
+            </td>
+            <td style="padding: 1px;height: 20px;font-size: 13px;vertical-align: middle"><input placeholder="Filter" style="padding:1px;height:20px;width:100%" ng-model="f.recipe_Name"></td>
+
+        </tr>
+
+        <tr ng-repeat="recipe in Recipes | filter:f | orderBy:sort.active:sort.descending ">
+            @* Fetch All the Recipe record using ng-repeat *@
+
+            
+            <td style="height:15px;padding:1px;width:100px;text-align:right">
+                <input type="checkbox"
+                       ng-model="recipe.isSelected"
+                       ng-true-value="true"
+                       ng-false-value="false">
+            </td>
+            <td style="height:15px;padding:1px">{{recipe.recipe_Name}}</td>
+        </tr>
 
 
-    }
+        <tr>
+            
+            <td colspan="2" style="        text-align: left
+">
+
+                <input type="button" style="background-color: wheat;" class="btn btn-sm" value="Compare" ng-click="RedirectToCompare(Recipes)" />
+            </td>
+
+
+        </tr>
+    </table>
 </div>
-
 
