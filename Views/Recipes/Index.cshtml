@@ -19,37 +19,43 @@
     
     
     <table style="width:100%" class="table table-condensed table-hover table-striped table-bordered table-responsive-lg">
-        <tr >
+        <tr>
             <th class="AngularTableHeaderColor" style="vertical-align:bottom">
                 <a href="" ng-click="changeSorting('recipe_Name')"><font style="color:black">Recipe Name</font></a>
                 <i class="fa fa-caret-left" ng-class="getIcon('recipe_Name')"></i>
             </th>
-            <th  class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">               
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
                 <a href="" ng-click="changeSorting('category_Name')"><font style="color:black">Category</font></a>
                 <i class="fa fa-caret-left" ng-class="getIcon('category_Name')"></i>
             </th>
 
-            <th  class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
                 <a href="" ng-click="changeSorting('gluten_Free')"><font style="color:black">Gluten Free</font></a>
                 <i class="fa fa-caret-left" ng-class="getIcon('gluten_Free')"></i>
             </th>
 
-            <th  class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
-                 <a href="" ng-click="changeSorting('serving_Size')"><font style="color:black">Serving Size</font></a>
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('isArchived')"><font style="color:black">Archived</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('isArchived')"></i>
+            </th>
+
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('serving_Size')"><font style="color:black">Serving Size</font></a>
                 <i class="fa fa-caret-left" ng-class="getIcon('serving_Size')"></i>
             </th>
 
-            <th  style="text-align:right"  class="AngularTableHeaderColor"><a href="@Url.Action("Create", "Recipes")" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> New Recipe</a></th>
-          
+            <th style="text-align:right" class="AngularTableHeaderColor"><a href="@Url.Action("Create", "Recipes")" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> New Recipe</a></th>
+
 
         </tr>
         <tr>
             <td style="padding:1px;height:20px;font-size:13px"><input placeholder="Filter" style="padding:1px;height:20px;width:100%" ng-model="f.recipe_Name"></td>
-            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input placeholder="Filter" style="padding:1px;height:20px;width:100%"  ng-model="f.category_Name"></td>
+            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input placeholder="Filter" style="padding:1px;height:20px;width:100%" ng-model="f.category_Name"></td>
             <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input placeholder="Filter" style="padding:1px;height:20px;width:100%" ng-model="f.gluten_Free"></td>
-            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input placeholder="Filter" style="padding:1px;height:20px;width:100%"  ng-model="f.serving_Size"></td>
+            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input placeholder="Filter" style="padding:1px;height:20px;width:100%" ng-model="f.isArchived"></td>
+            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input placeholder="Filter" style="padding:1px;height:20px;width:100%" ng-model="f.serving_Size"></td>
             <td> </td>
-            
+
         </tr>
     @*</table>
     <table width="100%" class="table table-condensed table-hover table-striped table-responsive-lg">*@
@@ -62,6 +68,12 @@
         <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;width:125px">
             <div class="{{recipe.gluten_Free == true ? 'AngularTrueResults' : 'AngularNAResults' }} ">
                 {{recipe.gluten_Free ? "T":"F"}}
+
+            </div>
+        </td>
+        <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;width:125px">
+            <div class="{{recipe.isArchived == true ? 'AngularFalseResults' : 'AngularNAResults' }} ">
+                {{recipe.isArchived ? "T":"F"}}
 
             </div>
         </td>

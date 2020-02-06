@@ -18,6 +18,7 @@ namespace Recitopia.Models
         public decimal? LaborCost { get; set; }
         public int SS_Id { get; set; }
         public int? Serving_Size { get; set; }
+        public bool isArchived { get; set; }
         public DateTime? LastModified { get; set; }
     }
 }

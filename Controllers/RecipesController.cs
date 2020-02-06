@@ -73,6 +73,7 @@ namespace Recitopia.Controllers
                    SS_Id = ri.SS_Id,
                    Serving_Size = ri.Serving_Sizes.Serving_Size,
                    LastModified = ri.LastModified,
+                   isArchived = ri.isArchived
                })
                .ToListAsync();
 
@@ -624,6 +625,34 @@ namespace Recitopia.Controllers
 
             stream.Position = 0; //reset stream
             return File(stream, "application/octet-stream", customerInfo.Customer_Name + "_Recipies.csv");
+        }
+        public async Task<IActionResult> ArchiveIt(int? id)
+        {
+            
+            var recipeInfo = await _recitopiaDbContext.Recipe.FindAsync(id);
+
+            recipeInfo.isArchived = true;
+            recipeInfo.ArchiveDate = DateTime.UtcNow;
+
+            _recitopiaDbContext.Entry(recipeInfo).State = EntityState.Modified;
+
+            await _recitopiaDbContext.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = recipeInfo.Recipe_Id });
+        }
+        public async Task<IActionResult> UnArchiveIt(int? id)
+        {
+            
+            var recipeInfo = await _recitopiaDbContext.Recipe.FindAsync(id);
+
+            recipeInfo.isArchived = false;
+            recipeInfo.ArchiveDate = DateTime.MinValue;
+
+            _recitopiaDbContext.Entry(recipeInfo).State = EntityState.Modified;
+
+            await _recitopiaDbContext.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = recipeInfo.Recipe_Id });
         }
         public IActionResult uploadRecipeFile(int? id)
         {
