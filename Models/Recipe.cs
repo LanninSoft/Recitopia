@@ -39,7 +39,9 @@ namespace Recitopia.Models
         public int SS_Id { get; set; }
         public string SS_Name { get; set; }
         public DateTime? LastModified { get; set; }
-       // public int Customer_Id { get; set; }
+        public bool isArchived { get; set; }
+        public DateTime ArchiveDate { get; set; }
+        // public int Customer_Id { get; set; }
         public string Customer_Guid { get; set; }
         public virtual Meal_Category Meal_Category { get; set; }
         public virtual Serving_Sizes Serving_Sizes { get; set; }
