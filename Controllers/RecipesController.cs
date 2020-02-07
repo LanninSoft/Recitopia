@@ -183,12 +183,25 @@ namespace Recitopia.Controllers
                 List<View_Nutrition_Panel> NutritionPanelItems = new List<View_Nutrition_Panel>();
 
                 
-
-                foreach (View_Nutrition_Panel thing in nutritionDisplay)
+                if (nutritionDisplay.Count() > 0)
                 {
-                    thing.Recipe_Name = recipeName.Recipe_Name;
-                    NutritionPanelItems.Add(thing);
+                    foreach (View_Nutrition_Panel thing in nutritionDisplay)
+                        {
+                            thing.Recipe_Name = recipeName.Recipe_Name;
+                            NutritionPanelItems.Add(thing);
+                        }
                 }
+                else
+                {
+                    var tempThing = new View_Nutrition_Panel() 
+                    { 
+                        Recipe_Name = recipeName.Recipe_Name,
+                        Recipe_Id = recipeName.Recipe_Id
+                    };
+
+                    NutritionPanelItems.Add(tempThing);
+                }
+                
 
                 mainNutritionPanel.Add(NutritionPanelItems);
                 
