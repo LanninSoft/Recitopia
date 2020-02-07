@@ -166,15 +166,9 @@ namespace Recitopia.Controllers
         {
             List<List<View_Nutrition_Panel>> mainNutritionPanel = new List<List<View_Nutrition_Panel>>();
 
-
             List<string> recipeIdsList = id.Split(',').ToList();
 
             List<int> recipeIdsListInt = recipeIdsList.Select(s => int.Parse(s)).ToList();
-
-            //get recipe name
-            var recipeNames = await (from r in _recitopiaDbContext.Recipe
-                                     where recipeIdsListInt.Contains(r.Recipe_Id)
-                                     select r).ToListAsync();
 
             foreach (string item in recipeIdsList)
             {
@@ -182,20 +176,26 @@ namespace Recitopia.Controllers
                 //put in model to display
                 var nutritionDisplay = await GetNutritionPanel(Int32.Parse(item));
 
+                //get recipe name
+                var recipeName = await _recitopiaDbContext.Recipe.FindAsync(Int32.Parse(item));
+                
+
                 List<View_Nutrition_Panel> NutritionPanelItems = new List<View_Nutrition_Panel>();
+
+                
 
                 foreach (View_Nutrition_Panel thing in nutritionDisplay)
                 {
+                    thing.Recipe_Name = recipeName.Recipe_Name;
                     NutritionPanelItems.Add(thing);
                 }
 
                 mainNutritionPanel.Add(NutritionPanelItems);
-
+                
 
 
             }
 
-            ViewBag.RecipeInfo = recipeNames;
 
             return View(mainNutritionPanel);
         }
