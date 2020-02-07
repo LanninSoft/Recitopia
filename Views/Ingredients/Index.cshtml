@@ -13,25 +13,25 @@
 <br />
 <div ng-app="myApp" ng-controller="Ingredients" class="container-fluid" style="font-size:13px">
     @* Use ng-controller *@
-   
+
 
     <table width="100%" class="table table-condensed table-hover table-striped  table-responsive-lg">
         <tr>
-            <th  class="AngularTableHeaderColor" style="vertical-align:bottom">
+            <th class="AngularTableHeaderColor" style="vertical-align:bottom">
                 <a href="" ng-click="changeSorting('ingred_name')"><font style="color:black">Ingredient Name</font></a>
                 <i class="fa fa-caret-left" ng-class="getIcon('ingred_name')"></i>
             </th>
-            <th  class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
                 <a href="" ng-click="changeSorting('cost_per_lb')"><font style="color:black">Cost/lb</font></a>
                 <i class="fa fa-caret-left" ng-class="getIcon('cost_per_lb')"></i>
             </th>
 
             @*<th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
-                <a href="" ng-click="changeSorting('cost')"><font style="color:black">$Cost</font></a>
-                <i class="fa fa-caret-left" ng-class="getIcon('cost')"></i>
-            </th>*@
+                    <a href="" ng-click="changeSorting('cost')"><font style="color:black">$Cost</font></a>
+                    <i class="fa fa-caret-left" ng-class="getIcon('cost')"></i>
+                </th>*@
 
-            
+
             <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
                 <a href="" ng-click="changeSorting('vendor_Name')"><font style="color:black">Vendor</font></a>
                 <i class="fa fa-caret-left" ng-class="getIcon('vendor_Name')"></i>
@@ -45,48 +45,50 @@
             <td style="padding:1px;height:20px;font-size:13px"><input placeholder="Filter" style="padding:1px;height:20px;width:100%" ng-model="f.ingred_name"></td>
             <td class="d-none d-lg-table-cell" style="padding:1px;height:20px;font-size:13px"></td>
             @*<td class="d-none d-lg-table-cell" style="padding:1px;height:20px;font-size:13px"></td>*@
-            
+
             <td class="d-none d-lg-table-cell" style="padding:1px;height:20px;font-size:13px"><input placeholder="Filter" style="padding:1px;height:20px;width:100%" ng-model="f.vendor_Name"></td>
-            <td > </td>
+            <td> </td>
 
         </tr>
-   
-    <tr ng-repeat="ingredient in Ingredients | filter:f | orderBy:sort.active:sort.descending">
-        @* Fetch All the Recipe record using ng-repeat *@
 
-        <td style="height:15px;padding:1px;">{{ingredient.ingred_name}}</td>
-        <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;">{{ingredient.cost_per_lb}}</td>
-        @*<td class="d-none d-lg-table-cell" style="height:15px;padding:1px;">{{ingredient.cost}}</td>*@
-      
-        <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;">{{ingredient.vendor_Name}}</td>
+        <tr ng-repeat="ingredient in Ingredients | filter:f | orderBy:sort.active:sort.descending">
+            @* Fetch All the Recipe record using ng-repeat *@
+
+            <td style="height:15px;padding:1px;">{{ingredient.ingred_name}}</td>
+            <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;">{{ingredient.cost_per_lb}}</td>
+            @*<td class="d-none d-lg-table-cell" style="height:15px;padding:1px;">{{ingredient.cost}}</td>*@
+
+            <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;">{{ingredient.vendor_Name}}</td>
 
 
-       
-        <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:225px">
-            <input type="button" style="background-color:lavender" class="btn btn-sm AngularButtons" value="Nutrition" ng-click="RedirectToIngredientNutrition(ingredient)" /> |
-            <input type="button" style="background-color:wheat" class="btn btn-sm AngularButtons" value="Allergens" ng-click="RedirectToIngredientAllergen(ingredient)" /> |
 
-            <button ng-click="RedirectToEdit(ingredient)" class="btn btn-outline-success AngularButtons">
-                <i class="fa fa-pen"></i>
-            </button> |
-            <button ng-click="RedirectToDetails(ingredient)" class="btn btn-outline-info AngularButtons">
-                <i class="fa fa-clipboard"></i>
-            </button> |
+            <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:225px">
+                <input type="button" style="background-color:lavender" class="btn btn-sm AngularButtons" value="Nutrition" ng-click="RedirectToIngredientNutrition(ingredient)" /> |
+                <input type="button" style="background-color:wheat" class="btn btn-sm AngularButtons" value="Allergens" ng-click="RedirectToIngredientAllergen(ingredient)" /> |
 
-            <button ng-click="DelIngredient(ingredient)" class="btn btn-outline-danger AngularButtons">
-                <i class="fa fa-trash"></i>
-            </button>
-        </td>
-    </tr>
+                <button ng-click="RedirectToEdit(ingredient)" class="btn btn-outline-success AngularButtons">
+                    <i class="fa fa-pen"></i>
+                </button> |
+                <button ng-click="RedirectToDetails(ingredient)" class="btn btn-outline-info AngularButtons">
+                    <i class="fa fa-clipboard"></i>
+                </button> |
+
+                <button ng-click="DelIngredient(ingredient)" class="btn btn-outline-danger AngularButtons">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </td>
+        </tr>
 
     </table>
 </div>
-<div>
-    @*<a href="@Url.Action("Create", "Ingredients")" class="btn alert-success" role="button"><i class="fa fa-plus"></i> New Ingredient</a>*@
-    <a asp-action="uploadIngredientFile" class="btn alert-success" role="button"><i class="fa fa-upload"></i> Import Ingredients (CSV)</a>
-    <a asp-action="DownloadIngredients" class="btn alert-success" role="button"><i class="fa fa-download"></i> Export Ingredients (CSV)</a>
-</div>
-
+@if (User.IsInRole("Administrator"))
+{
+    <div>
+        @*<a href="@Url.Action("Create", "Ingredients")" class="btn alert-success" role="button"><i class="fa fa-plus"></i> New Ingredient</a>*@
+        <a asp-action="uploadIngredientFile" class="btn alert-success" role="button"><i class="fa fa-upload"></i> Import Ingredients (CSV)</a>
+        <a asp-action="DownloadIngredients" class="btn alert-success" role="button"><i class="fa fa-download"></i> Export Ingredients (CSV)</a>
+    </div>
+}
 
 
 

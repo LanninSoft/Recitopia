@@ -13,27 +13,27 @@
 <br />
 <div ng-app="myApp" ng-controller="Nutrition" class="container-fluid" style="font-size:13px">
     @* Use ng-controller *@
-   
+
 
     <table style="width:100%" class="table table-condensed table-hover table-striped table-responsive-lg">
         <tr>
-            <th  class="AngularTableHeaderColor" style="vertical-align:bottom">
+            <th class="AngularTableHeaderColor" style="vertical-align:bottom">
                 <a href="" ng-click="changeSorting('nutrition_Item')"><font style="color:black">Nutrient Name</font></a>
                 <i class="fa fa-caret-left" ng-class="getIcon('nutrition_Item')"></i>
             </th>
-            <th  class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
                 <a href="" ng-click="changeSorting('dv')"><font style="color:black">DV</font></a>
                 <i class="fa fa-caret-left" ng-class="getIcon('dv')"></i>
             </th>
-            <th  class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
                 <a href="" ng-click="changeSorting('measurement')"><font style="color:black">Measurement</font></a>
                 <i class="fa fa-caret-left" ng-class="getIcon('measurement')"></i>
             </th>
-            <th  class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
                 <a href="" ng-click="changeSorting('orderOnNutrientPanel')"><font style="color:black">Panel Order</font></a>
                 <i class="fa fa-caret-left" ng-class="getIcon('orderOnNutrientPanel')"></i>
             </th>
-            <th   class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
                 <a href="" ng-click="changeSorting('showOnNutrientPanel')"><font style="color:black">Panel Show</font></a>
                 <i class="fa fa-caret-left" ng-class="getIcon('showOnNutrientPanel')"></i>
             </th>
@@ -48,45 +48,47 @@
             <td class=" d-none d-lg-table-cell"></td>
             <td class=" d-none d-lg-table-cell"></td>
             <td class=" d-none d-lg-table-cell"></td>
-            <td ></td>
-            
+            <td></td>
+
 
         </tr>
-  
 
-    <tr ng-repeat="nutrient in Nutrients | filter:f | orderBy:sort.active:sort.descending">
-        @* Fetch All the Recipe record using ng-repeat *@
 
-        <td style="height:15px;padding:1px">{{nutrient.nutrition_Item}}</td>
-        <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{nutrient.dv}}</td>
-        <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{nutrient.measurement}}</td>
-        <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{nutrient.orderOnNutrientPanel}}</td>
-        <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{nutrient.showOnNutrientPanel ? "Yes":""}}</td>
+        <tr ng-repeat="nutrient in Nutrients | filter:f | orderBy:sort.active:sort.descending">
+            @* Fetch All the Recipe record using ng-repeat *@
 
-        
-        <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:150px">
-            <button ng-click="RedirectToEdit(nutrient)" class="btn btn-outline-success AngularButtons">
-                <i class="fa fa-pen"></i>
-            </button> |
-            <button ng-click="RedirectToDetails(nutrient)" class="btn btn-outline-info AngularButtons">
-                <i class="fa fa-clipboard"></i>
-            </button> |
+            <td style="height:15px;padding:1px">{{nutrient.nutrition_Item}}</td>
+            <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{nutrient.dv}}</td>
+            <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{nutrient.measurement}}</td>
+            <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{nutrient.orderOnNutrientPanel}}</td>
+            <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{nutrient.showOnNutrientPanel ? "Yes":""}}</td>
 
-            <button ng-click="DelNutrient(nutrient)" class="btn btn-outline-danger AngularButtons">
-                <i class="fa fa-trash"></i>
-            </button>
-        </td>
-    </tr>
+
+            <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:150px">
+                <button ng-click="RedirectToEdit(nutrient)" class="btn btn-outline-success AngularButtons">
+                    <i class="fa fa-pen"></i>
+                </button> |
+                <button ng-click="RedirectToDetails(nutrient)" class="btn btn-outline-info AngularButtons">
+                    <i class="fa fa-clipboard"></i>
+                </button> |
+
+                <button ng-click="DelNutrient(nutrient)" class="btn btn-outline-danger AngularButtons">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </td>
+        </tr>
 
     </table>
 </div>
-<div>
-    @*<a href="@Url.Action("Create", "Nutritions")" class="btn alert-success" role="button"><i class="fa fa-plus"></i> New Nutrient</a>*@
-    <a asp-action="uploadNutritionFile" class="btn alert-success" role="button"><i class="fa fa-upload"></i> Import Nutritions (CSV)</a>
-    <a asp-action="DownloadNutritions" class="btn alert-success" role="button"><i class="fa fa-download"></i> Export Nutritions (CSV)</a>
-</div>
+@if (User.IsInRole("Administrator"))
+{
+    <div>
+        @*<a href="@Url.Action("Create", "Nutritions")" class="btn alert-success" role="button"><i class="fa fa-plus"></i> New Nutrient</a>*@
+        <a asp-action="uploadNutritionFile" class="btn alert-success" role="button"><i class="fa fa-upload"></i> Import Nutritions (CSV)</a>
+        <a asp-action="DownloadNutritions" class="btn alert-success" role="button"><i class="fa fa-download"></i> Export Nutritions (CSV)</a>
+    </div>
 
-
+}
 
 
 
