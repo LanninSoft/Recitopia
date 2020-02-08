@@ -14,7 +14,7 @@
                     @Html.ActionLink("Create Copy", "CreateCopy", new { id = Model.Recipe_Id }) |
                     @if (Model.isArchived == false)
                     {
-                        @Html.ActionLink("Archive It", "ArchiveIt", new { id = Model.Recipe_Id })
+                        @Html.ActionLink("Archive It", "ArchiveIt", new { id = Model.Recipe_Id } )
                     }
                     else
                     {
@@ -27,8 +27,8 @@
             </td>
             <td style="text-align:right">
                 <div>
-                    <a href="@Url.Action("Index", "Recipe_Ingredients", new { recipeID = Model.Recipe_Id })" style="background-color:lavender;padding:9px" class="btn btn-sm AngularButtons" role="button"><i class="fa fa-plus"></i> Ingredients</a>
-                    <a href="@Url.Action("Index", "Recipe_Packaging", new { recipeID = Model.Recipe_Id })" style="background-color:wheat;padding:9px" class="btn btn-sm AngularButtons" role="button"><i class="fa fa-plus"></i> Packaging</a>
+                    <a href="@Url.Action("Index", "Recipe_Ingredients", new { recipeID = Model.Recipe_Id })" style="background-color:lavender;padding:9px" class="btn btn-sm AngularButtons effect8" role="button"><i class="fa fa-plus"></i> Ingredients</a>
+                    <a href="@Url.Action("Index", "Recipe_Packaging", new { recipeID = Model.Recipe_Id })" style="background-color:wheat;padding:9px" class="btn btn-sm AngularButtons effect8" role="button"><i class="fa fa-plus"></i> Packaging</a>
                 </div>
             </td>
         </tr>
@@ -499,8 +499,8 @@ else
             </td>
             <td style="text-align:right">
                 <div>
-                    <a href="@Url.Action("Index", "Recipe_Ingredients", new { recipeID = Model.Recipe_Id })" style="background-color:lavender;padding:9px" class="btn btn-sm AngularButtons" role="button"><i class="fa fa-plus"></i> Ingredients</a>
-                    <a href="@Url.Action("Index", "Recipe_Packaging", new { recipeID = Model.Recipe_Id })" style="background-color:wheat;padding:9px" class="btn btn-sm AngularButtons" role="button"><i class="fa fa-plus"></i> Packaging</a>
+                    <a href="@Url.Action("Index", "Recipe_Ingredients", new { recipeID = Model.Recipe_Id })" style="background-color:lavender;padding:9px" class="btn btn-sm AngularButtons effect8" role="button"><i class="fa fa-plus"></i> Ingredients</a>
+                    <a href="@Url.Action("Index", "Recipe_Packaging", new { recipeID = Model.Recipe_Id })" style="background-color:wheat;padding:9px" class="btn btn-sm AngularButtons effect8" role="button"><i class="fa fa-plus"></i> Packaging</a>
                 </div>
             </td>
         </tr>
