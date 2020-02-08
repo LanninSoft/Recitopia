@@ -666,6 +666,7 @@ namespace Recitopia.Controllers
 
             recipeInfo.isArchived = false;
             recipeInfo.ArchiveDate = DateTime.MinValue;
+            recipeInfo.WhoArchived = null;
 
             _recitopiaDbContext.Entry(recipeInfo).State = EntityState.Modified;
 
