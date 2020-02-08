@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Recitopia.Data;
 
 namespace Recitopia.Data.Migrations
 {
     [DbContext(typeof(RecitopiaDBContext))]
-    partial class RecitopiaDBContextModelSnapshot : ModelSnapshot
+    [Migration("20200208103812_addmorearchiving")]
+    partial class addmorearchiving
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -780,9 +782,6 @@ namespace Recitopia.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("ArchiveDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<decimal>("Cost")
                         .HasColumnType("decimal(18,3)");
 
@@ -813,12 +812,6 @@ namespace Recitopia.Data.Migrations
 
                     b.Property<decimal>("Weight")
                         .HasColumnType("decimal(18,3)");
-
-                    b.Property<string>("WhoArchived")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("isArchived")
-                        .HasColumnType("bit");
 
                     b.HasKey("Package_Id");
 

@@ -137,7 +137,11 @@ namespace Recitopia.Controllers
             ViewBag.RecipeName = recipe.Recipe_Name;
             ViewBag.Rec_Id = recipeID;
 
-            ViewBag.Package_Id = new SelectList(await _recitopiaDbContext.Packaging.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Package_Name).ToListAsync(), "Package_Id", "Package_Name");
+            ViewBag.Package_Id = new SelectList(await _recitopiaDbContext.Packaging
+                .Where(m => m.Customer_Guid == customerGuid && m.isArchived == false)
+                .OrderBy(m => m.Package_Name)
+                .ToListAsync(), "Package_Id", "Package_Name");
+
             ViewBag.Recipe_Id = new SelectList(await _recitopiaDbContext.Recipe.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Recipe_Name).ToListAsync(), "Recipe_Id", "Recipe_Name");
             //REFACTOR - get rid of model and populate directly
             //CREATE LIST OF PREVIOUS ADDED INGREDIENTS

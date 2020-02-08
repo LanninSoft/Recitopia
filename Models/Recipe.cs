@@ -41,6 +41,7 @@ namespace Recitopia.Models
         public DateTime? LastModified { get; set; }
         public bool isArchived { get; set; }
         public DateTime ArchiveDate { get; set; }
+        public string WhoArchived { get; set; }
         // public int Customer_Id { get; set; }
         public string Customer_Guid { get; set; }
         public virtual Meal_Category Meal_Category { get; set; }

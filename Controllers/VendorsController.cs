@@ -51,7 +51,38 @@ namespace Recitopia.Controllers
 
             return Json(vendors);
         }
+        public async Task<IActionResult> ArchiveIt(int? id)
+        {
 
+            var vendorInfo = await _recitopiaDbContext.Vendor.FindAsync(id);
+
+            var currentUser = await _recitopiaDbContext.AppUsers.Where(m => m.UserName == User.Identity.Name).FirstAsync();
+
+            vendorInfo.isArchived = true;
+            vendorInfo.ArchiveDate = DateTime.UtcNow;
+            vendorInfo.WhoArchived = currentUser.FullName;
+
+            _recitopiaDbContext.Entry(vendorInfo).State = EntityState.Modified;
+
+            await _recitopiaDbContext.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = vendorInfo.Vendor_Id });
+        }
+        public async Task<IActionResult> UnArchiveIt(int? id)
+        {
+
+            var vendorInfo = await _recitopiaDbContext.Vendor.FindAsync(id);
+
+            vendorInfo.isArchived = false;
+            vendorInfo.ArchiveDate = DateTime.MinValue;
+            vendorInfo.WhoArchived = null;
+
+            _recitopiaDbContext.Entry(vendorInfo).State = EntityState.Modified;
+
+            await _recitopiaDbContext.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = vendorInfo.Vendor_Id });
+        }
         public async Task<ActionResult> Details(int id)
         {
             

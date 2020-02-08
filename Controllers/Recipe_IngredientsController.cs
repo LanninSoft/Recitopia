@@ -100,7 +100,7 @@ namespace Recitopia.Controllers
             
             var filterIngredients = await _recitopiaDbContext.Ingredient
                 .Include(f => f.Vendor)
-                .Where(f => !IngredientIdList.Contains(f.Ingredient_Id) && f.Customer_Guid == customerGuid)
+                .Where(f => !IngredientIdList.Contains(f.Ingredient_Id) && f.Customer_Guid == customerGuid && f.isArchived == false)
                 .OrderBy(i => i.Ingred_name)
                 .Select(ri => new View_Angular_Ingredients_Details()
                 {
@@ -181,7 +181,11 @@ namespace Recitopia.Controllers
             ViewBag.RecipeName = recipe.Recipe_Name;
             ViewBag.Rec_Id = recipeID;
 
-            ViewBag.Ingredient_Id = new SelectList(await _recitopiaDbContext.Ingredient.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Ingred_name).ToListAsync(), "Ingredient_Id", "Ingred_name");
+            ViewBag.Ingredient_Id = new SelectList(await _recitopiaDbContext.Ingredient
+                .Where(m => m.Customer_Guid == customerGuid && m.isArchived == false)
+                .OrderBy(m => m.Ingred_name)
+                .ToListAsync(), "Ingredient_Id", "Ingred_name");
+
             ViewBag.Recipe_Id = new SelectList(await _recitopiaDbContext.Recipe.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Recipe_Name).ToListAsync(), "Recipe_Id", "Recipe_Name");
 
             //CREATE LIST OF PREVIOUS ADDED INGREDIENTS

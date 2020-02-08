@@ -34,16 +34,16 @@
                 <i class="fa fa-caret-left" ng-class="getIcon('gluten_Free')"></i>
             </th>
 
-            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
-                <a href="" ng-click="changeSorting('isArchived')"><font style="color:black">Archived</font></a>
-                <i class="fa fa-caret-left" ng-class="getIcon('isArchived')"></i>
-            </th>
+            
 
             <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
                 <a href="" ng-click="changeSorting('serving_Size')"><font style="color:black">Serving Size</font></a>
                 <i class="fa fa-caret-left" ng-class="getIcon('serving_Size')"></i>
             </th>
-
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('isArchived')"><font style="color:black">Archived</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('isArchived')"></i>
+            </th>
             <th style="text-align:right" class="AngularTableHeaderColor"><a href="@Url.Action("Create", "Recipes")" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> New Recipe</a></th>
 
 
@@ -52,8 +52,9 @@
             <td style="padding:1px;height:20px;font-size:13px"><input placeholder="Filter" style="padding:1px;height:20px;width:100%" ng-model="f.recipe_Name"></td>
             <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input placeholder="Filter" style="padding:1px;height:20px;width:100%" ng-model="f.category_Name"></td>
             <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input placeholder="Filter" style="padding:1px;height:20px;width:100%" ng-model="f.gluten_Free"></td>
-            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input placeholder="Filter" style="padding:1px;height:20px;width:100%" ng-model="f.isArchived"></td>
+
             <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input placeholder="Filter" style="padding:1px;height:20px;width:100%" ng-model="f.serving_Size"></td>
+            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input placeholder="Filter" style="padding:1px;height:20px;width:100%" ng-model="f.isArchived"></td>
             <td> </td>
 
         </tr>
@@ -71,13 +72,14 @@
 
                 </div>
             </td>
-            <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;width:125px">
+            <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{recipe.serving_Size}}</td>
+            <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;width:90px">
                 <div class="{{recipe.isArchived == true ? 'AngularFalseResults' : 'AngularNAResults' }} ">
                     {{recipe.isArchived ? "T":"F"}}
 
                 </div>
             </td>
-            <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{recipe.serving_Size}}</td>
+            
 
 
             <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:225px">

@@ -18,5 +18,7 @@ namespace Recitopia.Models
         [Column(TypeName = "decimal(18,3)")]
         public decimal Amount_g { get; set; }
         public int recipe_Id { get; set; }
+
+        public bool isArchived { get; set; }
     }
 }

@@ -50,6 +50,9 @@ namespace Recitopia.Models
         public string Notes { get; set; }
         //public int Customer_Id { get; set; }
         public string Customer_Guid { get; set; }
+        public bool isArchived { get; set; }
+        public DateTime ArchiveDate { get; set; }
+        public string WhoArchived { get; set; }
         public virtual ICollection<Ingredient> Ingredient { get; set; }
         public virtual ICollection<Packaging> Packaging { get; set; }
     }

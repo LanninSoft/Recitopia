@@ -59,7 +59,9 @@ namespace Recitopia.Models
         [DataType(DataType.Currency)]
         [DisplayFormat(DataFormatString = "{0:N2}")]
         public decimal? Cost { get; set; }
-        //public int Customer_Id { get; set; }
+        public bool isArchived { get; set; }
+        public DateTime ArchiveDate { get; set; }
+        public string WhoArchived { get; set; }
         public string Customer_Guid { get; set; }
         public virtual Vendor Vendor { get; set; }
         public virtual ICollection<Ingredient_Components> Ingredient_Components { get; set; }

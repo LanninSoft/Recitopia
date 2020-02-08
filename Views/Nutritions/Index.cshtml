@@ -37,7 +37,10 @@
                 <a href="" ng-click="changeSorting('showOnNutrientPanel')"><font style="color:black">Panel Show</font></a>
                 <i class="fa fa-caret-left" ng-class="getIcon('showOnNutrientPanel')"></i>
             </th>
-
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('isArchived')"><font style="color:black">Archived</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('isArchived')"></i>
+            </th>
             <th style="text-align:right" class="AngularTableHeaderColor"><a href="@Url.Action("Create", "Nutritions")" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> New Nutrient</a></th>
 
 
@@ -48,6 +51,7 @@
             <td class=" d-none d-lg-table-cell"></td>
             <td class=" d-none d-lg-table-cell"></td>
             <td class=" d-none d-lg-table-cell"></td>
+            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input placeholder="Filter" style="padding:1px;height:20px;width:100%" ng-model="f.isArchived"></td>
             <td></td>
 
 
@@ -62,7 +66,12 @@
             <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{nutrient.measurement}}</td>
             <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{nutrient.orderOnNutrientPanel}}</td>
             <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{nutrient.showOnNutrientPanel ? "Yes":""}}</td>
+            <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;width:90px">
+                <div class="{{nutrient.isArchived == true ? 'AngularFalseResults' : 'AngularNAResults' }} ">
+                    {{nutrient.isArchived ? "T":"F"}}
 
+                </div>
+            </td>
 
             <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:150px">
                 <button ng-click="RedirectToEdit(nutrient)" class="btn btn-outline-success AngularButtons">

@@ -110,6 +110,7 @@ namespace Recitopia.Controllers
                     Cost = ri.Cost,
                     Package = ri.Package,
                     Vendor_Name = ri.Vendor.Vendor_Name,
+                    isArchived = ri.isArchived
                 })
                 .ToListAsync();
 
@@ -117,6 +118,38 @@ namespace Recitopia.Controllers
             return ingredients != null
                  ? Json(ingredients)
                  : Json(new { Status = "Failure" });
+        }
+        public async Task<IActionResult> ArchiveIt(int? id)
+        {
+
+            var ingredientInfo = await _recitopiaDbContext.Ingredient.FindAsync(id);
+
+            var currentUser = await _recitopiaDbContext.AppUsers.Where(m => m.UserName == User.Identity.Name).FirstAsync();
+
+            ingredientInfo.isArchived = true;
+            ingredientInfo.ArchiveDate = DateTime.UtcNow;
+            ingredientInfo.WhoArchived = currentUser.FullName;
+
+            _recitopiaDbContext.Entry(ingredientInfo).State = EntityState.Modified;
+
+            await _recitopiaDbContext.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = ingredientInfo.Ingredient_Id });
+        }
+        public async Task<IActionResult> UnArchiveIt(int? id)
+        {
+
+            var ingredientInfo = await _recitopiaDbContext.Ingredient.FindAsync(id);
+
+            ingredientInfo.isArchived = false;
+            ingredientInfo.ArchiveDate = DateTime.MinValue;
+            ingredientInfo.WhoArchived = null;
+
+            _recitopiaDbContext.Entry(ingredientInfo).State = EntityState.Modified;
+
+            await _recitopiaDbContext.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = ingredientInfo.Ingredient_Id });
         }
         // GET: Ingredients/Details/5
         public async Task<ActionResult> Details(int? id)
@@ -211,7 +244,10 @@ namespace Recitopia.Controllers
                 return RedirectToAction("CustomerLogin", "Customers");
             }
 
-            ViewBag.Vendor_Id = new SelectList(await _recitopiaDbContext.Vendor.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Vendor_Name).ToListAsync(), "Vendor_Id", "Vendor_Name");
+            ViewBag.Vendor_Id = new SelectList(await _recitopiaDbContext.Vendor
+                .Where(m => m.Customer_Guid == customerGuid && m.isArchived == false)
+                .OrderBy(m => m.Vendor_Name)
+                .ToListAsync(), "Vendor_Id", "Vendor_Name");
             return View();
         }
 
@@ -396,6 +432,8 @@ namespace Recitopia.Controllers
                 ingredient_new.Package = ingredient.Package;
                 ingredient_new.Cost = ingredient.Cost;
                 ingredient_new.Customer_Guid = ingredient.Customer_Guid;
+                ingredient_new.isArchived = ingredient.isArchived;
+                ingredient_new.ArchiveDate = ingredient.ArchiveDate;
 
                 await _recitopiaDbContext.Ingredient.AddAsync(ingredient_new);
                 await _recitopiaDbContext.SaveChangesAsync();

@@ -4,7 +4,18 @@
     ViewBag.Title = "Details";
 }
 
-
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Vendor_Id }) |
+    @Html.ActionLink("Back to List", "Index") |
+    @if (Model.isArchived == false)
+    {
+        @Html.ActionLink("Archive It", "ArchiveIt", new { id = Model.Vendor_Id })
+    }
+    else
+    {
+        @Html.ActionLink("UnArchive It", "UnArchiveIt", new { id = Model.Vendor_Id })
+    }
+</p>
 <table style="width:100%">
     <tr>
         <th>
@@ -12,14 +23,31 @@
         </th>
     </tr>
 </table>
-<table style="width:100%" class="table table-borderless rounded-sm box effect8">
-    <tr class="pageBanner">
-        <th style="font-size:20px">
-            @Model.Vendor_Name
-        </th>
-    </tr>
+@if (Model.isArchived == true)
+{
+    var isArchivedMessage = "Archived on " + Model.ArchiveDate.ToShortDateString();
 
-</table>
+    <table style="width:100%" class="table table-borderless rounded-sm box effect8">
+        <tr class="pageBanner">
+            <th style="font-size:20px">
+                @Model.Vendor_Name <font style="font-size:15px;color:red">(@isArchivedMessage)</font>
+            </th>
+        </tr>
+
+    </table>
+}
+else
+{
+
+    <table style="width:100%" class="table table-borderless rounded-sm box effect8">
+        <tr class="pageBanner">
+            <th style="font-size:20px">
+                @Model.Vendor_Name
+            </th>
+        </tr>
+
+    </table>
+}
 <br />
 <div>
 
@@ -109,5 +137,13 @@
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Vendor_Id }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index") |
+    @if (Model.isArchived == false)
+    {
+        @Html.ActionLink("Archive It", "ArchiveIt", new { id = Model.Vendor_Id })
+    }
+    else
+    {
+        @Html.ActionLink("UnArchive It", "UnArchiveIt", new { id = Model.Vendor_Id })
+    }
 </p>
