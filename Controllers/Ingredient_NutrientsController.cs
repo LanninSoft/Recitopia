@@ -113,7 +113,10 @@ namespace Recitopia.Controllers
             ViewBag.IngredId = IngredID;
 
             ViewBag.Ingred_Id = new SelectList(await _recitopiaDbContext.Ingredient.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Ingred_name).ToListAsync(), "Ingredient_Id", "Ingred_name");
-            ViewBag.Nutrition_Item_Id = new SelectList(await _recitopiaDbContext.Nutrition.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Nutrition_Item).ToListAsync(), "Nutrition_Item_Id", "Nutrition_Item");
+            ViewBag.Nutrition_Item_Id = new SelectList(await _recitopiaDbContext.Nutrition
+                .Where(m => m.Customer_Guid == customerGuid && m.isArchived == false)
+                .OrderBy(m => m.Nutrition_Item)
+                .ToListAsync(), "Nutrition_Item_Id", "Nutrition_Item");
 
             //BUILD VIEW FOR ALREADY ADDED NUTRIENTS
             var ingredientNutrients =  _recitopiaDbContext.Ingredient_Nutrients

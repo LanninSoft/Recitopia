@@ -29,6 +29,9 @@ namespace Recitopia.Models
         public bool ShowOnNutrientPanel { get; set; }
         //public int Customer_Id { get; set; }
         public string Customer_Guid { get; set; }
+        public bool isArchived { get; set; }
+        public DateTime ArchiveDate { get; set; }
+        public string WhoArchived { get; set; }
 
         public virtual ICollection<Ingredient_Nutrients> Ingredient_Nutrients { get; set; }
     }

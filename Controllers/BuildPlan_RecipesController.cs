@@ -100,7 +100,7 @@ namespace Recitopia.Controllers
 
 
             var filterRecipes = await _recitopiaDbContext.Recipe
-                .Where(f => !RecipeIdList.Contains(f.Recipe_Id) && f.Customer_Guid == customerGuid)
+                .Where(f => !RecipeIdList.Contains(f.Recipe_Id) && f.Customer_Guid == customerGuid && f.isArchived == false)
                 .OrderBy(i => i.Recipe_Name)
                 .Select(ri => new View_Angular_BuildPlan_Item_Details()
                 {

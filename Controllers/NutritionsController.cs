@@ -58,7 +58,38 @@ namespace Recitopia.Controllers
                 : Json(new { Status = "Failure" });
 
         }
+        public async Task<IActionResult> ArchiveIt(int? id)
+        {
 
+            var nutritionInfo = await _recitopiaDbContext.Nutrition.FindAsync(id);
+
+            var currentUser = await _recitopiaDbContext.AppUsers.Where(m => m.UserName == User.Identity.Name).FirstAsync();
+
+            nutritionInfo.isArchived = true;
+            nutritionInfo.ArchiveDate = DateTime.UtcNow;
+            nutritionInfo.WhoArchived = currentUser.FullName;
+
+            _recitopiaDbContext.Entry(nutritionInfo).State = EntityState.Modified;
+
+            await _recitopiaDbContext.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = nutritionInfo.Nutrition_Item_Id });
+        }
+        public async Task<IActionResult> UnArchiveIt(int? id)
+        {
+
+            var nutritionInfo = await _recitopiaDbContext.Nutrition.FindAsync(id);
+
+            nutritionInfo.isArchived = false;
+            nutritionInfo.ArchiveDate = DateTime.MinValue;
+            nutritionInfo.WhoArchived = null;
+
+            _recitopiaDbContext.Entry(nutritionInfo).State = EntityState.Modified;
+
+            await _recitopiaDbContext.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = nutritionInfo.Nutrition_Item_Id });
+        }
         public async Task<ActionResult> Details(int id)
         {
             var nutrition = await _recitopiaDbContext.Nutrition.FindAsync(id);

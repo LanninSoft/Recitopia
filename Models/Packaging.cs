@@ -41,6 +41,9 @@ namespace Recitopia.Models
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
         public string Customer_Guid { get; set; }
+        public bool isArchived { get; set; }
+        public DateTime ArchiveDate { get; set; }
+        public string WhoArchived { get; set; }
         public virtual Vendor Vendor { get; set; }
         public virtual ICollection<Recipe_Packaging> Recipe_Packaging { get; set; }
     }

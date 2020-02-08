@@ -562,7 +562,10 @@ namespace Recitopia.Controllers
             {
                 return RedirectToAction("CustomerLogin", "Customers");
             }
-            ViewBag.Category_Id = new SelectList(await _recitopiaDbContext.Meal_Category.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Category_Name).ToListAsync(), "Category_Id", "Category_Name");
+            ViewBag.Category_Id = new SelectList(await _recitopiaDbContext.Meal_Category
+                .Where(m => m.Customer_Guid == customerGuid)
+                .OrderBy(m => m.Category_Name)
+                .ToListAsync(), "Category_Id", "Category_Name");
             ViewBag.SS_Id = new SelectList(await _recitopiaDbContext.Serving_Sizes.Where(m => m.Customer_Guid == customerGuid).OrderBy(m => m.Serving_Size).ToListAsync(), "SS_Id", "Serving_Size", 1);
 
             return View();
@@ -644,8 +647,11 @@ namespace Recitopia.Controllers
             
             var recipeInfo = await _recitopiaDbContext.Recipe.FindAsync(id);
 
+            var currentUser = await _recitopiaDbContext.AppUsers.Where(m => m.UserName == User.Identity.Name).FirstAsync();
+
             recipeInfo.isArchived = true;
             recipeInfo.ArchiveDate = DateTime.UtcNow;
+            recipeInfo.WhoArchived = currentUser.FullName;
 
             _recitopiaDbContext.Entry(recipeInfo).State = EntityState.Modified;
 
@@ -966,6 +972,8 @@ namespace Recitopia.Controllers
                     recipe_new.LaborCost = recipe.LaborCost;
                     recipe_new.SS_Id = recipe.SS_Id;
                     recipe_new.Customer_Guid = recipe.Customer_Guid;
+                    recipe_new.isArchived = recipe.isArchived;
+                    recipe_new.ArchiveDate = recipe.ArchiveDate;
 
                 await _recitopiaDbContext.Recipe.AddAsync(recipe_new);
                 await _recitopiaDbContext.SaveChangesAsync();

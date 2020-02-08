@@ -26,17 +26,14 @@
                 <i class="fa fa-caret-left" ng-class="getIcon('cost_per_lb')"></i>
             </th>
 
-            @*<th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
-                    <a href="" ng-click="changeSorting('cost')"><font style="color:black">$Cost</font></a>
-                    <i class="fa fa-caret-left" ng-class="getIcon('cost')"></i>
-                </th>*@
-
-
             <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
                 <a href="" ng-click="changeSorting('vendor_Name')"><font style="color:black">Vendor</font></a>
                 <i class="fa fa-caret-left" ng-class="getIcon('vendor_Name')"></i>
             </th>
-
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('isArchived')"><font style="color:black">Archived</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('isArchived')"></i>
+            </th>
             <th style="text-align:right" class="AngularTableHeaderColor"><a href="@Url.Action("Create", "Ingredients")" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> New Ingredient</a></th>
 
 
@@ -47,6 +44,7 @@
             @*<td class="d-none d-lg-table-cell" style="padding:1px;height:20px;font-size:13px"></td>*@
 
             <td class="d-none d-lg-table-cell" style="padding:1px;height:20px;font-size:13px"><input placeholder="Filter" style="padding:1px;height:20px;width:100%" ng-model="f.vendor_Name"></td>
+            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input placeholder="Filter" style="padding:1px;height:20px;width:100%" ng-model="f.isArchived"></td>
             <td> </td>
 
         </tr>
@@ -59,7 +57,12 @@
             @*<td class="d-none d-lg-table-cell" style="height:15px;padding:1px;">{{ingredient.cost}}</td>*@
 
             <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;">{{ingredient.vendor_Name}}</td>
+            <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;width:90px">
+                <div class="{{ingredient.isArchived == true ? 'AngularFalseResults' : 'AngularNAResults' }} ">
+                    {{ingredient.isArchived ? "T":"F"}}
 
+                </div>
+            </td>
 
 
             <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:225px">

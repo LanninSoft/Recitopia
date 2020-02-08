@@ -10,8 +10,15 @@
                 <div>
                     @Html.ActionLink("Edit", "Edit", new { id = Model.Ingredient_Id }) |
                     @Html.ActionLink("Back to List", "Index") |
-                    @Html.ActionLink("Create Copy", "CreateCopy", new { id = Model.Ingredient_Id })
-
+                    @Html.ActionLink("Create Copy", "CreateCopy", new { id = Model.Ingredient_Id }) |
+                    @if (Model.isArchived == false)
+                    {
+                        @Html.ActionLink("Archive It", "ArchiveIt", new { id = Model.Ingredient_Id })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("UnArchive It", "UnArchiveIt", new { id = Model.Ingredient_Id })
+                    }
 
                 </div>
             </td>
@@ -32,14 +39,31 @@
         </th>
     </tr>
 </table>
-<table style="width:100%" class="table table-borderless rounded-sm box effect8">
-    <tr class="pageBanner">
-        <th style="font-size:20px">
-            @ViewBag.IngredientName
-        </th>
-    </tr>
-    
-</table>
+@if (Model.isArchived == true)
+{
+    var isArchivedMessage = "Archived on " + Model.ArchiveDate.ToShortDateString();
+
+    <table style="width:100%" class="table table-borderless rounded-sm box effect8">
+        <tr class="pageBanner">
+            <th style="font-size:20px">
+                @Model.Ingred_name <font style="font-size:15px;color:red">(@isArchivedMessage)</font>
+            </th>
+        </tr>
+
+    </table>
+}
+else
+{
+
+    <table style="width:100%" class="table table-borderless rounded-sm box effect8">
+        <tr class="pageBanner">
+            <th style="font-size:20px">
+                @Model.Ingred_name
+            </th>
+        </tr>
+
+    </table>
+}
 <br />
 <div>
 
@@ -233,8 +257,15 @@
                 <div>
                     @Html.ActionLink("Edit", "Edit", new { id = Model.Ingredient_Id }) |
                     @Html.ActionLink("Back to List", "Index") |
-                    @Html.ActionLink("Create Copy", "CreateCopy", new { id = Model.Ingredient_Id })
-
+                    @Html.ActionLink("Create Copy", "CreateCopy", new { id = Model.Ingredient_Id }) |
+                    @if (Model.isArchived == false)
+                    {
+                        @Html.ActionLink("Archive It", "ArchiveIt", new { id = Model.Ingredient_Id })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("UnArchive It", "UnArchiveIt", new { id = Model.Ingredient_Id })
+                    }
 
                 </div>
             </td>

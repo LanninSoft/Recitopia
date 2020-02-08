@@ -80,7 +80,37 @@ namespace Recitopia.Controllers
 
             return View(packaging);
         }
+        public async Task<IActionResult> ArchiveIt(int? id)
+        {
 
+            var packageInfo = await _recitopiaDbContext.Packaging.FindAsync(id);
+
+            var currentUser = await _recitopiaDbContext.AppUsers.Where(m => m.UserName == User.Identity.Name).FirstAsync();
+
+            packageInfo.isArchived = true;
+            packageInfo.ArchiveDate = DateTime.UtcNow;
+            packageInfo.WhoArchived = currentUser.FullName;
+
+            _recitopiaDbContext.Entry(packageInfo).State = EntityState.Modified;
+
+            await _recitopiaDbContext.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = packageInfo.Package_Id });
+        }
+        public async Task<IActionResult> UnArchiveIt(int? id)
+        {
+
+            var packageInfo = await _recitopiaDbContext.Packaging.FindAsync(id);
+
+            packageInfo.isArchived = false;
+            packageInfo.ArchiveDate = DateTime.MinValue;
+
+            _recitopiaDbContext.Entry(packageInfo).State = EntityState.Modified;
+
+            await _recitopiaDbContext.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = packageInfo.Package_Id });
+        }
         // GET: Packaging/Create
         public async Task<IActionResult> Create()
         {

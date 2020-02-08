@@ -37,7 +37,10 @@
                 <a href="" ng-click="changeSorting('weigth')"><font style="color:black">Weight(g)</font></a>
                 <i class="fa fa-caret-left" ng-class="getIcon('weigth')"></i>
             </th>
-
+            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+                <a href="" ng-click="changeSorting('isArchived')"><font style="color:black">Archived</font></a>
+                <i class="fa fa-caret-left" ng-class="getIcon('isArchived')"></i>
+            </th>
             <th style="text-align:right" class="AngularTableHeaderColor"><a href="@Url.Action("Create", "Packaging")" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> New Packaging</a></th>
 
 
@@ -47,35 +50,41 @@
             <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"></td>
             <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"></td>
             <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"></td>
+            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input placeholder="Filter" style="padding:1px;height:20px;width:100%" ng-model="f.isArchived"></td>
             <td> </td>
 
         </tr>
         @*</table>
             <table width="100%" class="table table-condensed table-hover table-striped table-responsive-lg">*@
 
-        <tr ng-repeat="packaging in Packaging | filter:f | orderBy:sort.active:sort.descending ">
-            @* Fetch All the Recipe record using ng-repeat *@
+    <tr ng-repeat="packaging in Packaging | filter:f | orderBy:sort.active:sort.descending ">
+        @* Fetch All the Recipe record using ng-repeat *@
 
-            <td style="height:15px;padding:1px">{{packaging.package_Name}}</td>
-            <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{packaging.vendor_Name}}</td>
-            <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{packaging.cost}}</td>
-            <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{packaging.weight}}</td>
+        <td style="height:15px;padding:1px">{{packaging.package_Name}}</td>
+        <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{packaging.vendor_Name}}</td>
+        <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{packaging.cost}}</td>
+        <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{packaging.weight}}</td>
+        <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;width:90px">
+            <div class="{{packaging.isArchived == true ? 'AngularFalseResults' : 'AngularNAResults' }} ">
+                {{packaging.isArchived ? "T":"F"}}
 
+            </div>
+        </td>
 
-            <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:225px">
+        <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:225px">
 
-                <button ng-click="RedirectToEdit(packaging)" class="btn btn-outline-success AngularButtons">
-                    <i class="fa fa-pen"></i>
-                </button> |
-                <button ng-click="RedirectToDetails(packaging)" class="btn btn-outline-info AngularButtons">
-                    <i class="fa fa-clipboard"></i>
-                </button> |
+            <button ng-click="RedirectToEdit(packaging)" class="btn btn-outline-success AngularButtons">
+                <i class="fa fa-pen"></i>
+            </button> |
+            <button ng-click="RedirectToDetails(packaging)" class="btn btn-outline-info AngularButtons">
+                <i class="fa fa-clipboard"></i>
+            </button> |
 
-                <button ng-click="DelPackaging(packaging)" class="btn btn-outline-danger AngularButtons">
-                    <i class="fa fa-trash"></i>
-                </button>
-            </td>
-        </tr>
+            <button ng-click="DelPackaging(packaging)" class="btn btn-outline-danger AngularButtons">
+                <i class="fa fa-trash"></i>
+            </button>
+        </td>
+    </tr>
 
     </table>
 </div>
