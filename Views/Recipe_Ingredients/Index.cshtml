@@ -32,7 +32,10 @@
 
 
 
-                            <th style="text-align:right" class="AngularTableHeaderColor"><a href="@Url.Action("Create", "Recipe_Ingredients", new { recipeID = ViewBag.RecipeNameID })" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> Ingredient(s)</a></th>
+                            <th style="text-align:right" class="AngularTableHeaderColor">
+                            <a href="@Url.Action("Create", "Recipe_Ingredients", new { recipeID = ViewBag.RecipeNameID })" class="btn alert-success btn-sm effect8" role="button">
+                                <i class="fa fa-plus"></i> Ingredient(s)</a>
+                            </th>
 
 
                         </tr>
@@ -97,7 +100,7 @@
                             </td>
                             <td align="right" colspan="3">
                                 <div>
-                                    <button class="btn alert-warning AngularButtons border-dark" ng-click="RedirectToUpdate(Ingredients)">
+                                    <button class="btn alert-warning AngularButtons effect8" ng-click="RedirectToUpdate(Ingredients)">
                                         &nbsp;<i style="height:15px" class=" fa fa-save"></i> Save your changes&nbsp;
                                     </button>
                                 </div>

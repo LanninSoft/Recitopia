@@ -42,7 +42,7 @@
                             <a href="" ng-click="changeSorting('nut_per_100_grams')"><font style="color:black">Nut/100g</font></a>
                             <i class="fa fa-caret-left" ng-class="getIcon('nut_per_100_grams')"></i>
                         </th>
-                        <th style="text-align:right" class="AngularTableHeaderColor"><a href="@Url.Action("Create", "Ingredient_Nutrients", new { IngredID = ViewBag.IngredNameID })" class="btn alert-success btn-sm" role="button"><i class="fa fa-plus"></i> Add Item</a></th>
+                        <th style="text-align:right" class="AngularTableHeaderColor"><a href="@Url.Action("Create", "Ingredient_Nutrients", new { IngredID = ViewBag.IngredNameID })" class="btn alert-success btn-sm effect8" role="button"><i class="fa fa-plus"></i> Add Item</a></th>
 
                     </tr>
                     <tr ng-if="(IngredientNutrition|filter:query).length > 0">
@@ -99,7 +99,7 @@
                         </td>
                         <td align="right" colspan="2">
                             <div >
-                                <button class="btn alert-warning AngularButtons border-dark" ng-click="RedirectToUpdate(IngredientNutrition)">
+                                <button class="btn alert-warning AngularButtons effect8" ng-click="RedirectToUpdate(IngredientNutrition)">
                                     &nbsp;<i style="height:15px" class=" fa fa-save"></i> Save your changes&nbsp;
                                 </button>
                             </div>
