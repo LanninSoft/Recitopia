@@ -16,7 +16,7 @@
 <br />
 <table width="100%">
     <tr>
-        <td width="50%" valign="top">
+        <td  style="vertical-align:top;text-align:left">
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()
@@ -24,7 +24,7 @@
                 <div class="form-horizontal">
 
                     <div class="form-group">
-                       
+
                         <input value="@ViewBag.Rec_Id" id="RID" name="RID" type="hidden">
                     </div>
 
@@ -52,15 +52,14 @@
                 </div>
             }
         </td>
-        @*</tr>
-            <tr>*@
-        <td width="50%" valign="top" style="font-size:13px">
-            <div>
-                <table>
+       
+        <td style="vertical-align:top;text-align:left">
+            <div class="effect8" style="width:300px">
+                <table style="width:100%" class="table-striped">
                     <tr style="background-color:lightblue">
-                        <td style="font-weight:bolder" align="center">
+                        <th align="center">
                             Packaging already in '@ViewBag.RecipeName'
-                        </td>
+                        </th>
 
                     </tr>
                     @if (ViewBag.Packaging != null)

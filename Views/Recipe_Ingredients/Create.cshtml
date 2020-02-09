@@ -45,7 +45,7 @@
                             </th>
 
                             <th style="text-align:right" class="AngularTableHeaderColor">
-                                <button class="btn alert-warning AngularButtons border-dark" ng-click="RedirectToAdd(Ingredients)">
+                                <button class="btn alert-warning AngularButtons effect8" ng-click="RedirectToAdd(Ingredients)">
                                     &nbsp;<i style="height:15px" class=" fa fa-save"></i> Save&nbsp;
                                 </button>
                             </th>
@@ -108,7 +108,7 @@
                             </td>
                             <td align="right" colspan="3">
 
-                                <button class="btn alert-warning AngularButtons border-dark" ng-click="RedirectToAdd(Ingredients)">
+                                <button class="btn alert-warning AngularButtons effect8" ng-click="RedirectToAdd(Ingredients)">
                                     &nbsp;<i style="height:15px" class=" fa fa-save"></i> Save&nbsp;
                                 </button>
                             </td>
@@ -120,12 +120,12 @@
                 </div>
             </td>
             <td style="vertical-align:top;text-align:left">
-                <div>
-                    <table>
+                <div class="effect8" style="width:300px">
+                    <table style="width:100%" class="table-striped" >
                         <tr style="background-color:lightblue">
-                            <td style="font-weight:bolder" align="center">
+                            <th align="center">
                                 Ingredients already in '@ViewBag.RecipeName'
-                            </td>
+                            </th>
 
                         </tr>
                         @if (ViewBag.Ingredients != null)

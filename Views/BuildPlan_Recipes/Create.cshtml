@@ -42,7 +42,7 @@
                             </th>
 
                             <th style="text-align:right" class="AngularTableHeaderColor">
-                                <button class="btn alert-warning AngularButtons border-dark" ng-click="RedirectToAdd(Plans)">
+                                <button class="btn alert-warning AngularButtons effect8" ng-click="RedirectToAdd(Plans)">
                                     &nbsp;<i style="height:15px" class=" fa fa-save"></i> Save&nbsp;
                                 </button>
                             </th>
@@ -81,8 +81,8 @@
 
                             <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:100px">
                                 @*<button ng-click="RedirectToAdd(ingredient)" class="btn btn-outline-success AngularButtons">
-                                        <i class="fa fa-plus"></i>
-                                    </button>*@
+                                <i class="fa fa-plus"></i>
+                            </button>*@
 
                             </td>
 
@@ -105,7 +105,7 @@
                             </td>
                             <td align="right" colspan="3">
 
-                                <button class="btn alert-warning AngularButtons border-dark" ng-click="RedirectToAdd(Plans)">
+                                <button class="btn alert-warning AngularButtons effect8" ng-click="RedirectToAdd(Plans)">
                                     &nbsp;<i style="height:15px" class=" fa fa-save"></i> Save&nbsp;
                                 </button>
                             </td>
@@ -116,13 +116,14 @@
 
                 </div>
             </td>
+            
             <td style="vertical-align:top;text-align:left">
-                <div>
-                    <table>
+                <div class="effect8"  style="width:300px">
+                    <table style="width:100%" class="table-striped">
                         <tr style="background-color:lightblue">
-                            <td style="font-weight:bolder" align="center">
-                                Items already in '@ViewBag.OrderName'
-                            </td>
+                            <th align="center">
+                                Recipes already in '@ViewBag.OrderName'
+                            </th>
 
                         </tr>
                         @if (ViewBag.Recipes != null)
