@@ -14,53 +14,58 @@
 </table>
 <br />
 
-    <div style="width:350px">
+    <div style="width:350px;font-size:13px">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
-                <label asp-for="Recipe_Name" class="control-label"></label>
-                <input asp-for="Recipe_Name" class="form-control" />
+                <label asp-for="Recipe_Name" class="control-label" style="font-weight:bold"></label>
+                <input asp-for="Recipe_Name" class="form-control" style="font-size:13px" />
                 <span asp-validation-for="Recipe_Name" class="text-danger"></span>
             </div>
             <div>
-                <label asp-for="Category_Id" class="control-label"></label>
-                <select asp-for="Category_Id"
+                <label asp-for="Category_Id" class="control-label" style="font-weight:bold"></label>
+                <br />
+                <select asp-for="Category_Id" style="font-size:13px"
                         asp-items="ViewBag.Category_Id">
                 </select>
                 <span asp-validation-for="Category_Id" class="text-danger"></span>
             </div>
+            <br />
             <div>
-                <label asp-for="SS_Id" class="control-label"></label>
-                <select asp-for="SS_Id"
+                <label asp-for="SS_Id" class="control-label" style="font-weight:bold"></label>
+                <br />
+                <select asp-for="SS_Id" style="font-size:13px"
                         asp-items="ViewBag.SS_Id">
                 </select>
                 <span asp-validation-for="SS_Id" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
-                <label asp-for="LaborCost" class="control-label"></label>
-                <input asp-for="LaborCost" class="form-control" />
+                <label asp-for="LaborCost" class="control-label" style="font-weight:bold"></label>
+                <br />
+                <input asp-for="LaborCost" class="form-control"  style="font-size:13px"/>
                 <span asp-validation-for="LaborCost" class="text-danger"></span>
             </div>
-
+            
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Gluten_Free" /> @Html.DisplayNameFor(model => model.Gluten_Free)
+                    <input class="form-check-input" asp-for="Gluten_Free" /> <font style="font-weight:bold">@Html.DisplayNameFor(model => model.Gluten_Free)</font>
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="SKU" class="control-label"></label>
-                <input asp-for="SKU" class="form-control" />
+                <label asp-for="SKU" class="control-label" style="font-weight:bold"></label>
+                <input asp-for="SKU" class="form-control"  style="font-size:13px"/>
                 <span asp-validation-for="SKU" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UPC" class="control-label"></label>
-                <input asp-for="UPC" class="form-control" />
+                <label asp-for="UPC" class="control-label" style="font-weight:bold"></label>
+                <input asp-for="UPC" class="form-control"  style="font-size:13px"/>
                 <span asp-validation-for="UPC" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Notes" class="control-label"></label>
-                <textarea asp-for="Notes" class="form-control"></textarea>
+                <label asp-for="Notes" class="control-label" style="font-weight:bold"></label>
+                <textarea asp-for="Notes" class="form-control" style="font-size:13px"></textarea>
                 <span asp-validation-for="Notes" class="text-danger"></span>
             </div>
 
