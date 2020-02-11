@@ -44,10 +44,21 @@
             <div class="form-group">
                 <label asp-for="LaborCost" class="control-label" style="font-weight:bold"></label>
                 <br />
-                <input asp-for="LaborCost" class="form-control"  style="font-size:13px"/>
+                <input asp-for="LaborCost" class="form-control" style="font-size:13px" />
                 <span asp-validation-for="LaborCost" class="text-danger"></span>
             </div>
-            
+            <div class="form-group">
+                <label asp-for="RetailPrice" class="control-label" style="font-weight:bold"></label>
+                <br />
+                <input asp-for="RetailPrice" class="form-control" style="font-size:13px" />
+                <span asp-validation-for="RetailPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WholesalePrice" class="control-label" style="font-weight:bold"></label>
+                <br />
+                <input asp-for="WholesalePrice" class="form-control" style="font-size:13px" />
+                <span asp-validation-for="WholesalePrice" class="text-danger"></span>
+            </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Gluten_Free" /> <font style="font-weight:bold">@Html.DisplayNameFor(model => model.Gluten_Free)</font>
@@ -55,12 +66,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="SKU" class="control-label" style="font-weight:bold"></label>
-                <input asp-for="SKU" class="form-control"  style="font-size:13px"/>
+                <input asp-for="SKU" class="form-control" style="font-size:13px" />
                 <span asp-validation-for="SKU" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="UPC" class="control-label" style="font-weight:bold"></label>
-                <input asp-for="UPC" class="form-control"  style="font-size:13px"/>
+                <input asp-for="UPC" class="form-control" style="font-size:13px" />
                 <span asp-validation-for="UPC" class="text-danger"></span>
             </div>
             <div class="form-group">

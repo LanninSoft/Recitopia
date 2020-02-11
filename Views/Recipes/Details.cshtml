@@ -106,6 +106,100 @@ else
                         <td>@Html.DisplayFor(model => model.LaborCost)</td>
                     </tr>
                     <tr>
+                        <th>@Html.LabelFor(model => model.RetailPrice)</th>
+                    </tr>
+                    <tr>
+                        <td>@Html.DisplayFor(model => model.RetailPrice)</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table style="width:100%;font-size:12px">
+                                <tr>
+                                    <td style="width:75%;text-align:right;font-weight:bold">
+                                        Retail Gross Profit($)
+                                    </td>
+                                    <td style="text-align:right">
+                                        @if (Model.RetailPrice > 0)
+                                        {
+                                            @(Math.Round((Model.RetailPrice - ViewBag.CostGRANDTotal), 2))
+                                        }
+                                        else
+                                        {
+                                            <text>NA</text>
+                                        }
+
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td style="width:75%;text-align:right;font-weight:bold">
+                                        Retail Gross Margin(%)
+                                    </td>
+                                    <td style="text-align:right">
+                                        @if (Model.RetailPrice > 0)
+                                        {
+                                            @(Math.Round(((Model.RetailPrice - ViewBag.CostGRANDTotal) / Model.RetailPrice) * 100, 2))
+                                        }
+                                        else
+                                        {
+                                            <text>NA</text>
+                                        }
+
+                                    </td>
+
+                                </tr>
+                                
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>@Html.LabelFor(model => model.WholesalePrice)</th>
+                    </tr>
+                    <tr>
+                        <td>@Html.DisplayFor(model => model.WholesalePrice)</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table style="width:100%;font-size:12px">
+                               
+                                <tr>
+                                    <td style="width:75%;text-align:right;font-weight:bold">
+                                        Wholesale Gross Profit($)
+                                    </td>
+                                    <td style="text-align:right">
+                                        @if (Model.WholesalePrice > 0)
+                                        {
+                                            @(Math.Round((Model.WholesalePrice - ViewBag.CostGRANDTotal), 2))
+                                        }
+                                        else
+                                        {
+                                            <text>NA</text>
+                                        }
+
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td style="width:75%;text-align:right;font-weight:bold">
+                                        Wholesale Gross Margin(%)
+                                    </td>
+                                    <td style="text-align:right">
+                                        @if (Model.WholesalePrice > 0)
+                                        {
+                                            @(Math.Round(((Model.WholesalePrice - ViewBag.CostGRANDTotal) / Model.RetailPrice) * 100, 2))
+                                        }
+                                        else
+                                        {
+                                            <text>NA</text>
+                                        }
+
+                                    </td>
+
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
                         <th>@Html.LabelFor(model => model.Gluten_Free)</th>
                     </tr>
                     <tr>
@@ -390,7 +484,7 @@ else
                             </table>
                         </td>
 
-                        <td style="text-align:right;width:50%">
+                        <td style="text-align: right; width: 50%">
                             <table border="1" style="width:100%" class="table-striped">
                                 <tr>
                                     <th colspan="4" style="background-color:darkseagreen;font-size:15px;text-align:left">
