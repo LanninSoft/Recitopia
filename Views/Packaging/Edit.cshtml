@@ -24,43 +24,43 @@
 </table>
 <br />
 
-<div style="width:350px">
+<div style="width:350px;font-size:13px">
     <form asp-action="Edit">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="Package_Id" />
         <input type="hidden" asp-for="Customer_Guid" />
         <div class="form-group">
-            <label asp-for="Package_Name" class="control-label"></label>
-            <input asp-for="Package_Name" class="form-control" />
+            <label asp-for="Package_Name" class="control-label" style="font-weight:bold"></label>
+            <input asp-for="Package_Name" class="form-control" style="font-size:13px" />
             <span asp-validation-for="Package_Name" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="Vendor_Name" class="control-label"></label>
-            <select asp-for="Vendor_Id"
+            <label asp-for="Vendor_Name" class="control-label" style="font-weight:bold"></label>
+            <select asp-for="Vendor_Id" style="font-size:13px"
                     asp-items="ViewBag.Vendor_Id" class="form-control">
             </select>
             <span asp-validation-for="Vendor_Id" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="Website" class="control-label"></label>
-            <input asp-for="Website" class="form-control" />
+            <label asp-for="Website" class="control-label" style="font-weight:bold"></label>
+            <input asp-for="Website" class="form-control"  style="font-size:13px"/>
             <span asp-validation-for="Website" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label asp-for="Cost" class="control-label"></label>
-            <input asp-for="Cost" class="form-control" />
+            <label asp-for="Cost" class="control-label" style="font-weight:bold"></label>
+            <input asp-for="Cost" class="form-control"  style="font-size:13px"/>
             <span asp-validation-for="Cost" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="Weight" class="control-label"></label>
-            <input asp-for="Weight" class="form-control" />
+            <label asp-for="Weight" class="control-label" style="font-weight:bold"></label>
+            <input asp-for="Weight" class="form-control"  style="font-size:13px"/>
             <span asp-validation-for="Weight" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="Notes" class="control-label"></label>
-            <textarea asp-for="Notes" class="form-control"></textarea>
+            <label asp-for="Notes" class="control-label" style="font-weight:bold"></label>
+            <textarea asp-for="Notes" class="form-control" style="font-size:13px"></textarea>
             <span asp-validation-for="Notes" class="text-danger"></span>
         </div>
 

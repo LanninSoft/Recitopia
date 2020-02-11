@@ -15,34 +15,34 @@
 <br />
 
 
-    <div style="width:350px">
+    <div style="width:350px;font-size:13px">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             
             <div class="form-group">
-                <label asp-for="Nutrition_Item" class="control-label"></label>
-                <input asp-for="Nutrition_Item" class="form-control" />
+                <label asp-for="Nutrition_Item" class="control-label" style="font-weight:bold"></label>
+                <input asp-for="Nutrition_Item" class="form-control"  style="font-size:13px"/>
                 <span asp-validation-for="Nutrition_Item" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="ShowOnNutrientPanel" /> @Html.DisplayNameFor(model => model.ShowOnNutrientPanel)
+                    <input class="form-check-input" asp-for="ShowOnNutrientPanel" /> <font style="font-weight:bold">@Html.DisplayNameFor(model => model.ShowOnNutrientPanel)</font>
                 </label>
             </div>
 
             <div class="form-group">
-                <label asp-for="OrderOnNutrientPanel" class="control-label"></label>
-                <input asp-for="OrderOnNutrientPanel" class="form-control" />
+                <label asp-for="OrderOnNutrientPanel" class="control-label" style="font-weight:bold"></label>
+                <input asp-for="OrderOnNutrientPanel" class="form-control"  style="font-size:13px"/>
                 <span asp-validation-for="OrderOnNutrientPanel" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DV" class="control-label"></label>
-                <input asp-for="DV" class="form-control" />
+                <label asp-for="DV" class="control-label" style="font-weight:bold"></label>
+                <input asp-for="DV" class="form-control"  style="font-size:13px"/>
                 <span asp-validation-for="DV" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Measurement" class="control-label"></label>
-                <input asp-for="Measurement" class="form-control" />
+                <label asp-for="Measurement" class="control-label" style="font-weight:bold"></label>
+                <input asp-for="Measurement" class="form-control"  style="font-size:13px"/>
                 <span asp-validation-for="Measurement" class="text-danger"></span>
             </div>
 

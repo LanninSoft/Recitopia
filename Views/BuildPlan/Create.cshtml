@@ -15,33 +15,33 @@
 </table>
 <br />
 
-    <div class="col-md-4">
+    <div class="col-md-4" style="font-size:13px">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Plan_Name" class="control-label"></label>
-                <input asp-for="Plan_Name" class="form-control" />
+                <label asp-for="Plan_Name" class="control-label" style="font-weight:bold"></label>
+                <input asp-for="Plan_Name" class="form-control"  style="font-size:13px"/>
                 <span asp-validation-for="Plan_Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PlanDate" class="control-label"></label>
-                <input asp-for="PlanDate" class="form-control" />
+                <label asp-for="PlanDate" class="control-label" style="font-weight:bold"></label>
+                <input asp-for="PlanDate" class="form-control"  style="font-size:13px"/>
                 <span asp-validation-for="PlanDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="NeedByDate" class="control-label"></label>
-                <input asp-for="NeedByDate" class="form-control" />
+                <label asp-for="NeedByDate" class="control-label" style="font-weight:bold"></label>
+                <input asp-for="NeedByDate" class="form-control" style="font-size:13px" />
                 <span asp-validation-for="NeedByDate" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="FullFilled" /> @Html.DisplayNameFor(model => model.FullFilled)
+                    <input class="form-check-input" asp-for="FullFilled" /> <font style="font-weight:bold">@Html.DisplayNameFor(model => model.FullFilled)</font>
                 </label>
             </div>
            
             <div class="form-group">
-                <label asp-for="Notes" class="control-label"></label>
-                <textarea asp-for="Notes" class="form-control"></textarea>
+                <label asp-for="Notes" class="control-label" style="font-weight:bold"></label>
+                <textarea asp-for="Notes" class="form-control" style="font-size:13px"></textarea>
                 <span asp-validation-for="Notes" class="text-danger"></span>
             </div>
            
