@@ -214,7 +214,63 @@ namespace Recitopia.Controllers
         }
 
 
+        public async Task<IActionResult> PricingMargins()
+        {
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
 
+            if (customerGuid == null || customerGuid.Trim() == "")
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
+
+            var recipes = await _recitopiaDbContext.Recipe
+                .Include(r => r.Meal_Category)
+                .Include(r => r.Serving_Sizes)
+                .Where(r => r.Customer_Guid == customerGuid && r.isArchived == false )
+                .OrderBy(r => r.Recipe_Name)
+                .ToListAsync();
+
+            List<View_PricingMargins> recipeGPItems = new List<View_PricingMargins>();
+
+            //Loop through customer recipes and build out View_PricingMargins model
+            foreach (Recipe thing in recipes)
+            {
+                
+                var tempTotalCost = await GetRecipeCost(thing.Recipe_Id);
+                //need to add labor cost to get total
+
+                try
+                {
+                    var tempRecipeHolder = new View_PricingMargins()
+                    {
+                        Item = thing.UPC,
+                        Recipe_Name = thing.Recipe_Name,
+                        Recipe_Id = thing.Recipe_Id,
+                        RecipeCost = tempTotalCost,
+                        Labor = thing.LaborCost > 0 ? (decimal)thing.LaborCost : 0,
+                        TotalCost = thing.LaborCost > 0 ? tempTotalCost + (decimal)thing.LaborCost : tempTotalCost,
+                        RetailPrice = thing.RetailPrice > 0 ? thing.RetailPrice : 0,
+                        RetailGP = thing.RetailPrice > 0 && thing.LaborCost > 0 ? thing.RetailPrice - (tempTotalCost + (decimal)thing.LaborCost) : 0,
+                        RetailGPMargin = thing.RetailPrice > 0 && thing.LaborCost > 0 ? ((thing.RetailPrice - (tempTotalCost + (decimal)thing.LaborCost) / thing.RetailPrice)) * 100 : 0,
+                        WholesalePrice = thing.WholesalePrice > 0 ? thing.WholesalePrice : 0,
+                        WholesaleGP = thing.WholesalePrice > 0 && thing.LaborCost > 0 ? thing.WholesalePrice - (tempTotalCost + (decimal)thing.LaborCost) : 0,
+                        WholesaleGPMargin = thing.WholesalePrice > 0 && thing.LaborCost > 0 ? ((thing.WholesalePrice - (tempTotalCost + (decimal)thing.LaborCost) / thing.WholesalePrice)) * 100 : 0,
+
+                    };
+
+                    recipeGPItems.Add(tempRecipeHolder);
+                }
+                catch(Exception e)
+                {
+
+                }
+                    
+
+            }
+
+            return View(recipeGPItems);
+
+        }
         public async Task<ActionResult> Details(int id)
         {
             var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
@@ -1171,6 +1227,158 @@ namespace Recitopia.Controllers
             }
 
             return NutrientTable;
+        }
+        public async Task<decimal> GetRecipeCost(int id)
+        {
+            var recipeIngredients = await _recitopiaDbContext.Recipe_Ingredients
+                            .Include(ri => ri.Recipe)
+                            .Include(ri => ri.Ingredient)
+                            .Where(ri => ri.Recipe_Id == id)
+                            .OrderBy(ri => ri.Ingredient.Ingred_name)
+                            .Select(ri => new View_All_Recipe_Ingredients()
+                            {
+                                Id = ri.Id,
+                                Customer_Guid = ri.Customer_Guid,
+                                Recipe_Id = ri.Recipe_Id,
+                                Ingredient_Id = ri.Ingredient_Id,
+                                Amount_g = ri.Amount_g,
+                                Ingred_name = ri.Ingredient.Ingred_name,
+                                Ingred_Comp_name = ri.Ingredient.Ingred_Comp_name,
+                                Cost_per_lb = ri.Ingredient.Cost_per_lb,
+                                Cost = ri.Ingredient.Cost,
+                                Package = ri.Ingredient.Package,
+                                Recipe_Name = ri.Recipe.Recipe_Name
+                            })
+                            .ToListAsync();
+
+
+            List<View_All_Recipe_Ingredients> recipe_ing2 = recipeIngredients;
+
+
+            decimal netTotal = 0;
+            decimal netGramTotal = 0;
+            decimal netGramTotalP = 0;
+
+            decimal grandTotalC = 0;
+
+            //USED TO CALCULATE
+            decimal ingCost = 0;
+            decimal amountG = 0;
+
+            decimal costLb = 0;
+            decimal weight = 0;
+            decimal gToLbConversion = (decimal)453.592;
+
+            //----------------------------------------------------
+            //MAIN INGREDIENTS 
+            //----------------------------------------------------          
+            foreach (View_All_Recipe_Ingredients ri in recipe_ing2)
+            {
+                if (ri.Package == false)
+                {
+                    //CALCULATE INGREDIENT COST
+                    if (!ri.Amount_g.Equals(null))
+                    {
+                        amountG = (decimal)ri.Amount_g;
+                    }
+                    else
+                    {
+                        amountG = 0;
+                    }
+                    netGramTotal += amountG;
+
+                    if (!ri.Cost_per_lb.Equals(null))
+                    {
+                        costLb = (decimal)ri.Cost_per_lb;
+                    }
+                    else
+                    {
+                        costLb = 0;
+                    }
+
+                    ingCost = (amountG / gToLbConversion) * costLb;
+
+                    //ADD TO INGREDIENT SUBTOTAL
+                    netTotal += ingCost;
+
+                    View_All_Recipe_Ingredients ingredPanelItem = new View_All_Recipe_Ingredients()
+                    {
+                        Ingred_name = ri.Ingred_name,
+                        Amount_g = amountG,
+                        Cost_per_lb = Math.Round(costLb, 3),
+                        Cost = Math.Round(ingCost, 3)
+                    };                    
+
+                }
+
+            }         
+            
+            grandTotalC += Math.Round(netTotal, 3);
+
+            //----------------------------------------------------
+            //MAIN PACKAGING 
+            //---------------------------------------------------- 
+            //RESET
+            netTotal = 0;
+
+            //BUILD OUT RECIPE PACKAGING ITEMS
+            var recipePackaging =
+                 await (from rp in _recitopiaDbContext.Recipe_Packaging
+                        join r in _recitopiaDbContext.Recipe
+                        on rp.Recipe_Id equals r.Recipe_Id
+                        join p in _recitopiaDbContext.Packaging
+                        on rp.Package_Id equals p.Package_Id
+                        where r.Recipe_Id == id 
+                        orderby p.Package_Name
+                        select new Recipe_Packaging()
+                        {
+                            Id = rp.Id,
+                            Customer_Guid = rp.Customer_Guid,
+                            Recipe_Id = rp.Recipe_Id,
+                            Package_Id = rp.Package_Id,
+                            Amount = rp.Amount,
+                            Packaging = p,
+                            Recipe = r
+                        })
+                .ToListAsync();
+
+            //PACKAGING     
+            foreach (Recipe_Packaging rp in recipePackaging)
+            {
+                //CALCULATE INGREDIENT COST
+                if (!rp.Amount.Equals(null))
+                {
+                    amountG = rp.Amount;
+                }
+                else
+                {
+                    amountG = 0;
+                }
+                netGramTotalP += (amountG * rp.Packaging.Weight);
+
+                if (!rp.Packaging.Cost.Equals(null))
+                {
+                    costLb = (rp.Packaging.Cost * rp.Amount);
+                }
+                else
+                {
+                    costLb = 0;
+                }
+                if (!rp.Packaging.Weight.Equals(null))
+                {
+                    weight = rp.Packaging.Weight;
+                }
+                else
+                {
+                    weight = 0;
+                }
+                //ADD TO INGREDIENT SUBTOTAL
+                netTotal += costLb;               
+
+            }           
+            grandTotalC += Math.Round(netTotal, 3);
+            
+            return grandTotalC;
         }
     }
 }
