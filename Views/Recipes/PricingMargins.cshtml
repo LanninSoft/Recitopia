@@ -1,0 +1,116 @@
+﻿@model IEnumerable<Recitopia.Models.View_PricingMargins>
+
+@{
+    ViewData["Title"] = "PricingMargins";
+
+}
+
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBanner">
+        <th style="font-size:20px">
+            Recipe Pricing and Margins
+        </th>
+    </tr>
+
+</table>
+<br />
+<div class="effect8">
+    <table class="table-hover table-striped" style="font-size:13px;width:100%">
+        <tr style="vertical-align:bottom">
+            <th>
+                UPC
+            </th>
+            <th>
+                Recipe Name
+            </th>
+            <th>
+                Cost($)
+            </th>
+            <th>
+                Labor($)
+            </th>
+            <th>
+                Total Cost($)
+            </th>
+            <th>
+                Retail Price($)
+            </th>
+            <th>
+                Retail GP($)
+            </th>
+            <th>
+                Retail GP Margin(%)
+            </th>
+            <th>
+                Wholesale Price($)
+            </th>
+            <th>
+                Wholesale GP($)
+            </th>
+            <th>
+                Wholesale GP Margin(%)
+            </th>
+        </tr>
+
+        @if (Model != null)
+        {
+            foreach (View_PricingMargins thing in Model)
+            {
+                <tr>
+
+                    <td>
+                        @thing.Item
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@thing.Recipe_Id">@thing.Recipe_Name</a>
+                    </td>
+                    <td>
+
+                        @Math.Round(@thing.RecipeCost, 2)
+                    </td>
+                    <td>
+
+                        @Math.Round(@thing.Labor, 2)
+                    </td>
+                    <td>
+
+                        @Math.Round(@thing.TotalCost, 2)
+                    </td>
+                    <td>
+
+                        @Math.Round(@thing.RetailPrice, 2)
+                    </td>
+                    <td>
+
+                        @Math.Round(@thing.RetailGP, 2)
+                    </td>
+                    <td>
+
+                        @Math.Round(@thing.RetailGPMargin, 2)
+                    </td>
+                    <td>
+
+                        @Math.Round(@thing.WholesalePrice, 2)
+                    </td>
+                    <td>
+
+                        @Math.Round(@thing.WholesaleGP, 2)
+                    </td>
+                    <td>
+
+                        @Math.Round(@thing.WholesaleGPMargin, 2)
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <text>There are no Recipes to report</text>
+        }
+
+
+
+
+    </table>
+
+</div>
