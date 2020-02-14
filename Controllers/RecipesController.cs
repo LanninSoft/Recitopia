@@ -251,10 +251,10 @@ namespace Recitopia.Controllers
                         TotalCost = thing.LaborCost > 0 ? tempTotalCost + (decimal)thing.LaborCost : tempTotalCost,
                         RetailPrice = thing.RetailPrice > 0 ? thing.RetailPrice : 0,
                         RetailGP = thing.RetailPrice > 0 && thing.LaborCost > 0 ? thing.RetailPrice - (tempTotalCost + (decimal)thing.LaborCost) : 0,
-                        RetailGPMargin = thing.RetailPrice > 0 && thing.LaborCost > 0 ? ((thing.RetailPrice - (tempTotalCost + (decimal)thing.LaborCost) / thing.RetailPrice)) * 100 : 0,
+                        RetailGPMargin = thing.RetailPrice > 0 && thing.LaborCost > 0 ? (((thing.RetailPrice - (tempTotalCost + (decimal)thing.LaborCost)) / thing.RetailPrice)) * 100 : 0,
                         WholesalePrice = thing.WholesalePrice > 0 ? thing.WholesalePrice : 0,
                         WholesaleGP = thing.WholesalePrice > 0 && thing.LaborCost > 0 ? thing.WholesalePrice - (tempTotalCost + (decimal)thing.LaborCost) : 0,
-                        WholesaleGPMargin = thing.WholesalePrice > 0 && thing.LaborCost > 0 ? ((thing.WholesalePrice - (tempTotalCost + (decimal)thing.LaborCost) / thing.WholesalePrice)) * 100 : 0,
+                        WholesaleGPMargin = thing.WholesalePrice > 0 && thing.LaborCost > 0 ? (((thing.WholesalePrice - (tempTotalCost + (decimal)thing.LaborCost)) / thing.WholesalePrice)) * 100 : 0,
 
                     };
 

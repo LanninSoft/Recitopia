@@ -26,7 +26,7 @@
                 <a href="" ng-click="changeSorting('lastName')"><font style="color:black">Last Name</font></a>
                 <i class="fa fa-caret-left" ng-class="getIcon('lastName')"></i>
             </th>
-            <th class="AngularTableHeaderColor d-none d-lg-table-cell" style="vertical-align:bottom">
+            <th class="AngularTableHeaderColor" style="vertical-align:bottom">
                 <a href="" ng-click="changeSorting('firstName')"><font style="color:black">First Name</font></a>
                 <i class="fa fa-caret-left" ng-class="getIcon('firstName')"></i>
             </th>
@@ -52,7 +52,7 @@
         </tr>
         <tr>
             <td style="padding:1px;height:20px;font-size:13px"><input placeholder="Filter" style="padding:1px;height:20px;width:100%" ng-model="f.lastName"></td>
-            <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input placeholder="Filter" style="padding:1px;height:20px;width:100%" ng-model="f.firstName"></td>
+            <td style="padding:1px;height:20px;font-size:13px" ><input placeholder="Filter" style="padding:1px;height:20px;width:100%" ng-model="f.firstName"></td>
             <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"><input placeholder="Filter" style="padding:1px;height:20px;width:100%" ng-model="f.email"></td>
             <td style="padding:1px;height:20px;font-size:13px" class="d-none d-lg-table-cell"></td>
 
@@ -64,7 +64,7 @@
             @* Fetch All the Recipe record using ng-repeat *@
 
             <td style="height:15px;padding:1px">{{appuser.lastName}}</td>
-            <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{appuser.firstName}}</td>
+            <td style="height:15px;padding:1px">{{appuser.firstName}}</td>
             <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{appuser.email}}</td>
             <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{appuser.customer_Name}}</td>
             <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{appuser.site_Role_Id}}</td>
