@@ -243,7 +243,7 @@ namespace Recitopia.Controllers
                 {
                     var tempRecipeHolder = new View_PricingMargins()
                     {
-                        Item = thing.UPC,
+                        Item = thing.SKU,
                         Recipe_Name = thing.Recipe_Name,
                         Recipe_Id = thing.Recipe_Id,
                         RecipeCost = tempTotalCost,
@@ -260,7 +260,7 @@ namespace Recitopia.Controllers
 
                     recipeGPItems.Add(tempRecipeHolder);
                 }
-                catch(Exception e)
+                catch(Exception)
                 {
 
                 }
