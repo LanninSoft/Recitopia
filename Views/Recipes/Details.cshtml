@@ -186,7 +186,7 @@ else
                                     <td style="text-align:right">
                                         @if (Model.WholesalePrice > 0)
                                         {
-                                            @(Math.Round(((Model.WholesalePrice - ViewBag.CostGRANDTotal) / Model.RetailPrice) * 100, 2))
+                                            @(Math.Round(((Model.WholesalePrice - ViewBag.CostGRANDTotal) / Model.WholesalePrice) * 100, 2))
                                         }
                                         else
                                         {
