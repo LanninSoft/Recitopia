@@ -38,15 +38,17 @@
                     <tr ng-repeat="allergen in IngredientComponents | filter:f | orderBy:sort.active:sort.descending">
                         @* Fetch All the Vendor record using ng-repeat *@
 
-                        <td style="height:15px;padding:1px">{{allergen.component_Name}}</td>
+                        <td style="height:15px;padding:1px">
+                            <a href="@Url.Action("Details","Components")?id={{allergen.comp_Id}}">{{allergen.component_Name}}</a>
+                        </td>
 
                         <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:150px">
                             @*<button ng-click="RedirectToEdit(allergen)" class="btn btn-outline-success AngularButtons">
-                                    <i class="fa fa-pen"></i>
-                                </button> |*@
-                            <button ng-click="RedirectToDetails(allergen)" class="btn btn-outline-info AngularButtons">
-                                <i class="fa fa-clipboard"></i>
-                            </button> |
+                <i class="fa fa-pen"></i>
+            </button> |
+        <button ng-click="RedirectToDetails(allergen)" class="btn btn-outline-info AngularButtons">
+            <i class="fa fa-clipboard"></i>
+        </button> |*@
 
                             <button ng-click="DelIngredientComponent(allergen)" class="btn btn-outline-danger AngularButtons">
                                 <i class="fa fa-trash"></i>

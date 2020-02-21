@@ -61,7 +61,10 @@
         <tr ng-repeat="nutrient in Nutrients | filter:f | orderBy:sort.active:sort.descending">
             @* Fetch All the Recipe record using ng-repeat *@
 
-            <td style="height:15px;padding:1px">{{nutrient.nutrition_Item}}</td>
+            <td style="height:15px;padding:1px">
+                
+                <a href="@Url.Action("Details","Nutritions")?id={{nutrient.nutrition_Item_Id}}">{{nutrient.nutrition_Item}}</a>
+            </td>
             <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{nutrient.dv}}</td>
             <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{nutrient.measurement}}</td>
             <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{nutrient.orderOnNutrientPanel}}</td>
@@ -77,9 +80,9 @@
                 <button ng-click="RedirectToEdit(nutrient)" class="btn btn-outline-success AngularButtons">
                     <i class="fa fa-pen"></i>
                 </button> |
-                <button ng-click="RedirectToDetails(nutrient)" class="btn btn-outline-info AngularButtons">
+                @*<button ng-click="RedirectToDetails(nutrient)" class="btn btn-outline-info AngularButtons">
                     <i class="fa fa-clipboard"></i>
-                </button> |
+                </button> |*@
 
                 <button ng-click="DelNutrient(nutrient)" class="btn btn-outline-danger AngularButtons">
                     <i class="fa fa-trash"></i>
