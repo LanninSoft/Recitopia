@@ -64,7 +64,10 @@
         <tr ng-repeat="recipe in Recipes | filter:f | orderBy:sort.active:sort.descending ">
             @* Fetch All the Recipe record using ng-repeat *@
 
-            <td style="height:15px;padding:1px">{{recipe.recipe_Name}}</td>
+            <td style="height:15px;padding:1px">
+               
+                <a href="@Url.Action("Details","Recipes")?id={{recipe.recipe_Id}}">{{recipe.recipe_Name}}</a>
+            </td>
             <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{recipe.category_Name}}</td>
             <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;width:125px">
                 <div class="{{recipe.gluten_Free == true ? 'AngularTrueResults' : 'AngularNAResults' }} ">
@@ -88,9 +91,9 @@
                 <button ng-click="RedirectToEdit(recipe)" class="btn btn-outline-success AngularButtons">
                     <i class="fa fa-pen"></i>
                 </button> |
-                <button ng-click="RedirectToDetails(recipe)" class="btn btn-outline-info AngularButtons">
+                @*<button ng-click="RedirectToDetails(recipe)" class="btn btn-outline-info AngularButtons">
                     <i class="fa fa-clipboard"></i>
-                </button> |
+                </button> |*@
 
                 <button ng-click="DelRecipe(recipe)" class="btn btn-outline-danger AngularButtons">
                     <i class="fa fa-trash"></i>

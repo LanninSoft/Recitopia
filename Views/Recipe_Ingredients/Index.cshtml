@@ -48,7 +48,10 @@
 
 
                         <tr ng-repeat="ingredient in Ingredients | filter:f | orderBy:sort.active:sort.descending" ng-if="(Ingredients|filter:query).length > 0">
-                            <td style="height:15px;padding:1px">{{ingredient.ingred_name}}</td>
+                            <td style="height:15px;padding:1px">
+                            
+                                <a href="@Url.Action("Details","Ingredients")?id={{ingredient.ingredient_Id}}">{{ingredient.ingred_name}}</a>
+                            </td>
 
 
 
@@ -70,11 +73,11 @@
 
                             <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:150px">
                                 @*<button ng-click="RedirectToEdit(ingredient)" class="btn btn-outline-success AngularButtons">
-                                    <i class="fa fa-pen"></i>
-                                </button> |*@
-                                <button ng-click="RedirectToDetails(ingredient)" class="btn btn-outline-info AngularButtons">
-                                    <i class="fa fa-clipboard"></i>
-                                </button> |
+            <i class="fa fa-pen"></i>
+        </button> |
+        <button ng-click="RedirectToDetails(ingredient)" class="btn btn-outline-info AngularButtons">
+            <i class="fa fa-clipboard"></i>
+        </button> |*@
 
                                 <button ng-click="DelIngredient(ingredient)" class="btn btn-outline-danger AngularButtons">
                                     <i class="fa fa-trash"></i>

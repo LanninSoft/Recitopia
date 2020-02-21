@@ -38,7 +38,10 @@
                             <td></td>
                         </tr>
                         <tr ng-repeat="packaging in Packaging | filter:f | orderBy:sort.active:sort.descending" ng-if="(Packaging|filter:query).length > 0">
-                            <td style="height:15px;padding:1px">{{packaging.package_Name}}</td>
+                            <td style="height:15px;padding:1px">
+                            
+                                <a href="@Url.Action("Details","Packaging")?id={{packaging.package_Id}}">{{packaging.package_Name}}</a>
+                            </td>
                             <td style="height:15px;padding:1px">
                                 <div ng-show="!packaging.edit.amount"
                                      ng-click="packaging.edit.amount = !packaging.edit.amount">
@@ -51,11 +54,11 @@
                             </td>
                             <td style="height:15px;padding:1px;text-align:right;vertical-align:central;width:150px">
                                 @* <button ng-click="RedirectToEdit(packaging)" class="btn btn-outline-success AngularButtons">
-                                        <i class="fa fa-pen"></i>
-                                    </button> |*@
-                                <button ng-click="RedirectToDetails(packaging)" class="btn btn-outline-info AngularButtons">
-                                    <i class="fa fa-clipboard"></i>
-                                </button> |
+                <i class="fa fa-pen"></i>
+            </button> |
+        <button ng-click="RedirectToDetails(packaging)" class="btn btn-outline-info AngularButtons">
+            <i class="fa fa-clipboard"></i>
+        </button> |*@
 
                                 <button ng-click="DelPackaging(packaging)" class="btn btn-outline-danger AngularButtons">
                                     <i class="fa fa-trash"></i>

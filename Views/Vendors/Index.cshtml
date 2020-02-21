@@ -50,7 +50,9 @@
         <tr ng-repeat="vendor in Vendors | filter:f | orderBy:sort.active:sort.descending">
             @* Fetch All the Vendor record using ng-repeat *@
 
-            <td style="height:15px;padding:1px">{{vendor.vendor_Name}}</td>
+            <td style="height:15px;padding:1px">
+                <a href="@Url.Action("Details","Vendors")?id={{vendor.vendor_Id}}">{{vendor.vendor_Name}}</a>
+            </td>
             <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{vendor.email}}</td>
             <td class=" d-none d-lg-table-cell" style="height:15px;padding:1px">{{vendor.phone}}</td>
             <td class="d-none d-lg-table-cell" style="height:15px;padding:1px;width:90px">
@@ -65,9 +67,9 @@
                 <button ng-click="RedirectToEdit(vendor)" class="btn btn-outline-success AngularButtons">
                     <i class="fa fa-pen"></i>
                 </button> |
-                <button ng-click="RedirectToDetails(vendor)" class="btn btn-outline-info AngularButtons">
+                @*<button ng-click="RedirectToDetails(vendor)" class="btn btn-outline-info AngularButtons">
                     <i class="fa fa-clipboard"></i>
-                </button> |
+                </button> |*@
 
                 <button ng-click="DelVendor(vendor)" class="btn btn-outline-danger AngularButtons">
                     <i class="fa fa-trash"></i>
