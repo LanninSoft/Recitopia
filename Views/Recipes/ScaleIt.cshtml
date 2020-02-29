@@ -1,0 +1,62 @@
+﻿@model IEnumerable<Recitopia.Models.View_All_Recipe_Ingredients>
+
+@{
+    ViewData["Title"] = "Scale It";
+
+}
+    <font style="font-weight:bold">Scale It!</font>
+<table style="width:100%" class="table table-borderless rounded-sm box effect8">
+    <tr class="pageBanner">
+        <th style="font-size:20px">
+            @ViewBag.RecipeName X <font style="color:red">@ViewBag.ScaleAmount</font>
+        </th>
+    </tr>
+
+</table>
+<br />
+@Html.ActionLink("Back to Recipe Details", "Details", new { id = ViewBag.RecipeId }) 
+
+<br />
+<div class="effect8">
+    <table border="1" style="width:100%" class="table-striped">
+        <tr>
+            <th style="text-align:left">
+                Ingredients
+            </th>
+            <th>
+                Amount g
+            </th>
+            <th>
+                Cost/lb
+            </th>
+            <th>
+                Ingredient Cost
+            </th>
+        </tr>
+        @if (Model != null)
+        {
+            foreach (var Ingr in Model)
+            {
+
+                <tr>
+                    <td style="text-align:left">
+                        <span> @Ingr.Ingred_name </span>
+                    </td>
+                    <td>
+                        <span> @Ingr.Amount_g </span>
+                    </td>
+                    <td>
+                        <span> @Ingr.Cost_per_lb </span>
+                    </td>
+                    <td>
+                        <span> @Ingr.Cost  </span>
+                    </td>
+                </tr>
+
+
+
+            }
+        }
+    </table>
+
+</div>

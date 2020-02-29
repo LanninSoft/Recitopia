@@ -284,6 +284,24 @@ namespace Recitopia.Controllers
                 .Include(r => r.Meal_Category)
                 .Include(r => r.Serving_Sizes)
                 .Where(r => r.Recipe_Id == id)
+                .Select(r => new View_Recipe_Details()
+                {
+                    Recipe_Id = r.Recipe_Id,
+                    Recipe_Name = r.Recipe_Name,
+                    Category_Name = r.Category_Name,
+                    Gluten_Free = r.Gluten_Free,
+                    SKU = r.SKU,
+                    UPC = r.UPC,
+                    Notes = r.Notes,
+                    LaborCost = r.LaborCost,
+                    RetailPrice = r.RetailPrice,
+                    WholesalePrice = r.WholesalePrice,
+                    SS_Name = r.SS_Name,
+                    LastModified = r.LastModified,                    
+                    Meal_Category = r.Meal_Category,
+                    Serving_Sizes = r.Serving_Sizes,
+
+                })
                 .SingleAsync();
 
             if (recipe == null)
@@ -1227,6 +1245,110 @@ namespace Recitopia.Controllers
             }
 
             return NutrientTable;
+        }
+        public async Task<IActionResult> ScaleIt([FromForm] View_Recipe_Details recipe)
+        {
+            var customerGuid = HttpContext.Session.GetString("CurrentUserCustomerGuid");
+
+            if (customerGuid == null || customerGuid.Trim() == "")
+            {
+                return RedirectToAction("CustomerLogin", "Customers");
+            }
+
+
+            //----------------------------------------------------
+            //GET MAIN INGREDIENT LIST AND BUILD OUT COST COLUMN - 2 VIEWBAGS 
+            //---------------------------------------------------
+
+            //BUILD OUT RECIPE INGREDIENT ITEMS
+            var recipeIngredients = await _recitopiaDbContext.Recipe_Ingredients
+                            .Include(ri => ri.Recipe)
+                            .Include(ri => ri.Ingredient)
+                            .Where(ri => ri.Customer_Guid == customerGuid && ri.Recipe_Id == recipe.Recipe_Id)
+                            .OrderBy(ri => ri.Ingredient.Ingred_name)
+                            .Select(ri => new View_All_Recipe_Ingredients()
+                            {
+                                Id = ri.Id,
+                                Customer_Guid = ri.Customer_Guid,
+                                Recipe_Id = ri.Recipe_Id,
+                                Ingredient_Id = ri.Ingredient_Id,
+                                Amount_g = ri.Amount_g,
+                                Ingred_name = ri.Ingredient.Ingred_name,
+                                Ingred_Comp_name = ri.Ingredient.Ingred_Comp_name,
+                                Cost_per_lb = ri.Ingredient.Cost_per_lb,
+                                Cost = ri.Ingredient.Cost,
+                                Package = ri.Ingredient.Package,
+                                Recipe_Name = ri.Recipe.Recipe_Name
+                            })
+                            .ToListAsync();
+
+
+            List<View_All_Recipe_Ingredients> recipe_ing2 = recipeIngredients;
+
+
+            decimal netTotal = 0;
+            decimal netGramTotal = 0;
+           
+            //USED TO CALCULATE
+            decimal ingCost = 0;
+            decimal amountG = 0;
+
+            decimal costLb = 0;
+            
+            decimal gToLbConversion = (decimal)453.592;
+
+            //----------------------------------------------------
+            //MAIN INGREDIENTS 
+            //----------------------------------------------------           
+            List<View_All_Recipe_Ingredients> ingredPanel = new List<View_All_Recipe_Ingredients>();
+
+            foreach (View_All_Recipe_Ingredients ri in recipe_ing2)
+            {
+                if (ri.Package == false)
+                {
+                    //CALCULATE INGREDIENT COST
+                    if (!ri.Amount_g.Equals(null))
+                    {
+                        amountG = (decimal)ri.Amount_g;
+                    }
+                    else
+                    {
+                        amountG = 0;
+                    }
+                    netGramTotal += amountG;
+
+                    if (!ri.Cost_per_lb.Equals(null))
+                    {
+                        costLb = (decimal)ri.Cost_per_lb;
+                    }
+                    else
+                    {
+                        costLb = 0;
+                    }
+
+                    ingCost = (amountG / gToLbConversion) * costLb;
+
+                    //ADD TO INGREDIENT SUBTOTAL
+                    netTotal += ingCost;
+
+                    View_All_Recipe_Ingredients ingredPanelItem = new View_All_Recipe_Ingredients()
+                    {
+                        Ingred_name = ri.Ingred_name,
+                        Amount_g = amountG * recipe.Scaleit_Amount,
+                        Cost_per_lb = Math.Round(costLb, 3),
+                        Cost = Math.Round(ingCost * recipe.Scaleit_Amount, 3)
+                    };
+                    ingredPanel.Add(ingredPanelItem);
+
+                }
+
+            }
+            //ADD TO VIEWBAG RECIPE NAME AND ID      
+            ViewBag.RecipeName = recipe.Recipe_Name;
+            ViewBag.RecipeId = recipe.Recipe_Id;
+            ViewBag.ScaleAmount = recipe.Scaleit_Amount;
+
+           return View(ingredPanel.OrderByDescending(m => m.Amount_g).ToList());
         }
         public async Task<decimal> GetRecipeCost(int id)
         {

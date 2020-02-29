@@ -1,4 +1,4 @@
-﻿@model Recitopia.Models.Recipe
+﻿@model Recitopia.Models.View_Recipe_Details
 
 @{
     ViewBag.Title = "Details";
@@ -285,12 +285,19 @@ else
 
                 </table>
             </td>
+            
             <td style="font-size:13px;text-align:right;width:65%;vertical-align:top">
+
                 <table border="1" style="width:100%" class="table-striped">
                     <tr>
-                        <th colspan="4" style="background-color:darkseagreen;font-size:15px;text-align:left">
+                        <th colspan="2" style="background-color:darkseagreen;font-size:15px;text-align:left">
                             Ingredients
                         </th>
+                        <td colspan="2" style="background-color:darkseagreen;font-size:12px;text-align:left">
+                            &nbsp;
+                        </td>
+
+
                     </tr>
                     <tr>
                         <th style="text-align:left">
@@ -329,6 +336,7 @@ else
 
 
                         }
+
                     }
                     else
                     {
@@ -354,7 +362,26 @@ else
                         </td>
                     </tr>
                 </table>
+                <table border="1" style="width:100%">
+                    <tr>
+                        <td style="background-color:darkseagreen;font-size:12px;text-align:right;">
+                            <form asp-action="ScaleIt">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input type="hidden" asp-for="Recipe_Id" />
+                                <input type="hidden" asp-for="Recipe_Name" />
 
+                                <div class="input-group" style="width:25%;text-align:right" >
+                                    <input asp-for="Scaleit_Amount" class="form-control form-control-sm" style="height:22px" />
+                                    <span asp-validation-for="Scaleit_Amount" class="text-danger"></span>
+                                    <span class="input-group-btn">
+                                        <input type="submit" value="Scale it!" class="btn btn-sm alert-success " style="height:20px;width:100px;padding:1px;font-size:12px;color:black;background-color:wheat"/>
+                                    </span>
+                                </div>
+                            </form>
+                            @*<a href="@Url.Action("Index", "Recipes", new { recipeID = Model.Recipe_Id })" style="background-color:lavender;padding:2px" class="btn btn-sm AngularButtons effect8" role="button"><i class="fa fa-plus"></i> Scale it!</a>*@
+                        </td>
+                    </tr>
+                </table>
                 <br />
                 <table border="1" style="width:100%" class="table-striped">
                     <tr>
@@ -568,7 +595,7 @@ else
                         </tr>
                     }
                 </table>
-        </tr>
+</tr>
     </table>
 
 </div>
