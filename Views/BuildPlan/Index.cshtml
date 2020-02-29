@@ -56,7 +56,10 @@
         <tr ng-repeat="plan in Plans | filter:f | orderBy:sort.active:sort.descending ">
             @* Fetch All the Recipe record using ng-repeat *@
 
-            <td style="height:15px;padding:1px;width:250px">{{plan.plan_Name}}</td>
+            <td style="height:15px;padding:1px;width:250px">
+            
+                <a href="@Url.Action("Details","BuildPlan")?id={{plan.buildPlan_Id}}">{{plan.plan_Name}}</a>
+            </td>
             <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{plan.planDate | formatDate:"MMM dd yyyy"}}</td>
             
             <td class="d-none d-lg-table-cell" style="height:15px;padding:1px">{{plan.needByDate | formatDate:"MMM dd yyyy"}}</td>
@@ -73,9 +76,9 @@
                 <button ng-click="RedirectToEdit(plan)" class="btn btn-outline-success AngularButtons">
                     <i class="fa fa-pen"></i>
                 </button> |
-                <button ng-click="RedirectToDetails(plan)" class="btn btn-outline-info AngularButtons">
+                @*<button ng-click="RedirectToDetails(plan)" class="btn btn-outline-info AngularButtons">
                     <i class="fa fa-clipboard"></i>
-                </button> |
+                </button> |*@
 
                 <button ng-click="DelPlan(plan)" class="btn btn-outline-danger AngularButtons">
                     <i class="fa fa-trash"></i>
