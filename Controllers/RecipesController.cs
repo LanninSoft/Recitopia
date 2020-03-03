@@ -1259,7 +1259,7 @@ namespace Recitopia.Controllers
             //----------------------------------------------------
             //GET MAIN INGREDIENT LIST AND BUILD OUT COST COLUMN - 2 VIEWBAGS 
             //---------------------------------------------------
-
+            
             //BUILD OUT RECIPE INGREDIENT ITEMS
             var recipeIngredients = await _recitopiaDbContext.Recipe_Ingredients
                             .Include(ri => ri.Recipe)
@@ -1282,7 +1282,7 @@ namespace Recitopia.Controllers
                             })
                             .ToListAsync();
 
-
+            
             List<View_All_Recipe_Ingredients> recipe_ing2 = recipeIngredients;
 
 
@@ -1347,6 +1347,7 @@ namespace Recitopia.Controllers
             ViewBag.RecipeName = recipe.Recipe_Name;
             ViewBag.RecipeId = recipe.Recipe_Id;
             ViewBag.ScaleAmount = recipe.Scaleit_Amount;
+            ViewBag.TotalCost = ingredPanel.Sum(s => s.Cost);
 
            return View(ingredPanel.OrderByDescending(m => m.Amount_g).ToList());
         }

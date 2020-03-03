@@ -42,6 +42,7 @@ namespace Recitopia.Models
         public bool isArchived { get; set; }
         public DateTime ArchiveDate { get; set; }      
         public int Scaleit_Amount { get; set; } = 1;
+        public decimal TotalCost { get; set; }
         public virtual Meal_Category Meal_Category { get; set; }
         public virtual Serving_Sizes Serving_Sizes { get; set; }
         public virtual ICollection<Recipe_Ingredients> Recipe_Ingredients { get; set; }
