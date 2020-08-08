@@ -1,22 +1,22 @@
 ﻿
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Recitopia</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/twitter-bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-
     <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />
     <!-- In production use:
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
     -->
     <script src="~/lib/angular.js/angular.js"></script>
     <script src="~/lib/angular.js/angular-route.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery/jquery.min.js"></script>
     <script src="~/lib/moment.js/moment.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/twitter-bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <script src="~/app/app.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -31,7 +31,8 @@
 <body>
 
     <div class="container-fluid box effect8" style="background-color:whitesmoke;">
-        <table width="100%" align="center" class="table-responsive-lg">
+        <br />
+        <table border="0" style="align-content:center;width:100%" class="table-responsive-lg">
             <tr>
                 <td>
                     <div style="font-size:30px">
@@ -42,9 +43,9 @@
             </tr>
             <tr>
                 <td>
-                    <nav class="navbar navbar-expand-lg navbar-dark bg-dark " style="background-color:black;">
+                    <nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded-sm box effect8" style="background-color:black;width:100%">
 
-                        <div class="container-fluid">
+                        <div class="container-fluid d-print-none">
 
                             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                                 <span class="navbar-toggler-icon"></span>
@@ -86,8 +87,10 @@
                                             </a>
                                             <div class="dropdown-menu" aria-labelledby="navbarDropdownTools">
 
-                                                <a class="dropdown-item" href="">Simple MRP</a>
-
+                                                <a class="dropdown-item" href="@Url.Action("Index", "BuildPlan")">Simple MRP</a>
+                                                <a class="dropdown-item" href="@Url.Action("WhereUsed", "Ingredients")">Where Used</a>
+                                                <a class="dropdown-item" href="@Url.Action("CompareSelectRecipes", "Recipes")">Compare Nutrition</a>
+                                                <a class="dropdown-item" href="@Url.Action("PricingMargins", "Recipes")">Pricing and Margins</a>
                                             </div>
                                         </li>
                                         @if (User.IsInRole("Administrator"))
@@ -122,56 +125,51 @@
 
             <tr>
                 <td>
-                    <partial name="_LoginPartial" />
+                    <div class="d-print-none">
+                        <partial name="_LoginPartial" />
+                    </div>
                 </td>
             </tr>
-
             <tr>
                 <td>
-                    <table style="width:75%">
-                        <tr>
-                            <td style="width:25%;vertical-align:top">
-                                <div >
-                                    <partial name="_ManageNav" />
-                                </div>
-                            </td>
-                            <td style="width:75%">
-                                <div class="container body-content">
-                                   @RenderBody()
-
-
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-
                     <br />
-                    <div style="width:100%;background-color:#343a40">
-                        <font style="color:lightgray;font-size:12px">
-                            <footer>
-
-                                <table style="width:100%">
-                                    <tr>
-                                        <td style="text-align:left;width:50%">
-                                            <font style="color:lightgrey;font-size:12px">&nbsp;&copy; @DateTime.Now.Year - Recitopia</font>
-
-                                        </td>
-                                        <td style="text-align:right;width:50%">
-                                            @if (User.Identity.IsAuthenticated)
-                                            {
-                                                <a class="nav-link" href="@Url.Action("FeedbackUser", "Feedback")"><font style="color:whitesmoke;font-size:12px">FEEDBACK</font></a>
-                                            }
-                                        </td>
-                                    </tr>
-                                </table>
-                            </footer>
-
-                        </font>
+                    <div class="container body-content box effect8" style="padding-right:8px;padding-left:8px;padding-top:8px;padding-bottom:8px;">
+                        <br />
+                        @RenderBody()
+                        <br />
                     </div>
                     <br />
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <div class="d-print-none rounded-sm box effect8" style="background-color:#343a40;width:100%">
+
+                        <footer>
+                            <table border="0" style="width:100%">
+                                <tr>
+                                    <td style="text-align:left;width:50%">
+                                        <font style="color:lightgrey;font-size:12px">&nbsp;&copy; @DateTime.Now.Year - Recitopia</font>
+
+                                    </td>
+                                    <td style="text-align:right;width:50%">
+                                        @if (User.Identity.IsAuthenticated)
+                                        {
+                                            <a class="nav-link" href="@Url.Action("FeedbackUser", "Feedback")"><font style="color:whitesmoke;font-size:12px">FEEDBACK</font></a>
+                                        }
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </footer>
+
+                    </div>
+                </td>
+            </tr>
         </table>
+
+
+        <br />
     </div>
 
 
