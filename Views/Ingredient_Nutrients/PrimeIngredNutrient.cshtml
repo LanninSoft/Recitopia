@@ -4,14 +4,17 @@
     ViewBag.Title = "Create Copy";
 }
 
-@if (ViewBag.ErrorMessage != null)
-{
-    <font style="color:red">@ViewBag.ErrorMessage</font>
-}
+
 
 
 
 <font class="alert-info">Are you sure you want to create default nutrition for '@Model.Ingred_name'?  This will prime the Ingredient with the items selected to be on the Nutrition Panel under Nutrition.</font>
+<div>
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <font style="color:red">@ViewBag.ErrorMessage</font>
+    }
+</div>
 
 <div>
    

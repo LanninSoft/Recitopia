@@ -348,6 +348,7 @@ namespace Recitopia.Controllers
             }
             return View(ingredient);
         }
+
         [HttpPost, ActionName("PrimeIngredNutrient")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> PrimeIngredNutrientConfirmed(int id)
@@ -364,21 +365,34 @@ namespace Recitopia.Controllers
            
             var nutrients = await _recitopiaDbContext.Nutrition.Where(m => m.ShowOnNutrientPanel == true && m.Customer_Guid == customerGuid).ToListAsync();
 
-            foreach (Nutrition nutrient in nutrients)
+            if (nutrients.Count > 0)
             {
-                Ingredient_Nutrients ingredient_nutrients = new Ingredient_Nutrients() {
-                    Ingred_Id = ingredient.Ingredient_Id,
-                    Nutrition_Item_Id = nutrient.Nutrition_Item_Id,
-                    Nut_per_100_grams = 0,
-                    Customer_Guid = ingredient.Customer_Guid
+                foreach (Nutrition nutrient in nutrients)
+                {
+                    Ingredient_Nutrients ingredient_nutrients = new Ingredient_Nutrients()
+                    {
+                        Ingred_Id = ingredient.Ingredient_Id,
+                        Nutrition_Item_Id = nutrient.Nutrition_Item_Id,
+                        Nut_per_100_grams = 0,
+                        Customer_Guid = ingredient.Customer_Guid
 
-                };
-                //UPDATE DB - INSERT
-                await _recitopiaDbContext.Ingredient_Nutrients.AddAsync(ingredient_nutrients);
-                await _recitopiaDbContext.SaveChangesAsync();
-                
+                    };
+                    //UPDATE DB - INSERT
+                    await _recitopiaDbContext.Ingredient_Nutrients.AddAsync(ingredient_nutrients);
+                    await _recitopiaDbContext.SaveChangesAsync();
+
+                }
+
             }
-           
+            else 
+            {
+                ViewBag.ErrorMessage = "There are no Nutrition items setup.  Build out your Nutritions section before attempting Ingredient associations.";
+                return View(ingredient);
+            }
+
+
+
+
             return RedirectToAction("Index", new { IngredID = ingredient.Ingredient_Id });
         }
     }

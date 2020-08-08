@@ -267,6 +267,209 @@ namespace Recitopia.Controllers
 
                 await _recitopiaDbContext.SaveChangesAsync();
 
+                //----------------------------------------------------------------------------------------------------
+                //----------START ADD DEFAULT NUTRIENTS
+                //----------------------------------------------------------------------------------------------------
+                //ADD DEFAULT NUTRITION - manually put these in for now
+
+                //CALORIES
+                var nutritionCal = new Nutrition()
+                {
+                    Customer_Guid = customers.Customer_Guid,
+                    Nutrition_Item = "Calories",
+                    DV = null,
+                    Measurement = null,
+                    OrderOnNutrientPanel = 1,
+                    ShowOnNutrientPanel = true
+                };
+                _recitopiaDbContext.Nutrition.Add(nutritionCal);
+                //await _recitopiaDbContext.SaveChangesAsync();
+
+                //TOTAL FAT
+                var nutritionTF = new Nutrition()
+                {
+                    Customer_Guid = customers.Customer_Guid,
+                    Nutrition_Item = "Total Fat",
+                    DV = 78,
+                    Measurement = "g",
+                    OrderOnNutrientPanel = 2,
+                    ShowOnNutrientPanel = true
+                };
+                _recitopiaDbContext.Nutrition.Add(nutritionTF);
+
+                //Saturated Fat
+                var saturatedFat = new Nutrition()
+                {
+                    Customer_Guid = customers.Customer_Guid,
+                    Nutrition_Item = "Saturated Fat",
+                    DV = 20,
+                    Measurement = "g",
+                    OrderOnNutrientPanel = 3,
+                    ShowOnNutrientPanel = true
+                };
+                _recitopiaDbContext.Nutrition.Add(saturatedFat);
+
+                //Trans Fat
+                var transFat = new Nutrition()
+                {
+                    Customer_Guid = customers.Customer_Guid,
+                    Nutrition_Item = "Trans Fat",
+                    DV = 0,
+                    Measurement = "g",
+                    OrderOnNutrientPanel = 4,
+                    ShowOnNutrientPanel = true
+                };
+                _recitopiaDbContext.Nutrition.Add(transFat);
+
+                //Cholesterol
+                var cholesterol = new Nutrition()
+                {
+                    Customer_Guid = customers.Customer_Guid,
+                    Nutrition_Item = "Cholesterol",
+                    DV = 300,
+                    Measurement = "mg",
+                    OrderOnNutrientPanel = 5,
+                    ShowOnNutrientPanel = true
+                };
+                _recitopiaDbContext.Nutrition.Add(cholesterol);
+
+                //Sodium
+                var sodium = new Nutrition()
+                {
+                    Customer_Guid = customers.Customer_Guid,
+                    Nutrition_Item = "Sodium",
+                    DV = 2300,
+                    Measurement = "mg",
+                    OrderOnNutrientPanel = 6,
+                    ShowOnNutrientPanel = true
+                };
+                _recitopiaDbContext.Nutrition.Add(sodium);
+
+                //Total Carbohydrate
+                var totalCarbohydrate = new Nutrition()
+                {
+                    Customer_Guid = customers.Customer_Guid,
+                    Nutrition_Item = "Total Carbohydrate",
+                    DV = 275,
+                    Measurement = "g",
+                    OrderOnNutrientPanel = 7,
+                    ShowOnNutrientPanel = true
+                };
+                _recitopiaDbContext.Nutrition.Add(totalCarbohydrate);
+
+                //Dietary Fiber
+                var dietaryFiber = new Nutrition()
+                {
+                    Customer_Guid = customers.Customer_Guid,
+                    Nutrition_Item = "Dietary Fiber",
+                    DV = 28,
+                    Measurement = "g",
+                    OrderOnNutrientPanel = 8,
+                    ShowOnNutrientPanel = true
+                };
+                _recitopiaDbContext.Nutrition.Add(dietaryFiber);
+
+                //Sugars
+                var sugars = new Nutrition()
+                {
+                    Customer_Guid = customers.Customer_Guid,
+                    Nutrition_Item = "Sugars",
+                    DV = 0,
+                    Measurement = "g",
+                    OrderOnNutrientPanel = 9,
+                    ShowOnNutrientPanel = true
+                };
+                _recitopiaDbContext.Nutrition.Add(sugars);
+
+                //Protein
+                var protein = new Nutrition()
+                {
+                    Customer_Guid = customers.Customer_Guid,
+                    Nutrition_Item = "Protein",
+                    DV = 50,
+                    Measurement = "g",
+                    OrderOnNutrientPanel = 10,
+                    ShowOnNutrientPanel = true
+                };
+                _recitopiaDbContext.Nutrition.Add(protein);
+
+                //Vitamin A
+                var vitaminA = new Nutrition()
+                {
+                    Customer_Guid = customers.Customer_Guid,
+                    Nutrition_Item = "Vitamin A",
+                    DV = 3000,
+                    Measurement = "IU",
+                    OrderOnNutrientPanel = 11,
+                    ShowOnNutrientPanel = true
+                };
+                _recitopiaDbContext.Nutrition.Add(vitaminA);
+
+                //Vitamin C
+                var vitaminC = new Nutrition()
+                {
+                    Customer_Guid = customers.Customer_Guid,
+                    Nutrition_Item = "Vitamin C",
+                    DV = 60,
+                    Measurement = "mg",
+                    OrderOnNutrientPanel = 12,
+                    ShowOnNutrientPanel = true
+                };
+                _recitopiaDbContext.Nutrition.Add(vitaminC);
+
+                //Calcium
+                var calcium = new Nutrition()
+                {
+                    Customer_Guid = customers.Customer_Guid,
+                    Nutrition_Item = "Calcium",
+                    DV = 1000,
+                    Measurement = "mg",
+                    OrderOnNutrientPanel = 13,
+                    ShowOnNutrientPanel = true
+                };
+                _recitopiaDbContext.Nutrition.Add(calcium);
+
+                //Iron
+                var iron = new Nutrition()
+                {
+                    Customer_Guid = customers.Customer_Guid,
+                    Nutrition_Item = "Iron",
+                    DV = 18,
+                    Measurement = "mg",
+                    OrderOnNutrientPanel = 14,
+                    ShowOnNutrientPanel = true
+                };
+                _recitopiaDbContext.Nutrition.Add(iron);
+
+                //Iron
+                var potassium = new Nutrition()
+                {
+                    Customer_Guid = customers.Customer_Guid,
+                    Nutrition_Item = "Potassium",
+                    DV = 3500,
+                    Measurement = "mg",
+                    OrderOnNutrientPanel = 15,
+                    ShowOnNutrientPanel = true
+                };
+                _recitopiaDbContext.Nutrition.Add(potassium);
+
+                //Vitamin D
+                var vitaminD = new Nutrition()
+                {
+                    Customer_Guid = customers.Customer_Guid,
+                    Nutrition_Item = "Vitamin D",
+                    DV = 15,
+                    Measurement = "mcg",
+                    OrderOnNutrientPanel = 116,
+                    ShowOnNutrientPanel = true
+                };
+                _recitopiaDbContext.Nutrition.Add(vitaminC);
+
+                //----------------------------------------------------------------------------------------------------
+                //--------------END ADD DEFAULT NUTRIENTS-------------------------------------------------------------
+                //----------------------------------------------------------------------------------------------------
+
+                await _recitopiaDbContext.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
@@ -331,6 +534,9 @@ namespace Recitopia.Controllers
                 _recitopiaDbContext.Meal_Category.Add(categoryPrime);
 
                 await _recitopiaDbContext.SaveChangesAsync();
+
+                
+
 
                 //ADDED THE CUSTOMER GROUP NOW ADD THE CURRENT USER TO THAT CUSTOMER GROUP AND TAKE TO HOME PAGE
                 var currentUser = await _recitopiaDbContext.AppUsers.Where(m => m.UserName == User.Identity.Name).FirstAsync();
