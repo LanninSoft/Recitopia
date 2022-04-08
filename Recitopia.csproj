@@ -65,7 +65,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
     <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.0.96" />
-    <PackageReference Include="Moment.js" Version="2.24.0" />
+    <PackageReference Include="Moment.js" Version="2.29.2" />
     <PackageReference Include="morelinq" Version="3.3.2" />
     <PackageReference Include="Sendgrid" Version="9.12.6" />
   </ItemGroup>
